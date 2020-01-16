@@ -5,3 +5,4 @@
 # This is just unneeded intellij stuff
 *.DS_Store
 *.iml
+*.xml
