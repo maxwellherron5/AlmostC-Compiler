@@ -1,0 +1,7 @@
+# Ignoring all the annoying .class files
+*.class
+# This is the other generated jave file that I don't need
+*.java~
+# This is just unneeded intellij stuff
+*.DS_Store
+*.iml
