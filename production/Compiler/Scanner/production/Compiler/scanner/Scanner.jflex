@@ -33,6 +33,7 @@ symbol        = ":" | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "<="
 // Will have to get this working someday
 //comment       = (([?<=\/\/])[^\\/\/]]+[\n\$])|(([?<=\/\*])[\/\*]([^*\/]|[\r\n]|(\*+([^*\/]|[\r\n])))*[\*+\/]|[\*+\/])
 //comment       = (([?<=\/\/])[^\/\/]]+[\n\$])|(([?<=\/\*])[\/\*][.*][\*\/\$])
+comment       = (\/\*(\*(!\/)|[^*])*\*\/)|(\/[\/]+.*)
 keyword       = "char" | "int" | "float" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end"
 identifier    = {letter}+[0-9]?+
 
@@ -92,13 +93,13 @@ identifier    = {letter}+[0-9]?+
                         return t;
                    }
 
-//{comment}   {
-  //              Token t = new Token();
-    //            t.lexeme = yytext();
-      //          t.type = TokenType.COMMENT;
-        //        System.out.println(t.toString());
-          //      return t;
-            //}
+{comment}   {
+                Token t = new Token();
+                t.lexeme = yytext();
+                t.type = TokenType.COMMENT;
+                System.out.println(t.toString());
+                return t;
+            }
 
 {other}    { 
              System.out.println("Illegal char: '" + yytext() + "' found.");
