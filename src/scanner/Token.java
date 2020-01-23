@@ -1,5 +1,7 @@
 package scanner;
 
+import java.util.Objects;
+
 /**
  * Token.java
  * @author Maxwell Herron
@@ -28,6 +30,16 @@ public class Token
 		this.lexeme = lexeme;
 		this.type = type;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Token)) return false;
+		Token token = (Token) o;
+		return Objects.equals(getLexeme(), token.getLexeme()) &&
+				getType() == token.getType();
+	}
+
 
 	public String getLexeme()
 	{

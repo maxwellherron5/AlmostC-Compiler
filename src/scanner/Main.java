@@ -11,9 +11,9 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		String testString = "/* here is comment */  @@ %yf : 17E+1223 myVar123 Myvar123 -100 - + char float int";
+		String testString = "/* here is comment */ 5.78 @@ %yf : 17E+1223 myVar123 Myvar123 -100 - + char float int  ";
 		//String testString = "/* this should be a comment */\n //As should this";
-		MyScanner scan = new MyScanner(new StringReader(testString));
+		Scanner scan = new Scanner(new StringReader(testString));
 		Token result = null;
 		try {
 			result = scan.nextToken();

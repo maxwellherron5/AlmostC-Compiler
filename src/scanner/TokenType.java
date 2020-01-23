@@ -9,6 +9,7 @@ package scanner;
 public enum TokenType
 {
 	NUMBER,
+	REAL_NUMBER,
 	PLUS,
 	MINUS,
 	MULTIPLY,
