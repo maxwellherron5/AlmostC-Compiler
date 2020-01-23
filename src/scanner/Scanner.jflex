@@ -26,8 +26,9 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 other         = .
 letter        = [A-Za-z]
 whitespace    = [ \n\t]+
-number 	      = [\-]?[1-9]\d*|0|[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-real_number   = [/-]?{number}\.([0-9]*)
+//number 	      = [\-]?[1-9]\d*|0|[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
+number        = [\-]?\d+([eE][-+]?[0-9]+)?
+real_number   = [/-]?{number}\.([0-9]*)([eE][-+]?[0-9]+)?
 operator	  = [\+\-\*/]
 symbol        = ":" | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "<=" | ">=" | "!=" | "&&" | "||" | "!"
 comment       = (\/\*(\*(!\/)|[^*])*\*\/)|(\/[\/]+.*)
