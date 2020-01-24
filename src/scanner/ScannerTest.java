@@ -12,12 +12,11 @@ class ScannerTest {
     void nextTokenHappy1()
     {
         Token expected = new Token("-32.4", TokenType.REAL_NUMBER);
-        Scanner scan = new Scanner(new StringReader("-32.4"));
+        Scanner scan = new Scanner(new StringReader("-32.4    "));
         try {
             Token actual = new Token(scan.nextToken().lexeme, scan.nextToken().type);
+            assertEquals(expected, actual);
         } catch (Exception e) { }
-
-        assertEquals(expected.equals(actual))
     }
 
     @Test
@@ -47,7 +46,13 @@ class ScannerTest {
     @Test
     void nextTokenSad1()
     {
-
+        BadCharacterException expected = new BadCharacterException("Illegal char: '@' found.");
+        Scanner scan = new Scanner(new StringReader("  @"));
+        try {
+            scan.nextToken();
+        } catch (Exception actual) {
+            assertEquals(expected, actual);
+        }
     }
 
     @Test
