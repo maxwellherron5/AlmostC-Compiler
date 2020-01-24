@@ -10,8 +10,10 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 
 %%
 %class Scanner
+%yylexthrow BadCharacterException
 %function nextToken /* Renames the yylex() function */
 %type   Token      /* Defines the return type of the scanning function */
+
 %eofval{
   return null;
 %eofval}
@@ -100,6 +102,6 @@ identifier    = {letter}+[0-9]?+
             }
 
 {other}    { 
-             System.out.println("Illegal char: '" + yytext() + "' found.");
-
+             String errorMessage = "Illegal char: '" + yytext() + "' found.";
+             throw new BadCharacterException(errorMessage);
            }

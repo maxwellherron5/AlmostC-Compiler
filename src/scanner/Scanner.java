@@ -544,7 +544,7 @@ class Scanner {
    * @return      the next token
    * @exception   java.io.IOException  if any I/O-Error occurs
    */
-  public Token nextToken() throws java.io.IOException {
+  public Token nextToken() throws java.io.IOException, BadCharacterException {
     int zzInput;
     int zzAction;
 
@@ -630,7 +630,8 @@ class Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { System.out.println("Illegal char: '" + yytext() + "' found.");
+            { String errorMessage = "Illegal char: '" + yytext() + "' found.";
+             throw new BadCharacterException(errorMessage);
             } 
             // fall through
           case 10: break;
