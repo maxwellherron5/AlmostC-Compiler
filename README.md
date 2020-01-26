@@ -2,6 +2,7 @@
 
 This project is to be used to compile and run Micro-C programs. It is to be comprised of four main packages:
 1. scanner
+
 2. parser
 3. semantic analyzer
 4. code generator
