@@ -73,7 +73,7 @@ class Scanner {
   private static final String ZZ_ACTION_PACKED_0 =
     "\1\0\1\1\1\2\1\3\1\4\1\5\2\4\2\6"+
     "\2\1\10\3\2\0\1\7\1\0\1\10\1\0\3\3"+
-    "\1\11\6\3\1\0\1\5\3\0\10\3\1\0\1\7"+
+    "\1\6\6\3\1\0\1\5\3\0\10\3\1\0\1\7"+
     "\2\0\1\10\5\3";
 
   private static int [] zzUnpackAction() {
@@ -634,12 +634,12 @@ class Scanner {
              throw new BadCharacterException(errorMessage);
             } 
             // fall through
-          case 10: break;
+          case 9: break;
           case 2: 
             { //System.out.println("Found whitespace!");
             } 
             // fall through
-          case 11: break;
+          case 10: break;
           case 3: 
             { Token t = new Token();
                         t.lexeme = yytext();
@@ -648,7 +648,7 @@ class Scanner {
                         return t;
             } 
             // fall through
-          case 12: break;
+          case 11: break;
           case 4: 
             { Token t = new Token();
 				t.lexeme = yytext();
@@ -657,7 +657,7 @@ class Scanner {
 				return t;
             } 
             // fall through
-          case 13: break;
+          case 12: break;
           case 5: 
             { //System.out.println("Found a number: " + yytext());
 			 Token t = new Token();
@@ -667,7 +667,7 @@ class Scanner {
 			 return t;
             } 
             // fall through
-          case 14: break;
+          case 13: break;
           case 6: 
             { Token t = new Token();
                 t.lexeme = yytext();
@@ -676,7 +676,7 @@ class Scanner {
                 return t;
             } 
             // fall through
-          case 15: break;
+          case 14: break;
           case 7: 
             { Token t = new Token();
                     t.lexeme = yytext();
@@ -685,7 +685,7 @@ class Scanner {
                     return t;
             } 
             // fall through
-          case 16: break;
+          case 15: break;
           case 8: 
             { Token t = new Token();
                 t.lexeme = yytext();
@@ -694,16 +694,7 @@ class Scanner {
                 return t;
             } 
             // fall through
-          case 17: break;
-          case 9: 
-            { Token t = new Token();
-                t.lexeme = yytext();
-                t.type = TokenType.KEYWORD;
-                System.out.println(t.toString());
-                return t;
-            } 
-            // fall through
-          case 18: break;
+          case 16: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

@@ -30,5 +30,17 @@ public class LookupTable extends HashMap<String, TokenType>
         this.put("&&", TokenType.AND);
         this.put("||", TokenType.OR);
         this.put("!", TokenType.NOT);
+        this.put("char", TokenType.CHAR);
+        this.put("int", TokenType.INT);
+        this.put("float", TokenType.FLOAT);
+        this.put("if", TokenType.IF);
+        this.put("else", TokenType.ELSE);
+        this.put("while", TokenType.WHILE);
+        this.put("print", TokenType.PRINT);
+        this.put("read", TokenType.READ);
+        this.put("return", TokenType.RETURN);
+        this.put("func", TokenType.FUNC);
+        this.put("program", TokenType.PROGRAM);
+        this.put("end", TokenType.END);
     }
 }

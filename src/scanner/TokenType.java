@@ -32,4 +32,16 @@ public enum TokenType
 	OR,
 	NOT,
 	COMMENT,
+	INT,
+	FLOAT,
+	CHAR,
+	IF,
+	ELSE,
+	WHILE,
+	PRINT,
+	READ,
+	RETURN,
+	FUNC,
+	PROGRAM,
+	END
 }

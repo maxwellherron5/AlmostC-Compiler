@@ -72,7 +72,7 @@ identifier    = {letter}+[0-9]?+
 {keyword}  {
                 Token t = new Token();
                 t.lexeme = yytext();
-                t.type = TokenType.KEYWORD;
+                t.type = lookupTable.get(t.lexeme);
                 System.out.println(t.toString());
                 return t;
            }
