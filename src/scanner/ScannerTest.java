@@ -14,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ScannerTest {
 
+    /**
+     * Checks to see if scanner correctly detects a real number.
+     */
     @Test
     void nextTokenHappy1()
     {
@@ -25,6 +28,9 @@ class ScannerTest {
         } catch (Exception e) { }
     }
 
+    /**
+     * Checks to see if scanner correctly detects an identifier.
+     */
     @Test
     void nextTokenHappy2()
     {
@@ -36,6 +42,9 @@ class ScannerTest {
         } catch (Exception e) { }
     }
 
+    /**
+     * Checks to see if scanner correctly detects a comment.
+     */
     @Test
     void nextTokenHappy3()
     {
@@ -47,6 +56,9 @@ class ScannerTest {
         } catch (Exception e) { }
     }
 
+    /**
+     * Checks to see if scanner correctly detects an integer.
+     */
     @Test
     void nextTokenHappy4()
     {
@@ -58,10 +70,13 @@ class ScannerTest {
         } catch (Exception e) { }
     }
 
+    /**
+     * Checks to see if scanner correctly detects the print keyword.
+     */
     @Test
     void nextTokenHappy5()
     {
-        Token expected = new Token("print", TokenType.KEYWORD);
+        Token expected = new Token("print", TokenType.PRINT);
         Scanner scan = new Scanner(new StringReader("\n print"));
         try {
             Token actual = new Token(scan.nextToken().lexeme, scan.nextToken().type);
@@ -69,6 +84,9 @@ class ScannerTest {
         } catch (Exception e) { }
     }
 
+    /**
+     * Checks to see if scanner correctly detects and throws a bad character exception.
+     */
     @Test
     void nextTokenSad1()
     {
@@ -81,6 +99,9 @@ class ScannerTest {
         }
     }
 
+    /**
+     * Checks to see if scanner correctly detects and throws a bad character exception.
+     */
     @Test
     void nextTokenSad2()
     {
