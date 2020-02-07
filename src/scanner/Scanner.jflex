@@ -9,7 +9,7 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 /* Declarations */
 
 %%
-%class Scanner
+%public class Scanner
 %yylexthrow BadCharacterException
 %function nextToken /* Renames the yylex() function */
 %type   Token      /* Defines the return type of the scanning function */

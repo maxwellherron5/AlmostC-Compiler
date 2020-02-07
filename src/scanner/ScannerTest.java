@@ -105,8 +105,8 @@ class ScannerTest {
     @Test
     void nextTokenSad2()
     {
-        BadCharacterException expected = new BadCharacterException("Illegal char: '%' found.");
-        Scanner scan = new Scanner(new StringReader("int myVariable % print"));
+        BadCharacterException expected = new BadCharacterException("Illegal char: '@' found.");
+        Scanner scan = new Scanner(new StringReader("@"));
         Token result = null;
         try {
             result = scan.nextToken();
@@ -116,6 +116,7 @@ class ScannerTest {
         while (result != null) {
             try {
                 result = scan.nextToken();
+                fail();
             } catch (Exception actual) {
                 assertEquals(expected, actual);
             }

@@ -16,7 +16,7 @@ package scanner;    /* Declares this class to be a part of the scanner package *
  * <a href="http://www.jflex.de/">JFlex</a> 1.7.0
  * from the specification file <tt>Scanner.jflex</tt>
  */
-class Scanner {
+public class Scanner {
 
   /** This character denotes the end of file */
   public static final int YYEOF = -1;
