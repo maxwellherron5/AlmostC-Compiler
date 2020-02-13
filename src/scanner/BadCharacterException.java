@@ -9,7 +9,6 @@ import java.util.Objects;
  * scanner picks up lexeme input that is not matched with any of my
  * specified tokentypes.
  */
-
 public class BadCharacterException extends Exception
 {
     // This string will hold the output error message
@@ -28,6 +27,10 @@ public class BadCharacterException extends Exception
     public String getErrorMessage()
     {
         return errorMessage;
+    }
+
+    public void setErrorMessage(String message) {
+        this.errorMessage = message;
     }
 
     @Override

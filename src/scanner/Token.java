@@ -18,7 +18,7 @@ public class Token
 	/**
 	 * Empty constructor
 	 */
-	public Token() {}
+	public Token() { }
 
 	/**
 	 * Constructor with params
@@ -37,7 +37,7 @@ public class Token
 		if (!(o instanceof Token)) return false;
 		Token token = (Token) o;
 		return Objects.equals(getLexeme(), token.getLexeme()) &&
-				getType() == token.getType();
+		getType() == token.getType();
 	}
 
 

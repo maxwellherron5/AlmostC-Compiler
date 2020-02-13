@@ -30,7 +30,6 @@ public enum TokenType
 	AND,
 	OR,
 	NOT,
-	COMMENT,
 	INT,
 	FLOAT,
 	CHAR,
@@ -39,8 +38,11 @@ public enum TokenType
 	WHILE,
 	PRINT,
 	READ,
+	WRITE,
 	RETURN,
 	FUNC,
 	PROGRAM,
-	END
+	END,
+	COMMA,
+	VOID
 }
