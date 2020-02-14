@@ -23,6 +23,8 @@ public class LookupTable extends HashMap<String, TokenType>
         this.put("]", TokenType.RIGHT_BRACKET);
         this.put("{", TokenType.LEFT_CURLY);
         this.put("}", TokenType.RIGHT_CURLY);
+        this.put("==", TokenType.EQUAL);
+        this.put("=", TokenType.ASSIGNMENT);
         this.put("<", TokenType.LESS_THAN);
         this.put(">", TokenType.GREATER_THAN);
         this.put("<=", TokenType.LESS_THAN_EQUAL);

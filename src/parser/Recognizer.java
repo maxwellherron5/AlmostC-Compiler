@@ -112,7 +112,14 @@ public class Recognizer {
      * @return
      */
     public Boolean isMulop(Token inToken) {
-
+        boolean answer = false;
+        if( inToken.getType() == TokenType.MULTIPLY ||
+                inToken.getType() == TokenType.DIVIDE ||
+                inToken.getType() == TokenType.MODULO ||
+                inToken.getType() == TokenType.AND) {
+            answer = true;
+        }
+        return answer;
     }
 
     /**
@@ -121,7 +128,13 @@ public class Recognizer {
      * @return
      */
     public Boolean isAddop(Token inToken) {
-
+        boolean answer = false;
+        if( inToken.getType() == TokenType.PLUS ||
+                inToken.getType() == TokenType.MINUS ||
+                inToken.getType() == TokenType.OR) {
+            answer = true;
+        }
+        return answer;
     }
 
     /**
@@ -130,7 +143,13 @@ public class Recognizer {
      * @return
      */
     public Boolean isRelop(Token inToken) {
-
+        boolean answer = false;
+        if( inToken.getType() == TokenType.PLUS ||
+                inToken.getType() == TokenType.MINUS ||
+                inToken.getType() == TokenType.OR) {
+            answer = true;
+        }
+        return answer;
     }
 
     /**
@@ -148,7 +167,7 @@ public class Recognizer {
     }
 
     /**
-     * 
+     *
      */
     public void relop() {
 
