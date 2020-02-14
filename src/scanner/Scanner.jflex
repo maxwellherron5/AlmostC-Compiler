@@ -22,6 +22,19 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 %{
     // Instantiating a LookupTable object
     LookupTable lookupTable = new LookupTable();
+
+      /**
+       * Gets the line number of the most recent lexeme.
+       * @return The current line number.
+       */
+      public int getLine() { return yyline;}
+
+      /**
+       * Gets the column number of the most recent lexeme.
+       * This is the number of chars since the most recent newline char.
+       * @return The current column number.
+       */
+      public int getColumn() { return yycolumn;}
 %}
 
 /* Patterns */
@@ -32,7 +45,7 @@ whitespace    = [ \n\t]+
 //number 	      = [\-]?[1-9]\d*|0|[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 number        = [\-]?\d+([E][-+]?[0-9]+)?
 real_number   = [/-]?{number}\.([0-9]*)([E][-+]?[0-9]+)?
-operator	  = [\+\-\*/]
+operator	  = [\+\-\*/%]
 symbol        = ":" | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "<=" | ">=" | "!=" | "&&" | "||" | "!"
 comment       = (\/\*(\*(!\/)|[^*])*\*\/)|(\/[\/]+.*)
 keyword       = "char" | "int" | "float" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end"

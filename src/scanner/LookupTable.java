@@ -15,6 +15,7 @@ public class LookupTable extends HashMap<String, TokenType>
         this.put("+", TokenType.PLUS);
         this.put("/", TokenType.DIVIDE);
         this.put("*", TokenType.MULTIPLY);
+        this.put("%", TokenType.MODULO);
         this.put(";", TokenType.SEMICOLON);
         this.put("(", TokenType.LEFT_PARENTHESES);
         this.put(")", TokenType.RIGHT_PARENTHESES);

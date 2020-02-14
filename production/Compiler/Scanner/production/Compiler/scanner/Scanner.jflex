@@ -9,6 +9,7 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 /* Declarations */
 
 %%
+%public
 %class Scanner
 %yylexthrow BadCharacterException
 %function nextToken /* Renames the yylex() function */
@@ -29,12 +30,13 @@ other         = .
 letter        = [A-Za-z]
 whitespace    = [ \n\t]+
 //number 	      = [\-]?[1-9]\d*|0|[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-number        = [\-]?\d+([eE][-+]?[0-9]+)?
-real_number   = [/-]?{number}\.([0-9]*)([eE][-+]?[0-9]+)?
+number        = [\-]?\d+([E][-+]?[0-9]+)?
+real_number   = [/-]?{number}\.([0-9]*)([E][-+]?[0-9]+)?
 operator	  = [\+\-\*/]
 symbol        = ":" | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "<=" | ">=" | "!=" | "&&" | "||" | "!"
 comment       = (\/\*(\*(!\/)|[^*])*\*\/)|(\/[\/]+.*)
 keyword       = "char" | "int" | "float" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end"
+word          = {letter}+
 identifier    = {letter}+[0-9]?+
 
 %%
@@ -85,20 +87,20 @@ identifier    = {letter}+[0-9]?+
                 return t;
            }
 
-{identifier}       {
+{identifier} {
                         Token t = new Token();
                         t.lexeme = yytext();
                         t.type = TokenType.IDENTIFIER;
                         System.out.println(t.toString());
                         return t;
-                   }
+            }
 
 {comment}   {
-                Token t = new Token();
-                t.lexeme = yytext();
-                t.type = TokenType.COMMENT;
-                System.out.println(t.toString());
-                return t;
+
+            }
+
+{word}      {
+
             }
 
 {other}    { 

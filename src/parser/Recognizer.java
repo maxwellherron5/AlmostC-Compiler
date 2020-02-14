@@ -27,6 +27,12 @@ public class Recognizer {
     /////////////////////////
     //    CONSTRUCTOR
     /////////////////////////
+
+    /**
+     * Main constructor for recognizer.
+     * @param text input text that is being parsed.
+     * @param isFile true if text is derived from a file, false if not.
+     */
     public Recognizer(String text, boolean isFile) {
         if(isFile) {
             FileInputStream fis = null;
@@ -48,12 +54,15 @@ public class Recognizer {
         } catch (BadCharacterException ex) {
             error(ex.getErrorMessage());
         }
-
     }
 
     /////////////////////////
     //      METHODS
     /////////////////////////
+
+    public void term_part() {
+
+    }
 
     public void exp() {
 
@@ -63,19 +72,98 @@ public class Recognizer {
      *
      */
     public void factor() {
-        if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
-            match(TokenType.LEFT_PARENTHESES);
-            exp();
-            match(TokenType.RIGHT_PARENTHESES);
-        }
-        else if (lookahead.getType() == TokenType.NUMBER) {
-            match(TokenType.NUMBER);
-        }
-        else {
-            error("Factor");
+        switch (lookahead.getType()) {
+            /* If type is identifier, it then checks to see if the identifier is followed by
+            * either a left parentheses or a left bracket. If not, it ends. */
+            case IDENTIFIER:
+                match(TokenType.IDENTIFIER);
+                if (lookahead.getType() == TokenType.LEFT_BRACKET) {
+                    match(TokenType.LEFT_BRACKET);
+                    exp();
+                    match(TokenType.RIGHT_BRACKET);
+                }
+                else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+                    match(TokenType.LEFT_PARENTHESES);
+                    exp();
+                    match(TokenType.RIGHT_PARENTHESES);
+                }
+                break;
+            case LEFT_PARENTHESES:
+                match(TokenType.LEFT_PARENTHESES);
+                exp();
+                match(TokenType.RIGHT_PARENTHESES);
+                break;
+            case NUMBER:
+                match(TokenType.NUMBER);
+                break;
+            case NOT:
+                match(TokenType.NOT);
+                factor();
+                break;
+            default:
+                error("Factor");
+                break;
         }
     }
 
+    /**
+     *
+     * @param inToken
+     * @return
+     */
+    public Boolean isMulop(Token inToken) {
+
+    }
+
+    /**
+     *
+     * @param inToken
+     * @return
+     */
+    public Boolean isAddop(Token inToken) {
+
+    }
+
+    /**
+     *
+     * @param inToken
+     * @return
+     */
+    public Boolean isRelop(Token inToken) {
+
+    }
+
+    /**
+     *
+     */
+    public void mulop() {
+
+    }
+
+    /**
+     *
+     */
+    public void addop() {
+
+    }
+
+    /**
+     * 
+     */
+    public void relop() {
+
+    }
+
+    public void error(String message) {
+        System.out.println( "Error " + message + " at line " +
+                this.scanner.getLine() + " column " +
+                this.scanner.getColumn());
+    }
+
+    /**
+     *
+     * @param expected
+     */
     public void match(TokenType expected) {
         System.out.println("match( " + expected + ")");
         if( this.lookahead.getType() == expected) {
@@ -96,7 +184,11 @@ public class Recognizer {
         }
     }
 
-    public void error(String message) {
-
+    /**
+     * Getter for lookahead token.
+     * @return the lookahead token.
+     */
+    public Token getLookahead() {
+        return lookahead;
     }
 }
