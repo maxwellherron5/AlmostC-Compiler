@@ -38,6 +38,7 @@ public class LookupTable extends HashMap<String, TokenType>
         this.put("int", TokenType.INT);
         this.put("float", TokenType.FLOAT);
         this.put("void", TokenType.VOID);
+        this.put("main", TokenType.MAIN);
         this.put("if", TokenType.IF);
         this.put("else", TokenType.ELSE);
         this.put("while", TokenType.WHILE);

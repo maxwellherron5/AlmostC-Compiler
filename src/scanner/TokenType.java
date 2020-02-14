@@ -47,5 +47,6 @@ public enum TokenType
 	PROGRAM,
 	END,
 	COMMA,
-	VOID
+	VOID,
+	MAIN
 }

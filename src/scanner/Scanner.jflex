@@ -48,7 +48,7 @@ real_number   = [/-]?{number}\.([0-9]*)([E][-+]?[0-9]+)?
 operator	  = [\+\-\*/%]
 symbol        = ":" | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "<=" | ">=" | "!=" | "&&" | "||" | "!" | "==" | "="
 comment       = (\/\*(\*(!\/)|[^*])*\*\/)|(\/[\/]+.*)
-keyword       = "char" | "int" | "float" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end"
+keyword       = "char" | "int" | "float" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end" | "main"
 word          = {letter}+
 identifier    = {letter}+[0-9]?+
 

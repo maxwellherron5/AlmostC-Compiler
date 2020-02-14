@@ -60,8 +60,167 @@ public class Recognizer {
     //      METHODS
     /////////////////////////
 
-    public void term_part() {
+    /**
+     *
+     */
+    public void program() {
+        functionDeclarations();
+        match(TokenType.VOID);
+        match(TokenType.MAIN);
+        match(TokenType.LEFT_PARENTHESES);
+        match(TokenType.RIGHT_PARENTHESES);
+    }
 
+    /**
+     *
+     */
+    public void identifierList() {
+
+    }
+
+    /**
+     *
+     */
+    public void declarations() {
+
+    }
+
+    /**
+     *
+     */
+    public void type() {
+
+    }
+
+    /**
+     *
+     */
+    public void functionDeclarations() {
+
+    }
+
+    /**
+     *
+     */
+    public void functionDeclaration() {
+
+    }
+
+    /**
+     *
+     */
+    public void functionDefinitions() {
+
+    }
+
+    /**
+     *
+     */
+    public void functionDefinition() {
+
+    }
+
+    /**
+     *
+     */
+    public void parameters() {
+
+    }
+
+    /**
+     *
+     */
+    public void parameterList() {
+
+    }
+
+    /**
+     *
+     */
+    public void compoundStatement() {
+
+    }
+
+    /**
+     *
+     */
+    public void optionalStatements() {
+
+    }
+
+    /**
+     *
+     */
+    public void statementList() {
+
+    }
+
+    /**
+     *
+     */
+    public void statement() {
+
+    }
+
+    /**
+     *
+     */
+    public void variable() {
+
+    }
+
+    /**
+     *
+     */
+    public void expressionList() {
+
+    }
+
+    /**
+     *
+     */
+    public void expression() {
+
+    }
+
+    /**
+     *
+     */
+    public void simpleExpression() {
+
+    }
+
+    /**
+     *
+     */
+    public void simplePart() {
+        if (isAddop(lookahead)) {
+            term();
+            simplePart();
+        } else {
+            // Lambda
+        }
+    }
+
+    /**
+     *
+     */
+    public void term() {
+        factor();
+        termPart();
+    }
+
+    /**
+     *
+     */
+    public void termPart() {
+        if (isMulop(lookahead)) {
+            mulop();
+            factor();
+            termPart();
+        } else {
+            // Lambda
+        }
     }
 
     public void exp() {
