@@ -69,13 +69,19 @@ public class Recognizer {
         match(TokenType.MAIN);
         match(TokenType.LEFT_PARENTHESES);
         match(TokenType.RIGHT_PARENTHESES);
+        compoundStatement();
+        functionDefinitions();
     }
 
     /**
      *
      */
     public void identifierList() {
-
+        match(TokenType.IDENTIFIER);
+        if (lookahead.getType() == TokenType.COMMA) {
+            match(TokenType.COMMA);
+            identifierList();
+        }
     }
 
     /**
@@ -89,7 +95,19 @@ public class Recognizer {
      *
      */
     public void type() {
-
+        switch (lookahead.getType()) {
+            case VOID:
+                match(TokenType.VOID);
+                break;
+            case INT:
+                match(TokenType.INT);
+                break;
+            case FLOAT:
+                match(TokenType.FLOAT);
+                break;
+            default:
+                error("Type");
+        }
     }
 
     /**
@@ -103,7 +121,9 @@ public class Recognizer {
      *
      */
     public void functionDeclaration() {
-
+        type();
+        match(TokenType.IDENTIFIER);
+        parameters();
     }
 
     /**
@@ -131,14 +151,22 @@ public class Recognizer {
      *
      */
     public void parameterList() {
-
+        type();
+        match(TokenType.IDENTIFIER);
+        if (lookahead.getType() == TokenType.COMMA) {
+            match(TokenType.COMMA);
+            parameterList();
+        }
     }
 
     /**
      *
      */
     public void compoundStatement() {
-
+        match(TokenType.LEFT_CURLY);
+        declarations();
+        optionalStatements();
+        match(TokenType.RIGHT_CURLY);
     }
 
     /**
