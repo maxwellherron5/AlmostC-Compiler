@@ -108,6 +108,75 @@ public class Recognizer {
 
     /**
      *
+     */
+    public void mulop() {
+        switch (lookahead.getType()) {
+            case MULTIPLY:
+                match(TokenType.MULTIPLY);
+                break;
+            case DIVIDE:
+                match(TokenType.DIVIDE);
+                break;
+            case MODULO:
+                match(TokenType.MODULO);
+                break;
+            case AND:
+                match(TokenType.AND);
+                break;
+            default:
+                error("Mulop");
+        }
+    }
+
+    /**
+     *
+     */
+    public void addop() {
+        switch (lookahead.getType()) {
+            case PLUS:
+                match(TokenType.PLUS);
+                break;
+            case MINUS:
+                match(TokenType.MINUS);
+                break;
+            case OR:
+                match(TokenType.OR);
+                break;
+            default:
+                error("Addop");
+        }
+    }
+
+    /**
+     *
+     */
+    public void relop() {
+        switch (lookahead.getType()) {
+            case EQUAL:
+                match(TokenType.EQUAL);
+                break;
+            case NOT_EQUAL:
+                match(TokenType.NOT_EQUAL);
+                break;
+            case LESS_THAN:
+                match(TokenType.LESS_THAN);
+                break;
+            case LESS_THAN_EQUAL:
+                match(TokenType.LESS_THAN_EQUAL);
+                break;
+            case GREATER_THAN_EQUAL:
+                match(TokenType.GREATER_THAN_EQUAL);
+                break;
+            case GREATER_THAN:
+                match(TokenType.GREATER_THAN);
+                break;
+            default:
+                error("Relop");
+        }
+    }
+
+    /**
+     *
      * @param inToken
      * @return
      */
@@ -144,9 +213,12 @@ public class Recognizer {
      */
     public Boolean isRelop(Token inToken) {
         boolean answer = false;
-        if( inToken.getType() == TokenType.PLUS ||
-                inToken.getType() == TokenType.MINUS ||
-                inToken.getType() == TokenType.OR) {
+        if( inToken.getType() == TokenType.EQUAL ||
+                inToken.getType() == TokenType.NOT_EQUAL ||
+                inToken.getType() == TokenType.LESS_THAN ||
+                inToken.getType() == TokenType.LESS_THAN_EQUAL ||
+                inToken.getType() == TokenType.GREATER_THAN_EQUAL ||
+                inToken.getType() == TokenType.GREATER_THAN) {
             answer = true;
         }
         return answer;
@@ -154,25 +226,8 @@ public class Recognizer {
 
     /**
      *
+     * @param message
      */
-    public void mulop() {
-
-    }
-
-    /**
-     *
-     */
-    public void addop() {
-
-    }
-
-    /**
-     *
-     */
-    public void relop() {
-
-    }
-
     public void error(String message) {
         System.out.println( "Error " + message + " at line " +
                 this.scanner.getLine() + " column " +
