@@ -188,7 +188,7 @@ class RecognizerTest {
 
     @Test
     void expression() {
-        Recognizer r = new Recognizer("+ myVariable123", false);
+        Recognizer r = new Recognizer("myVariable321 >= myVariable123", false);
         try {
             r.simplePart();
         } catch (Exception e) {

@@ -216,7 +216,11 @@ public class Recognizer {
      *
      */
     public void simpleExpression() {
-
+        if (lookahead.getType() == TokenType.PLUS || lookahead.getType() == TokenType.MINUS) {
+            sign();
+        }
+        term();
+        simplePart();
     }
 
     /**
@@ -259,6 +263,7 @@ public class Recognizer {
     public void expression() {
         simpleExpression();
         if (isRelop(lookahead)) {
+            relop();
             simpleExpression();
         }
     }
@@ -371,12 +376,25 @@ public class Recognizer {
         }
     }
 
+    public void sign() {
+        switch (lookahead.getType()) {
+            case PLUS:
+                match(TokenType.PLUS);
+                break;
+            case MINUS:
+                match(TokenType.MINUS);
+                break;
+            default:
+                error("Sign");
+        }
+    }
+
     /**
      *
      * @param inToken
      * @return
      */
-    public Boolean isMulop(Token inToken) {
+    public boolean isMulop(Token inToken) {
         boolean answer = false;
         if( inToken.getType() == TokenType.MULTIPLY ||
                 inToken.getType() == TokenType.DIVIDE ||
@@ -392,7 +410,7 @@ public class Recognizer {
      * @param inToken
      * @return
      */
-    public Boolean isAddop(Token inToken) {
+    public boolean isAddop(Token inToken) {
         boolean answer = false;
         if( inToken.getType() == TokenType.PLUS ||
                 inToken.getType() == TokenType.MINUS ||
@@ -407,7 +425,7 @@ public class Recognizer {
      * @param inToken
      * @return
      */
-    public Boolean isRelop(Token inToken) {
+    public boolean isRelop(Token inToken) {
         boolean answer = false;
         if( inToken.getType() == TokenType.EQUAL ||
                 inToken.getType() == TokenType.NOT_EQUAL ||
@@ -425,12 +443,21 @@ public class Recognizer {
      * @param inToken
      * @return
      */
-    public Boolean isStatement(Token inToken) {
+    public boolean isStatement(Token inToken) {
         boolean answer = false;
         if (inToken.getType() == TokenType.IF || inToken.getType() == TokenType.WHILE ||
             inToken.getType() == TokenType.READ || inToken.getType() == TokenType.WRITE ||
             inToken.getType() == TokenType.RETURN || inToken.getType() == TokenType.IDENTIFIER ||
             inToken.getType() == TokenType.LEFT_CURLY) {
+                answer = true;
+        }
+        return answer;
+    }
+
+    public boolean isFactor(Token inToken) {
+        boolean answer = false;
+        if (inToken.getType() == TokenType.IDENTIFIER || inToken.getType() == TokenType.NUMBER ||
+            inToken.getType() == TokenType.LEFT_PARENTHESES || inToken.getType() == TokenType.NOT) {
                 answer = true;
         }
         return answer;
