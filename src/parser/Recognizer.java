@@ -173,14 +173,22 @@ public class Recognizer {
      *
      */
     public void optionalStatements() {
-
+        if(isStatement(lookahead)) {
+            statementList();
+        } else {
+            // Lambda
+        }
     }
 
     /**
      *
      */
     public void statementList() {
-
+        statement();
+        if (lookahead.getType() == TokenType.SEMICOLON) {
+            match(TokenType.SEMICOLON);
+            statementList();
+        }
     }
 
     /**
@@ -409,6 +417,21 @@ public class Recognizer {
             answer = true;
         }
         return answer;
+    }
+
+    /**
+     *
+     * @param inToken
+     * @return
+     */
+    public Boolean isStatement(Token inToken) {
+        if (inToken.getType() == TokenType.IF || inToken.getType() == TokenType.WHILE ||
+            inToken.getType() == TokenType.READ || inToken.getType() == TokenType.WRITE ||
+            inToken.getType() == TokenType.RETURN || inToken.getType() == TokenType.IDENTIFIER ||
+            inToken.getType() == TokenType.LEFT_CURLY) {
+                return true;
+        }
+        return false;
     }
 
     /**
