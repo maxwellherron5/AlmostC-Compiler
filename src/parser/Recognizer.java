@@ -215,13 +215,6 @@ public class Recognizer {
     /**
      *
      */
-    public void expression() {
-
-    }
-
-    /**
-     *
-     */
     public void simpleExpression() {
 
     }
@@ -231,6 +224,7 @@ public class Recognizer {
      */
     public void simplePart() {
         if (isAddop(lookahead)) {
+            addop();
             term();
             simplePart();
         } else {
@@ -259,9 +253,16 @@ public class Recognizer {
         }
     }
 
-    public void exp() {
-
+    /**
+     *
+     */
+    public void expression() {
+        simpleExpression();
+        if (isRelop(lookahead)) {
+            simpleExpression();
+        }
     }
+
 
     /**
      *
@@ -274,18 +275,18 @@ public class Recognizer {
                 match(TokenType.IDENTIFIER);
                 if (lookahead.getType() == TokenType.LEFT_BRACKET) {
                     match(TokenType.LEFT_BRACKET);
-                    exp();
+                    expression();
                     match(TokenType.RIGHT_BRACKET);
                 }
                 else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
                     match(TokenType.LEFT_PARENTHESES);
-                    exp();
+                    expression();
                     match(TokenType.RIGHT_PARENTHESES);
                 }
                 break;
             case LEFT_PARENTHESES:
                 match(TokenType.LEFT_PARENTHESES);
-                exp();
+                expression();
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case NUMBER:
@@ -425,13 +426,14 @@ public class Recognizer {
      * @return
      */
     public Boolean isStatement(Token inToken) {
+        boolean answer = false;
         if (inToken.getType() == TokenType.IF || inToken.getType() == TokenType.WHILE ||
             inToken.getType() == TokenType.READ || inToken.getType() == TokenType.WRITE ||
             inToken.getType() == TokenType.RETURN || inToken.getType() == TokenType.IDENTIFIER ||
             inToken.getType() == TokenType.LEFT_CURLY) {
-                return true;
+                answer = true;
         }
-        return false;
+        return answer;
     }
 
     /**
