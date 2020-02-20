@@ -88,7 +88,14 @@ public class Recognizer {
      *
      */
     public void declarations() {
-
+        if (isType()) {
+            type();
+            identifierList();
+            match(TokenType.SEMICOLON);
+            declarations();
+        } else {
+            // Lambda option
+        }
     }
 
     /**
@@ -114,7 +121,13 @@ public class Recognizer {
      *
      */
     public void functionDeclarations() {
-
+        if (isType()) {
+            functionDeclaration();
+            match(TokenType.SEMICOLON);
+            functionDeclarations();
+        } else {
+            // Lambda option
+        }
     }
 
     /**
@@ -130,21 +143,31 @@ public class Recognizer {
      *
      */
     public void functionDefinitions() {
-
+        if (isType()) {
+            functionDefinition();
+            functionDefinitions();
+        } else {
+            // Lambda option
+        }
     }
 
     /**
      *
      */
     public void functionDefinition() {
-
+        type();
+        match(TokenType.IDENTIFIER);
+        parameters();
+        compoundStatement();
     }
 
     /**
      *
      */
     public void parameters() {
-
+        match(TokenType.LEFT_PARENTHESES);
+        parameterList();
+        match(TokenType.RIGHT_PARENTHESES);
     }
 
     /**
@@ -173,7 +196,7 @@ public class Recognizer {
      *
      */
     public void optionalStatements() {
-        if(isStatement(lookahead)) {
+        if(isStatement()) {
             statementList();
         } else {
             // Lambda
@@ -195,21 +218,69 @@ public class Recognizer {
      *
      */
     public void statement() {
-
+        switch (lookahead.getType()) {
+            case IDENTIFIER:
+                variable();
+                match(TokenType.EQUAL);
+                expression();
+                break;
+            case LEFT_CURLY:
+                match(TokenType.LEFT_CURLY);
+                declarations();
+                optionalStatements();
+                match(TokenType.RIGHT_CURLY);
+                break;
+            case IF:
+                match(TokenType.IF);
+                expression();
+                compoundStatement();
+                match(TokenType.ELSE);
+                compoundStatement();
+                break;
+            case WHILE:
+                match(TokenType.WHILE);
+                expression();
+                compoundStatement();
+                break;
+            case READ:
+                match(TokenType.READ);
+                match(TokenType.LEFT_PARENTHESES);
+                match(TokenType.IDENTIFIER);
+                match(TokenType.RIGHT_PARENTHESES);
+                break;
+            case WRITE:
+                match(TokenType.WRITE);
+                match(TokenType.LEFT_PARENTHESES);
+                expression();
+                match(TokenType.RIGHT_PARENTHESES);
+                break;
+            case RETURN:
+                match(TokenType.RETURN);
+                expression();
+        }
     }
 
     /**
      *
      */
     public void variable() {
-
+        match(TokenType.IDENTIFIER);
+        if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+            match(TokenType.LEFT_PARENTHESES);
+            expressionList();
+            match(TokenType.RIGHT_PARENTHESES);
+        }
     }
 
     /**
      *
      */
     public void expressionList() {
-
+        expression();
+        if (lookahead.getType() == TokenType.COMMA) {
+            match(TokenType.COMMA);
+            expression();
+        }
     }
 
     /**
@@ -303,7 +374,6 @@ public class Recognizer {
                 break;
             default:
                 error("Factor");
-                break;
         }
     }
 
@@ -391,15 +461,14 @@ public class Recognizer {
 
     /**
      *
-     * @param inToken
      * @return
      */
-    public boolean isMulop(Token inToken) {
+    public boolean isMulop(Token lookahead) {
         boolean answer = false;
-        if( inToken.getType() == TokenType.MULTIPLY ||
-                inToken.getType() == TokenType.DIVIDE ||
-                inToken.getType() == TokenType.MODULO ||
-                inToken.getType() == TokenType.AND) {
+        if( lookahead.getType() == TokenType.MULTIPLY ||
+                lookahead.getType() == TokenType.DIVIDE ||
+                lookahead.getType() == TokenType.MODULO ||
+                lookahead.getType() == TokenType.AND) {
             answer = true;
         }
         return answer;
@@ -407,14 +476,13 @@ public class Recognizer {
 
     /**
      *
-     * @param inToken
      * @return
      */
-    public boolean isAddop(Token inToken) {
+    public boolean isAddop(Token lookahead) {
         boolean answer = false;
-        if( inToken.getType() == TokenType.PLUS ||
-                inToken.getType() == TokenType.MINUS ||
-                inToken.getType() == TokenType.OR) {
+        if( lookahead.getType() == TokenType.PLUS ||
+                lookahead.getType() == TokenType.MINUS ||
+                lookahead.getType() == TokenType.OR) {
             answer = true;
         }
         return answer;
@@ -422,17 +490,16 @@ public class Recognizer {
 
     /**
      *
-     * @param inToken
      * @return
      */
-    public boolean isRelop(Token inToken) {
+    public boolean isRelop(Token lookahead) {
         boolean answer = false;
-        if( inToken.getType() == TokenType.EQUAL ||
-                inToken.getType() == TokenType.NOT_EQUAL ||
-                inToken.getType() == TokenType.LESS_THAN ||
-                inToken.getType() == TokenType.LESS_THAN_EQUAL ||
-                inToken.getType() == TokenType.GREATER_THAN_EQUAL ||
-                inToken.getType() == TokenType.GREATER_THAN) {
+        if( lookahead.getType() == TokenType.EQUAL ||
+                lookahead.getType() == TokenType.NOT_EQUAL ||
+                lookahead.getType() == TokenType.LESS_THAN ||
+                lookahead.getType() == TokenType.LESS_THAN_EQUAL ||
+                lookahead.getType() == TokenType.GREATER_THAN_EQUAL ||
+                lookahead.getType() == TokenType.GREATER_THAN) {
             answer = true;
         }
         return answer;
@@ -440,25 +507,41 @@ public class Recognizer {
 
     /**
      *
-     * @param inToken
      * @return
      */
-    public boolean isStatement(Token inToken) {
+    public boolean isStatement() {
         boolean answer = false;
-        if (inToken.getType() == TokenType.IF || inToken.getType() == TokenType.WHILE ||
-            inToken.getType() == TokenType.READ || inToken.getType() == TokenType.WRITE ||
-            inToken.getType() == TokenType.RETURN || inToken.getType() == TokenType.IDENTIFIER ||
-            inToken.getType() == TokenType.LEFT_CURLY) {
+        if (lookahead.getType() == TokenType.IF || lookahead.getType() == TokenType.WHILE ||
+            lookahead.getType() == TokenType.READ || lookahead.getType() == TokenType.WRITE ||
+            lookahead.getType() == TokenType.RETURN || lookahead.getType() == TokenType.IDENTIFIER ||
+            lookahead.getType() == TokenType.LEFT_CURLY) {
                 answer = true;
         }
         return answer;
     }
 
-    public boolean isFactor(Token inToken) {
+    /**
+     *
+     * @return
+     */
+    public boolean isFactor() {
         boolean answer = false;
-        if (inToken.getType() == TokenType.IDENTIFIER || inToken.getType() == TokenType.NUMBER ||
-            inToken.getType() == TokenType.LEFT_PARENTHESES || inToken.getType() == TokenType.NOT) {
+        if (lookahead.getType() == TokenType.IDENTIFIER || lookahead.getType() == TokenType.NUMBER ||
+            lookahead.getType() == TokenType.LEFT_PARENTHESES || lookahead.getType() == TokenType.NOT) {
                 answer = true;
+        }
+        return answer;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public boolean isType() {
+        boolean answer = false;
+        if (lookahead.getType() == TokenType.VOID || lookahead.getType() == TokenType.INT ||
+            lookahead.getType() == TokenType.FLOAT) {
+            answer = true;
         }
         return answer;
     }

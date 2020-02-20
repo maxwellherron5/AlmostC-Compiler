@@ -8,8 +8,6 @@ import java.util.Objects;
  * This is the token object that is returned from the scanner. It has a lexeme, which is the string literal,
  * and it has a tokentype, which represents what type the lexeme is.
  */
-
-
 public class Token
 {
 	String lexeme;
