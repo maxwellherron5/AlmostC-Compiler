@@ -22,17 +22,6 @@ class RecognizerTest {
     }
 
     @Test
-    void testProgramSad() {
-        Recognizer r = new Recognizer("main(@){}", false);
-        try {
-            r.program();
-        } catch (Exception e) {
-            fail();
-        }
-        assertNotNull(r.getLookahead().getType());
-    }
-
-    @Test
     void testDeclarationsHappy() {
         Recognizer r = new Recognizer("void firstFunc123;\nint secondFunc123;\nfloat thirdFunc123;", false);
         try {
@@ -44,38 +33,40 @@ class RecognizerTest {
     }
 
     @Test
-    void testDeclarationsSad() {
-
-    }
-
-    @Test
     void testFunctionDefinition() {
-
-    }
-
-    @Test
-    void testStatement() {
-
-    }
-
-    @Test
-    void testSimpleExpression() {
-
-    }
-
-    @Test
-    void testFactorHappy() {
-        Recognizer r = new Recognizer("myVariable123", false);
+        Recognizer r = new Recognizer("", false);
         try {
-            r.factor();
+
         } catch (Exception e) {
-            fail();
+
         }
         assertNull(r.getLookahead().getType());
     }
 
     @Test
-    void testFactorSad() {
+    void testStatement() {
+        Recognizer r = new Recognizer("", false);
+        try {
+
+        } catch (Exception e) {
+
+        }
+        assertNull(r.getLookahead().getType());
+    }
+
+    @Test
+    void testSimpleExpression() {
+        Recognizer r = new Recognizer("", false);
+        try {
+
+        } catch (Exception e) {
+
+        }
+        assertNull(r.getLookahead().getType());
+    }
+
+    @Test
+    void testFactorHappy() {
         Recognizer r = new Recognizer("myVariable123", false);
         try {
             r.factor();
