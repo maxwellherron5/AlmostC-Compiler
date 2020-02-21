@@ -43,12 +43,12 @@ other         = .
 letter        = [A-Za-z]
 whitespace    = [ \n\t]+
 //number 	      = [\-]?[1-9]\d*|0|[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-number        = [\-]?\d+([E][-+]?[0-9]+)?
-real_number   = [/-]?{number}\.([0-9]*)([E][-+]?[0-9]+)?
+number        = [\-]?\d+([eE][-+]?[0-9]+)?
+real_number   = [/-]?{number}\.([0-9]*)([eE][-+]?[0-9]+)?
 operator	  = [\+\-\*/%]
 symbol        = ":" | ";" | "(" | ")" | "[" | "]" | "{" | "}" | "<" | ">" | "<=" | ">=" | "!=" | "&&" | "||" | "!" | "==" | "="
 comment       = (\/\*(\*(!\/)|[^*])*\*\/)|(\/[\/]+.*)
-keyword       = "char" | "int" | "float" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end" | "main"
+keyword       = "char" | "int" | "float" | "void" | "if" | "else" | "while" | "print" | "read" | "return" | "func" | "program" | "end" | "main"
 word          = {letter}+
 identifier    = {letter}+[0-9]?+
 
