@@ -65,7 +65,6 @@ public class Recognizer {
      */
     public void program() {
         functionDeclarations();
-        match(TokenType.VOID);
         match(TokenType.MAIN);
         match(TokenType.LEFT_PARENTHESES);
         match(TokenType.RIGHT_PARENTHESES);
@@ -221,7 +220,7 @@ public class Recognizer {
         switch (lookahead.getType()) {
             case IDENTIFIER:
                 variable();
-                match(TokenType.EQUAL);
+                match(TokenType.ASSIGNMENT);
                 expression();
                 break;
             case LEFT_CURLY:
