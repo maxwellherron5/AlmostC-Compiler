@@ -174,14 +174,19 @@ public class Recognizer {
 
     /**
      * Runs through the production for parameterList. Note that there are two diverging options; if there is
-     * a comma present, it will call itself again.
+     * a comma present, it will call itself again. Along with that, there is a lambda option, to allow
+     * for functions that have no parameters.
      */
     public void parameterList() {
-        type();
-        match(TokenType.IDENTIFIER);
-        if (lookahead.getType() == TokenType.COMMA) {
-            match(TokenType.COMMA);
-            parameterList();
+        if (isType()) {
+            type();
+            match(TokenType.IDENTIFIER);
+            if (lookahead.getType() == TokenType.COMMA) {
+                match(TokenType.COMMA);
+                parameterList();
+            }
+        } else {
+            // Lambda option
         }
     }
 
@@ -203,7 +208,7 @@ public class Recognizer {
         if(isStatement()) {
             statementList();
         } else {
-            // Lambda
+            // Lambda option
         }
     }
 
@@ -313,7 +318,7 @@ public class Recognizer {
             term();
             simplePart();
         } else {
-            // Lambda
+            // Lambda option
         }
     }
 
@@ -335,7 +340,7 @@ public class Recognizer {
             factor();
             termPart();
         } else {
-            // Lambda
+            // Lambda option
         }
     }
 
