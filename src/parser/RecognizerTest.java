@@ -33,7 +33,7 @@ class RecognizerTest {
      */
     @Test
     void testDeclarations() {
-        Recognizer r = new Recognizer("void firstFunc123;\nint secondFunc123;\nfloat thirdFunc123;", false);
+        Recognizer r = new Recognizer("void firstFunc123;\nint secondFunc123;\nfloat thirdFunc123", false);
         try {
             r.declarations();
         } catch (Exception e) {
