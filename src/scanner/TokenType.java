@@ -14,6 +14,7 @@ public enum TokenType
 	MINUS,
 	MULTIPLY,
 	DIVIDE,
+	MODULO,
 	IDENTIFIER,
 	SEMICOLON,
 	LEFT_PARENTHESES,
@@ -22,6 +23,8 @@ public enum TokenType
 	LEFT_BRACKET,
 	LEFT_CURLY,
 	RIGHT_CURLY,
+	EQUAL,
+	ASSIGNMENT,
 	LESS_THAN,
 	GREATER_THAN,
 	LESS_THAN_EQUAL,
@@ -30,7 +33,6 @@ public enum TokenType
 	AND,
 	OR,
 	NOT,
-	COMMENT,
 	INT,
 	FLOAT,
 	CHAR,
@@ -39,8 +41,12 @@ public enum TokenType
 	WHILE,
 	PRINT,
 	READ,
+	WRITE,
 	RETURN,
 	FUNC,
 	PROGRAM,
-	END
+	END,
+	COMMA,
+	VOID,
+	MAIN
 }

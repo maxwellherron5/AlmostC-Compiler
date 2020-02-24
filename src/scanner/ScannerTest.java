@@ -45,16 +45,16 @@ class ScannerTest {
     /**
      * Checks to see if scanner correctly detects a comment.
      */
-    @Test
-    void nextTokenHappy3()
-    {
-        Token expected = new Token("/* this is a comment */", TokenType.COMMENT);
-        Scanner scan = new Scanner(new StringReader("/* this is a comment */"));
-        try {
-            Token actual = new Token(scan.nextToken().lexeme, scan.nextToken().type);
-            assertEquals(expected, actual);
-        } catch (Exception e) { }
-    }
+//    @Test
+//    void nextTokenHappy3()
+//    {
+//        Token expected = new Token("/* this is a comment */", TokenType.COMMENT);
+//        Scanner scan = new Scanner(new StringReader("/* this is a comment */"));
+//        try {
+//            Token actual = new Token(scan.nextToken().lexeme, scan.nextToken().type);
+//            assertEquals(expected, actual);
+//        } catch (Exception e) { }
+//    }
 
     /**
      * Checks to see if scanner correctly detects an integer.
@@ -105,8 +105,8 @@ class ScannerTest {
     @Test
     void nextTokenSad2()
     {
-        BadCharacterException expected = new BadCharacterException("Illegal char: '%' found.");
-        Scanner scan = new Scanner(new StringReader("int myVariable % print"));
+        BadCharacterException expected = new BadCharacterException("Illegal char: '@' found.");
+        Scanner scan = new Scanner(new StringReader("@"));
         Token result = null;
         try {
             result = scan.nextToken();
@@ -116,6 +116,7 @@ class ScannerTest {
         while (result != null) {
             try {
                 result = scan.nextToken();
+                fail();
             } catch (Exception actual) {
                 assertEquals(expected, actual);
             }
