@@ -559,7 +559,7 @@ public class Recognizer {
      * @param message the error message.
      */
     public void error(String message) {
-        System.out.println( "Error " + message + " at line " +
+        throw new ParserException( "Error " + message + " at line " +
                 this.scanner.getLine() + " column " +
                 this.scanner.getColumn());
     }

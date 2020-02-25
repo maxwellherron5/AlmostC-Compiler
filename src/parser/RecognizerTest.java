@@ -33,7 +33,7 @@ class RecognizerTest {
      */
     @Test
     void testDeclarations() {
-        Recognizer r = new Recognizer("void firstFunc123;\nint secondFunc123;\nfloat thirdFunc123", false);
+        Recognizer r = new Recognizer("void firstFunc123;\nint secondFunc123;\nfloat thirdFunc123;", false);
         try {
             r.declarations();
         } catch (Exception e) {
@@ -48,7 +48,7 @@ class RecognizerTest {
      */
     @Test
     void testFunctionDefinition() {
-        Recognizer r = new Recognizer("int myFunction(int varOne , float varTwo) { int x; x = 2 + 2 }", false);
+        Recognizer r = new Recognizer("int myFunction(int varOne , float varTwo) { int x; x = 2 + 2 } ", false);
         try {
             r.functionDefinition();
         } catch (Exception e) {
@@ -100,5 +100,14 @@ class RecognizerTest {
             fail();
         }
         assertNull(r.getLookahead().getType());
+    }
+
+    @Test
+    void parserExceptionTest() {
+        Recognizer r = new Recognizer("main({", false);
+        try {
+            r.program();
+            fail();
+        } catch (ParserException e) { }
     }
 }
