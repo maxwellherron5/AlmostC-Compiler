@@ -19,11 +19,7 @@ class RecognizerTest {
     @Test
     void testProgram() {
         Recognizer r = new Recognizer("main(){}", false);
-        try {
-            r.program();
-        } catch (Exception e) {
-            fail();
-        }
+        r.program();
         assertNull(r.getLookahead().getType());
     }
 
@@ -82,6 +78,10 @@ class RecognizerTest {
         assertNull(r.getLookahead().getType());
     }
 
+    /**
+     * Tests to see if the ParserException is correctly thrown when an illegal string
+     * is parsed...or 'recognized'.
+     */
     @Test
     void parserExceptionTest() {
         Recognizer r = new Recognizer("main({", false);
