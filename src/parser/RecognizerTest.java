@@ -34,11 +34,7 @@ class RecognizerTest {
     @Test
     void testDeclarations() {
         Recognizer r = new Recognizer("void firstFunc123;\nint secondFunc123;\nfloat thirdFunc123;", false);
-        try {
-            r.declarations();
-        } catch (Exception e) {
-            fail();
-        }
+        r.declarations();
         assertNull(r.getLookahead().getType());
     }
 
@@ -49,11 +45,7 @@ class RecognizerTest {
     @Test
     void testFunctionDefinition() {
         Recognizer r = new Recognizer("int myFunction(int varOne , float varTwo) { int x; x = 2 + 2 } ", false);
-        try {
-            r.functionDefinition();
-        } catch (Exception e) {
-            fail();
-        }
+        r.functionDefinition();
         assertNull(r.getLookahead().getType());
     }
 
@@ -64,11 +56,7 @@ class RecognizerTest {
     @Test
     void testStatement() {
         Recognizer r = new Recognizer("myVar = 2 + 2", false);
-        try {
-            r.statement();
-        } catch (Exception e) {
-            fail();
-        }
+        r.statement();
         assertNull(r.getLookahead().getType());
     }
 
@@ -79,11 +67,7 @@ class RecognizerTest {
     @Test
     void testSimpleExpression() {
         Recognizer r = new Recognizer("23 + myVariable", false);
-        try {
-            r.simpleExpression();
-        } catch (Exception e) {
-            fail();
-        }
+        r.simpleExpression();
         assertNull(r.getLookahead().getType());
     }
 
@@ -94,11 +78,7 @@ class RecognizerTest {
     @Test
     void testFactor() {
         Recognizer r = new Recognizer("myVariable123", false);
-        try {
-            r.factor();
-        } catch (Exception e) {
-            fail();
-        }
+        r.factor();
         assertNull(r.getLookahead().getType());
     }
 
