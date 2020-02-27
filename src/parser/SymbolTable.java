@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public class SymbolTable {
 
-    private HashMap<String, Data> map;
+    private HashMap<String, IdentifierKind> map;
 
     /**
      * Default constructor
@@ -18,8 +18,36 @@ public class SymbolTable {
         map = new HashMap<>();
     }
 
-    public void add(String name, Data inData) {
-        map.put(name, inData);
+    public void addVariableName(String name) {
+        if (!exists(name)) {
+            map.put(name, IdentifierKind.VARIABLE);
+        } else {
+            throw new RuntimeException("ERROR: " + name + " already exists in the table.");
+        }
+    }
+
+    public void addFunctionName(String name) {
+        if (!exists(name)) {
+            map.put(name, IdentifierKind.FUNCTION);
+        } else {
+            throw new RuntimeException("ERROR: " + name + " already exists in the table.");
+        }
+    }
+
+    public void addProgramName(String name) {
+        if (!exists(name)) {
+            map.put(name, IdentifierKind.PROGRAM);
+        } else {
+            throw new RuntimeException("ERROR: " + name + " already exists in the table.");
+        }
+    }
+
+    public void addArrayName(String name) {
+        if (!exists(name)) {
+            map.put(name, IdentifierKind.ARRAY);
+        } else {
+            throw new RuntimeException("ERROR: " + name + " already exists in the table.");
+        }
     }
 
     /**
@@ -28,8 +56,7 @@ public class SymbolTable {
      */
     public boolean isVariableName(String name) {
         boolean answer = false;
-        Data check = map.get(name);
-        if (check.kind == IdentifierKind.VARIABLE) {
+        if (map.get(name) == IdentifierKind.VARIABLE) {
             answer = true;
         }
         return answer;
@@ -41,8 +68,7 @@ public class SymbolTable {
      */
     public boolean isFunctionName(String name) {
         boolean answer = false;
-        Data check = map.get(name);
-        if (check.kind == IdentifierKind.FUNCTION) {
+        if (map.get(name) == IdentifierKind.FUNCTION) {
             answer = true;
         }
         return answer;
@@ -54,8 +80,7 @@ public class SymbolTable {
      */
     public boolean isProgramName(String name) {
         boolean answer = false;
-        Data check = map.get(name);
-        if (check.kind == IdentifierKind.PROGRAM) {
+        if (map.get(name) == IdentifierKind.PROGRAM) {
             answer = true;
         }
         return answer;
@@ -67,8 +92,15 @@ public class SymbolTable {
      */
     public boolean isArrayName(String name) {
         boolean answer = false;
-        Data check = map.get(name);
-        if (check.kind == IdentifierKind.ARRAY) {
+        if (map.get(name) == IdentifierKind.ARRAY) {
+            answer = true;
+        }
+        return answer;
+    }
+
+    public boolean exists(String name) {
+        boolean answer = false;
+        if (map.get(name) != null) {
             answer = true;
         }
         return answer;
@@ -105,6 +137,11 @@ public class SymbolTable {
             this.id = inID;
             this.kind = inKind;
             this.type = inType;
+        }
+
+        Data(String inID, IdentifierKind inKind) {
+            this.id = inID;
+            this.kind = inKind;
         }
     }
 }
