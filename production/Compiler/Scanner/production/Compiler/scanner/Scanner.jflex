@@ -14,6 +14,8 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 %yylexthrow BadCharacterException
 %function nextToken /* Renames the yylex() function */
 %type   Token      /* Defines the return type of the scanning function */
+%line
+%column
 
 %eofval{
   return null;

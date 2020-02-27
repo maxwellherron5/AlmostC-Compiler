@@ -51,7 +51,7 @@ public class Recognizer {
             lookahead = scanner.nextToken();
         } catch (IOException ex) {
             error( "Scan error");
-        } catch (BadCharacterException ex) { }
+        }
     }
 
     /////////////////////////
