@@ -106,23 +106,18 @@ public class SymbolTable {
         return answer;
     }
 
+    public IdentifierKind get(String key) {
+        return map.get(key);
+    }
+
     /**
      * This enum holds the kind of identifier
      */
-    private enum IdentifierKind {
+    public enum IdentifierKind {
         FUNCTION,
         VARIABLE,
         PROGRAM,
         ARRAY
-    }
-
-    /**
-     * This enum holds the datatype of the identifier
-     */
-    private enum DataType {
-        VOID,
-        INT,
-        FLOAT
     }
 
     /**
@@ -131,13 +126,6 @@ public class SymbolTable {
     private class Data {
         String id;
         IdentifierKind kind;
-        DataType type;
-
-        Data(String inID, IdentifierKind inKind, DataType inType) {
-            this.id = inID;
-            this.kind = inKind;
-            this.type = inType;
-        }
 
         Data(String inID, IdentifierKind inKind) {
             this.id = inID;
