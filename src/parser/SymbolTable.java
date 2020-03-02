@@ -135,7 +135,6 @@ public class SymbolTable {
         return answer;
     }
 
-
     /**
      * Extension of the standard HashMap get() method used to get the kind value associated with
      * the string key.
