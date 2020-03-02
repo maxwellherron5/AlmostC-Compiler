@@ -106,7 +106,7 @@ class ScannerTest {
     void nextTokenSad2()
     {
         BadCharacterException expected = new BadCharacterException("Illegal char: '@' found.");
-        Scanner scan = new Scanner(new StringReader("@"));
+        Scanner scan = new Scanner(new StringReader("@ void int"));
         Token result = null;
         try {
             result = scan.nextToken();

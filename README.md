@@ -8,7 +8,8 @@ This project is to be used to compile and run Micro-C programs. It is to be comp
 3. semantic analyzer
 4. code generator
  
-In its current state, only the scanner and recognizer are written. To run the scanner, follow these steps:
+In its current state, only the scanner, recognizer, and symbol table are written. However, the 
+symbol table is not yet integrated with the recognizer. To run the scanner, follow these steps:
 
 1. Clone the repo
 2. In your terminal, enter the src folder, then enter the scanner package and run the command
@@ -23,5 +24,9 @@ The best way to run the recognizer in its current state, is to navigate to the f
 Here, you can selectively run individual tests through your IDE, or you can run them all at once
 to see if they pass the tests. In its current state, all tests are happy tests, so none will fail unless
 you modify the input string. Enjoy!
+
+Similarly to the recognizer, the only way to interact with the symbol table in the current state of this compiler is to
+run the tests that have been written for it. To do so, navigate to `SymbolTableTest.java`, which can be found in the
+parser package. Once in this file, run the tests just as you have done with the other test classes.
 
 

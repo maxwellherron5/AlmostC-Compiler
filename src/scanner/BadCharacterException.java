@@ -9,8 +9,7 @@ import java.util.Objects;
  * scanner picks up lexeme input that is not matched with any of my
  * specified tokentypes.
  */
-public class BadCharacterException extends Exception
-{
+public class BadCharacterException extends RuntimeException {
     // This string will hold the output error message
     private String errorMessage;
 
@@ -22,6 +21,7 @@ public class BadCharacterException extends Exception
     public BadCharacterException(String errorMessage)
     {
         this.errorMessage = errorMessage;
+        System.out.println(errorMessage);
     }
 
     public String getErrorMessage()

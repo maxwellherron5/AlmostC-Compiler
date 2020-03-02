@@ -7,10 +7,10 @@ import java.util.HashMap;
  * @author Maxwell Herron
  * This class uses a Hashmap to act as a lookup table to instantly assign a token type to each inputted lexeme.
  */
-public class LookupTable extends HashMap<String, TokenType>
-{
-    public LookupTable()
-    {
+public class LookupTable extends HashMap<String, TokenType> {
+
+    public LookupTable() {
+
         this.put("-", TokenType.MINUS);
         this.put("+", TokenType.PLUS);
         this.put("/", TokenType.DIVIDE);
