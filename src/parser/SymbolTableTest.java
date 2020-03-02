@@ -23,16 +23,6 @@ class SymbolTableTest {
     }
 
     /**
-     *
-     */
-//    @Test
-//    void testAddVariableNameSad() {
-//        SymbolTable table = new SymbolTable();
-//        String varName = "myVar123";
-//        table.addVariableName(varName);
-//    }
-
-    /**
      * Attempts to add a function name to the symbol table, then verifies that
      * the name has been added to the table.
      */
@@ -43,17 +33,6 @@ class SymbolTableTest {
         table.addFunctionName(funcName);
         assertTrue(table.isFunctionName(funcName));
     }
-
-    /**
-     *
-     */
-//    @Test
-//    void testAddFunctionNameSad() {
-//        SymbolTable table = new SymbolTable();
-//        String varName = "myVar123";
-//        table.addVariableName(varName);
-//        assertTrue(table.isVariableName(varName));
-//    }
 
     /**
      * Attempts to add a program name to the symbol table, then verifies that

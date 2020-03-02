@@ -18,6 +18,11 @@ public class SymbolTable {
         map = new HashMap<>();
     }
 
+    /**
+     * Adds a new variable name to the Symbol Table. If that name already exists, it will
+     * throw a runtime exception.
+     * @param name the name of the variable.
+     */
     public void addVariableName(String name) {
         if (!exists(name)) {
             map.put(name, IdentifierKind.VARIABLE);
@@ -26,6 +31,11 @@ public class SymbolTable {
         }
     }
 
+    /**
+     * Adds a new function name to the Symbol Table. If that name already exists, it will
+     * throw a runtime exception.
+     * @param name the name of the function.
+     */
     public void addFunctionName(String name) {
         if (!exists(name)) {
             map.put(name, IdentifierKind.FUNCTION);
@@ -34,6 +44,11 @@ public class SymbolTable {
         }
     }
 
+    /**
+     * Adds a new program name to the Symbol Table. If that name already exists, it will
+     * throw a runtime exception.
+     * @param name the name of the program.
+     */
     public void addProgramName(String name) {
         if (!exists(name)) {
             map.put(name, IdentifierKind.PROGRAM);
@@ -42,6 +57,11 @@ public class SymbolTable {
         }
     }
 
+    /**
+     * Adds a new array name to the Symbol Table. If that name already exists, it will
+     * throw a runtime exception.
+     * @param name the name of the array.
+     */
     public void addArrayName(String name) {
         if (!exists(name)) {
             map.put(name, IdentifierKind.ARRAY);
@@ -51,8 +71,9 @@ public class SymbolTable {
     }
 
     /**
-     *
-     * @return true if input is a variable name
+     * Checks whether or not the value associated with the input string is a variable kind.
+     * @param name the key used to access the value.
+     * @return true if input is a variable name.
      */
     public boolean isVariableName(String name) {
         boolean answer = false;
@@ -63,8 +84,9 @@ public class SymbolTable {
     }
 
     /**
-     *
-     * @return true if input is a function name
+     * Checks whether or not the value associated with the input string is a function kind.
+     * @param name the key used to access the value.
+     * @return true if input is a function name.
      */
     public boolean isFunctionName(String name) {
         boolean answer = false;
@@ -75,8 +97,9 @@ public class SymbolTable {
     }
 
     /**
-     *
-     * @return
+     * Checks whether or not the value associated with the input string is a program kind.
+     * @param name the key used to access the value.
+     * @return true if input is a program name.
      */
     public boolean isProgramName(String name) {
         boolean answer = false;
@@ -87,8 +110,9 @@ public class SymbolTable {
     }
 
     /**
-     *
-     * @return
+     * Checks whether or not the value associated with the input string is an array kind.
+     * @param name the key used to access the value.
+     * @return true if input is an array name.
      */
     public boolean isArrayName(String name) {
         boolean answer = false;
@@ -98,6 +122,11 @@ public class SymbolTable {
         return answer;
     }
 
+    /**
+     * Checks to see if entry given by input key exists.
+     * @param name the entry that you are checking.
+     * @return true if the given entry exists in the Symbol Table.
+     */
     public boolean exists(String name) {
         boolean answer = false;
         if (map.get(name) != null) {
@@ -106,6 +135,13 @@ public class SymbolTable {
         return answer;
     }
 
+
+    /**
+     * Extension of the standard HashMap get() method used to get the kind value associated with
+     * the string key.
+     * @param key the identifier name
+     * @return the kind value associated with the key input
+     */
     public IdentifierKind get(String key) {
         return map.get(key);
     }
