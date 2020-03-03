@@ -2,6 +2,7 @@ package parser;
 
 import java.io.FileInputStream;
 import scanner.*;
+import symbolTable.SymbolTable;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -23,6 +24,8 @@ public class Recognizer {
     private Token lookahead;
 
     private Scanner scanner;
+
+    private SymbolTable table;
 
     /////////////////////////
     //    CONSTRUCTOR
