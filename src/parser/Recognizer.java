@@ -2,7 +2,7 @@ package parser;
 
 import java.io.FileInputStream;
 import scanner.*;
-import symbolTable.SymbolTable;
+import symboltable.SymbolTable;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -55,6 +55,7 @@ public class Recognizer {
         } catch (IOException ex) {
             error( "Scan error");
         }
+        table = new SymbolTable();
     }
 
     /////////////////////////
@@ -232,7 +233,9 @@ public class Recognizer {
     public void statement() {
         switch (lookahead.getType()) {
             case IDENTIFIER:
+                String name = lookahead.getLexeme();
                 variable();
+                table.addVariableName(name);
                 match(TokenType.ASSIGNMENT);
                 expression();
                 break;
@@ -597,4 +600,10 @@ public class Recognizer {
     public Token getLookahead() {
         return lookahead;
     }
+
+    /**
+     * Getter for the symboltable.
+     * @return the symboltable.
+     */
+    public SymbolTable getTable() { return table; }
 }
