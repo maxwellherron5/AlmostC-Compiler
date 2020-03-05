@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Maxwell Herron
  * This class contains six happy path tests for the following productions: Program, Declarations,
  * FunctionDefinition, Statement, SimpleExpression, and Factor.
+ * NOTE: MODIFY SOME TESTS SO THAT YOU MANUALLY ADD ID'S TO SYMBOL TABLE BEFORE TEST
  */
 class RecognizerTest {
 
@@ -53,6 +54,7 @@ class RecognizerTest {
     void testStatement() {
         Recognizer r = new Recognizer("myVar = 2 + 2", false);
         r.statement();
+        System.out.println("HERE: " + r.getTable().get("myVar"));
         assertNull(r.getLookahead().getType());
     }
 

@@ -78,7 +78,9 @@ public class Recognizer {
      * Runs through the production for identifierList
      */
     public void identifierList() {
+        String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
+        table.addVariableName(name);
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
             identifierList();
@@ -138,7 +140,9 @@ public class Recognizer {
      */
     public void functionDeclaration() {
         type();
+        String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
+        table.addFunctionName(name);
         parameters();
     }
 
@@ -233,11 +237,15 @@ public class Recognizer {
     public void statement() {
         switch (lookahead.getType()) {
             case IDENTIFIER:
-                String name = lookahead.getLexeme();
-                variable();
-                table.addVariableName(name);
-                match(TokenType.ASSIGNMENT);
-                expression();
+                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
+                    variable();
+                    match(TokenType.ASSIGNMENT);
+                    expression();
+                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
+                    procedureStatement();
+                } else {
+                    error("statement");
+                }
                 break;
             case LEFT_CURLY:
                 match(TokenType.LEFT_CURLY);
@@ -272,6 +280,15 @@ public class Recognizer {
             case RETURN:
                 match(TokenType.RETURN);
                 expression();
+        }
+    }
+
+    public void procedureStatement() {
+        match(TokenType.IDENTIFIER);
+        if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+            match(TokenType.LEFT_PARENTHESES);
+            expressionList();
+            match(TokenType.RIGHT_PARENTHESES);
         }
     }
 
