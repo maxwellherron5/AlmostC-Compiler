@@ -40,7 +40,7 @@ public class Recognizer {
         if(isFile) {
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream("expressions/simplest.pas");
+                fis = new FileInputStream(text);
             } catch (FileNotFoundException ex) {
                 error( "No file");
             }
