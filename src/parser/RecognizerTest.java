@@ -1,7 +1,6 @@
 package parser;
 
 import org.junit.jupiter.api.Test;
-import scanner.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -53,8 +52,8 @@ class RecognizerTest {
     @Test
     void testStatement() {
         Recognizer r = new Recognizer("myVar = 2 + 2", false);
+        r.getTable().addVariableName("myVar");
         r.statement();
-        System.out.println("HERE: " + r.getTable().get("myVar"));
         assertNull(r.getLookahead().getType());
     }
 

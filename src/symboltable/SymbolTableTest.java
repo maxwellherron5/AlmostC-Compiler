@@ -69,4 +69,16 @@ class SymbolTableTest {
         table.addVariableName(varName);
         assertTrue(table.isVariableName(varName));
     }
+
+    @Test
+    void toString1() {
+        SymbolTable table = new SymbolTable();
+        String varOne = "ahh";
+        String varTwo = "woahhh";
+        String varThree = "eeeeeeh";
+        table.addVariableName(varOne);
+        table.addFunctionName(varTwo);
+        table.addVariableName(varThree);
+        System.out.println(table.toString());
+    }
 }

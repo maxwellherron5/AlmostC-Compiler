@@ -1,5 +1,6 @@
 package symboltable;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.HashMap;
 
 /**
@@ -174,7 +175,15 @@ public class SymbolTable {
      */
     @Override
     public String toString() {
-        return "";
+        StringBuilder output = new StringBuilder();
+        String format = "|%1$-10s|%2$-10s|\n";
+        output.append(String.format(format, "Name", "Kind"));
+        output.append(String.format(format, "----------", "----------"));
+        map.entrySet().forEach(entry->{
+            output.append(String.format(format, entry.getKey(), entry.getValue()));
+            output.append(String.format(format, "----------", "----------"));
+        });
+        return output.toString();
     }
 }
 

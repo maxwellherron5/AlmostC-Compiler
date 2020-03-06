@@ -1,5 +1,9 @@
 package compiler;
 
+import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 /**
  * CompilerMain.java
  * @author Maxwell Herron
