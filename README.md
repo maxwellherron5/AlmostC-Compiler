@@ -31,5 +31,6 @@ run the tests that have been written for it. To do so, navigate to `SymbolTableT
 parser package. Once in this file, run the tests just as you have done with the other test classes.
 
 The compiler package is the easiest way to run the Compiler in its entirety. To do so, navigate to `CompilerMain.java`,
-compile the file, and run it. This will run the recognizer on an input file in the same package, and then write the 
+compile the file, and run it, providing the name of the input file as a command line argument. This will run the recognizer on an input file in the same package, 
+and then write the 
 tabular form of the generated symbol table to an output file.

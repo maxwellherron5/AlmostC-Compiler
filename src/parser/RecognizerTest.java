@@ -93,7 +93,7 @@ class RecognizerTest {
     }
 
     /**
-     * Tests Statement() to ensure that if an identifier is of kind Function, then procedure statement is called
+     * Tests Statement() to ensure that if an identifier is of kind Function, then procedureStatement is called
      */
     @Test
     void statementProcedureStatementTest() {
@@ -104,7 +104,7 @@ class RecognizerTest {
     }
 
     /**
-     * Tests Statement() to ensure that if an identifier is of kind Function, then procedure statement is called
+     * Tests Statement() to ensure that if an identifier is of kind variable, then variable is called
      */
     @Test
     void statementVariableTest() {

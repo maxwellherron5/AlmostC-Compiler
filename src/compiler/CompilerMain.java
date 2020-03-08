@@ -2,7 +2,7 @@ package compiler;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import parser.*;
+import parser.Recognizer;
 
 /**
  * CompilerMain.java
