@@ -2,10 +2,7 @@ package compiler;
 
 import parser.Recognizer;
 
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FileNotFoundException;
-import java.io.File;
+import java.io.*;
 
 /**
  * CompilerMain.java
@@ -17,6 +14,12 @@ public class CompilerMain {
     public static void main(String[] args) {
         Recognizer r = new Recognizer("src/compiler/firstProgram.ac", true);
         r.program();
-        r.getTable().toString();
+        try {
+            FileWriter writer = new FileWriter("src/compiler/output.st");
+            writer.write(r.getTable().toString());
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("File not found :(");
+        }
     }
 }
