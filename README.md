@@ -3,10 +3,11 @@
 This project is to be used to compile and run Micro-C programs. It is to be comprised of four main packages:
 
 1. scanner
-
 2. parser
-3. semantic analyzer
-4. code generator
+3. symboltable
+4. semantic analyzer
+5. code generator
+6. compiler
  
 In its current state, only the scanner, recognizer, and symbol table are written. However, the 
 symbol table is not yet integrated with the recognizer. To run the scanner, follow these steps:
@@ -29,4 +30,6 @@ Similarly to the recognizer, the only way to interact with the symbol table in t
 run the tests that have been written for it. To do so, navigate to `SymbolTableTest.java`, which can be found in the
 parser package. Once in this file, run the tests just as you have done with the other test classes.
 
-
+The compiler package is the easiest way to run the Compiler in its entirety. To do so, navigate to `CompilerMain.java`,
+compile the file, and run it. This will run the recognizer on an input file in the same package, and then write the 
+tabular form of the generated symbol table to an output file.
