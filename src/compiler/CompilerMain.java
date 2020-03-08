@@ -1,8 +1,8 @@
 package compiler;
 
-import parser.Recognizer;
 import java.io.FileWriter;
 import java.io.IOException;
+import parser.*;
 
 /**
  * CompilerMain.java
@@ -13,7 +13,8 @@ import java.io.IOException;
 public class CompilerMain {
 
     public static void main(String[] args) {
-        Recognizer r = new Recognizer("src/compiler/firstProgram.ac", true);
+        // Takes the name of the file as a command line argument
+        Recognizer r = new Recognizer(args[0], true);
         r.program();
         try {
             FileWriter writer = new FileWriter("src/compiler/output.st");

@@ -91,4 +91,26 @@ class RecognizerTest {
             fail();
         } catch (ParserException e) { }
     }
+
+    /**
+     * Tests Statement() to ensure that if an identifier is of kind Function, then procedure statement is called
+     */
+    @Test
+    void statementProcedureStatementTest() {
+        Recognizer r = new Recognizer("myFunc(32, 12)", false);
+        r.getTable().addFunctionName("myFunc");
+        r.statement();
+        assertNull(r.getLookahead().getType());
+    }
+
+    /**
+     * Tests Statement() to ensure that if an identifier is of kind Function, then procedure statement is called
+     */
+    @Test
+    void statementVariableTest() {
+        Recognizer r = new Recognizer("myVar = 2 + 2", false);
+        r.getTable().addVariableName("myVar");
+        r.statement();
+        assertNull(r.getLookahead().getType());
+    }
 }
