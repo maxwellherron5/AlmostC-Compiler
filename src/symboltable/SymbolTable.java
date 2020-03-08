@@ -1,4 +1,4 @@
-package parser;
+package symboltable;
 
 import java.util.HashMap;
 
@@ -136,16 +136,6 @@ public class SymbolTable {
     }
 
     /**
-     * Extension of the standard HashMap get() method used to get the kind value associated with
-     * the string key.
-     * @param key the identifier name
-     * @return the kind value associated with the key input
-     */
-    public IdentifierKind get(String key) {
-        return map.get(key);
-    }
-
-    /**
      * This enum holds the kind of identifier
      */
     public enum IdentifierKind {
@@ -166,6 +156,36 @@ public class SymbolTable {
             this.id = inID;
             this.kind = inKind;
         }
+    }
+
+    /**
+     * Extension of the standard HashMap get() method used to get the kind value associated with
+     * the string key.
+     * @param key the identifier name
+     * @return the kind value associated with the key input
+     */
+    public IdentifierKind get(String key) {
+        return map.get(key);
+    }
+
+    /**
+     * A nicely formatted table printing out the keys/values within the symbol table.
+     * @return the stringified table.
+     */
+    @Override
+    public String toString() {
+        StringBuilder output = new StringBuilder();
+        // This format will maintain an even spacing for each line
+        String format = "|%1$-10s|%2$-10s|\n";
+        // Column names
+        output.append(String.format(format, "Name", "Kind"));
+        output.append(String.format(format, "----------", "----------"));
+        // Iterating through each the table to grab/print the key and value
+        map.entrySet().forEach(entry->{
+            output.append(String.format(format, entry.getKey(), entry.getValue()));
+            output.append(String.format(format, "----------", "----------"));
+        });
+        return output.toString();
     }
 }
 

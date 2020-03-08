@@ -1,7 +1,6 @@
 package parser;
 
 import org.junit.jupiter.api.Test;
-import scanner.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -9,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author Maxwell Herron
  * This class contains six happy path tests for the following productions: Program, Declarations,
  * FunctionDefinition, Statement, SimpleExpression, and Factor.
+ * NOTE: MODIFY SOME TESTS SO THAT YOU MANUALLY ADD ID'S TO SYMBOL TABLE BEFORE TEST
  */
 class RecognizerTest {
 
@@ -52,6 +52,7 @@ class RecognizerTest {
     @Test
     void testStatement() {
         Recognizer r = new Recognizer("myVar = 2 + 2", false);
+        r.getTable().addVariableName("myVar");
         r.statement();
         assertNull(r.getLookahead().getType());
     }
@@ -89,5 +90,27 @@ class RecognizerTest {
             r.program();
             fail();
         } catch (ParserException e) { }
+    }
+
+    /**
+     * Tests Statement() to ensure that if an identifier is of kind Function, then procedureStatement is called
+     */
+    @Test
+    void statementProcedureStatementTest() {
+        Recognizer r = new Recognizer("myFunc(32, 12)", false);
+        r.getTable().addFunctionName("myFunc");
+        r.statement();
+        assertNull(r.getLookahead().getType());
+    }
+
+    /**
+     * Tests Statement() to ensure that if an identifier is of kind variable, then variable is called
+     */
+    @Test
+    void statementVariableTest() {
+        Recognizer r = new Recognizer("myVar = 2 + 2", false);
+        r.getTable().addVariableName("myVar");
+        r.statement();
+        assertNull(r.getLookahead().getType());
     }
 }

@@ -2,6 +2,7 @@ package parser;
 
 import java.io.FileInputStream;
 import scanner.*;
+import symboltable.SymbolTable;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -24,6 +25,8 @@ public class Recognizer {
 
     private Scanner scanner;
 
+    private SymbolTable table;
+
     /////////////////////////
     //    CONSTRUCTOR
     /////////////////////////
@@ -37,7 +40,7 @@ public class Recognizer {
         if(isFile) {
             FileInputStream fis = null;
             try {
-                fis = new FileInputStream("expressions/simplest.pas");
+                fis = new FileInputStream(text);
             } catch (FileNotFoundException ex) {
                 error( "No file");
             }
@@ -52,6 +55,7 @@ public class Recognizer {
         } catch (IOException ex) {
             error( "Scan error");
         }
+        table = new SymbolTable();
     }
 
     /////////////////////////
@@ -74,7 +78,9 @@ public class Recognizer {
      * Runs through the production for identifierList
      */
     public void identifierList() {
+        String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
+        table.addVariableName(name);
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
             identifierList();
@@ -134,7 +140,9 @@ public class Recognizer {
      */
     public void functionDeclaration() {
         type();
+        String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
+        table.addFunctionName(name);
         parameters();
     }
 
@@ -229,9 +237,15 @@ public class Recognizer {
     public void statement() {
         switch (lookahead.getType()) {
             case IDENTIFIER:
-                variable();
-                match(TokenType.ASSIGNMENT);
-                expression();
+                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
+                    variable();
+                    match(TokenType.ASSIGNMENT);
+                    expression();
+                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
+                    procedureStatement();
+                } else {
+                    error("statement");
+                }
                 break;
             case LEFT_CURLY:
                 match(TokenType.LEFT_CURLY);
@@ -266,6 +280,15 @@ public class Recognizer {
             case RETURN:
                 match(TokenType.RETURN);
                 expression();
+        }
+    }
+
+    public void procedureStatement() {
+        match(TokenType.IDENTIFIER);
+        if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+            match(TokenType.LEFT_PARENTHESES);
+            expressionList();
+            match(TokenType.RIGHT_PARENTHESES);
         }
     }
 
@@ -594,4 +617,10 @@ public class Recognizer {
     public Token getLookahead() {
         return lookahead;
     }
+
+    /**
+     * Getter for the symboltable.
+     * @return the symboltable.
+     */
+    public SymbolTable getTable() { return table; }
 }
