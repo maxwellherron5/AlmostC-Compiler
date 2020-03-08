@@ -1,13 +1,14 @@
 package compiler;
 
 import parser.Recognizer;
-
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * CompilerMain.java
  * @author Maxwell Herron
- *
+ * Constructs and builds a Recognizer to be ran on a sample AlmostC program. It then
+ * writes the tabular form of the symbol table to 'output.st'.
  */
 public class CompilerMain {
 

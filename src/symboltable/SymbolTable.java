@@ -175,9 +175,12 @@ public class SymbolTable {
     @Override
     public String toString() {
         StringBuilder output = new StringBuilder();
+        // This format will maintain an even spacing for each line
         String format = "|%1$-10s|%2$-10s|\n";
+        // Column names
         output.append(String.format(format, "Name", "Kind"));
         output.append(String.format(format, "----------", "----------"));
+        // Iterating through each the table to grab/print the key and value
         map.entrySet().forEach(entry->{
             output.append(String.format(format, entry.getKey(), entry.getValue()));
             output.append(String.format(format, "----------", "----------"));

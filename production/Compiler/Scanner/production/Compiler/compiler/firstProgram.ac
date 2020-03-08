@@ -1,8 +1,13 @@
+// firstProgram.ac
+// This is my test AlmostC program !
+// Author: Maxwell Herron
+
 int x();
 int y();
 void z();
 void another();
 float yetAnother();
+
 main() {
     int a;
     float b;
