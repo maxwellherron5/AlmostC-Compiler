@@ -2,6 +2,7 @@
 package syntaxtree;
 
 import java.util.ArrayList;
+import symboltable.SymbolTable.DataType;
 
 /**
  * Represents a single function definition.

@@ -146,6 +146,13 @@ public class SymbolTable {
     }
 
     /**
+     * This enum holds the datatype
+     */
+    public enum DataType {
+        VOID, INT, FLOAT,
+    }
+
+    /**
      * This internal class encapsulates the identifier name and datatype
      */
     private class Data {
