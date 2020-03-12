@@ -1,5 +1,7 @@
 package syntaxtree;
 
+import scanner.TokenType;
+
 /**
  * Represents any operation in an expression.
  * @author Erik Steinmetz

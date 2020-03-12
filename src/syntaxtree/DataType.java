@@ -1,4 +1,3 @@
-
 package syntaxtree;
 
 /**
@@ -8,3 +7,4 @@ package syntaxtree;
 public enum DataType {
     VOID, INT, FLOAT,
 }
+
