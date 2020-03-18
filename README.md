@@ -30,6 +30,9 @@ Similarly to the recognizer, the only way to interact with the symbol table in t
 run the tests that have been written for it. To do so, navigate to `SymbolTableTest.java`, which can be found in the
 parser package. Once in this file, run the tests just as you have done with the other test classes.
 
+To mess around with the syntax tree, the best way to do so is to navigate to `SyntaxTreeTest.java`. Here, there are tests available
+to be ran, and you can play around and verify that correct syntax trees are being generated based on a given input.
+
 The compiler package is the easiest way to run the Compiler in its entirety. To do so, navigate to `CompilerMain.java`,
 compile the file, and run it, providing the name of the input file as a command line argument. This will run the recognizer on an input file in the same package, 
 and then write the 

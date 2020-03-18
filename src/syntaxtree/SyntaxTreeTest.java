@@ -8,7 +8,7 @@ public class SyntaxTreeTest {
 
     @Test
     public void indentedToStringTest() {
-        
+
     }
 
 }
