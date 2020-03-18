@@ -1,4 +1,3 @@
-
 package syntaxtree;
 
 /**
@@ -9,7 +8,6 @@ public class ProgramNode extends SyntaxTreeNode {
     
     private FunctionsNode functions;
     private CompoundStatementNode main;
-    
 
     public FunctionsNode getFunctions() {
         return functions;
