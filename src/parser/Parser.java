@@ -323,60 +323,71 @@ public class Parser {
      * Runs through the production for simpleExpression. If it detects a sign, it will call sign,
      * otherwise it will carry through with term and simplePart.
      */
-    public void simpleExpression() {
+    public ExpressionNode simpleExpression() {
+        ExpressionNode expNode = null;
         if (lookahead.getType() == TokenType.PLUS || lookahead.getType() == TokenType.MINUS) {
             sign();
         }
-        term();
-        simplePart();
+        expNode = term();
+        expNode = simplePart(expNode);
+        return expNode;
     }
 
     /**
      * Runs through the production for simplePart. Note that there is a lambda option if no addop
      * is present.
      */
-    public void simplePart() {
+    public ExpressionNode simplePart(ExpressionNode possibleLeft) {
         if (isAddop()) {
-            addop();
-            term();
-            simplePart();
+            OperationNode opNode = addop();
+            ExpressionNode right = term();
+            opNode.setLeft(possibleLeft);
+            opNode.setRight(right);
+            return simplePart(possibleLeft);
         } else {
             // Lambda option
         }
+        return possibleLeft;
     }
 
     /**
      * Runs through the production for term.
      */
-    public void term() {
-        factor();
-        termPart();
+    public ExpressionNode term() {
+        ExpressionNode left = factor();
+        return termPart(left);
     }
 
     /**
      * Runs through the production for termPart. Note that there is a lambda option if no
      * mulop is present.
      */
-    public void termPart() {
+    public ExpressionNode termPart(ExpressionNode possibleLeft) {
         if (isMulop()) {
-            mulop();
-            factor();
-            termPart();
+            OperationNode opNode = mulop();
+            ExpressionNode right = factor();
+            opNode.setLeft(possibleLeft);
+            opNode.setRight(termPart(right));
+            return opNode;
         } else {
             // Lambda option
         }
+        return possibleLeft;
     }
 
     /**
      * Runs through the production for expression. Optionally calls relop and simpleExpression if
      * a relop is detected after initially calling simpleExpression.
      */
-    public void expression() {
-        simpleExpression();
+    public ExpressionNode expression() {
+        ExpressionNode left = simpleExpression();
         if (isRelop()) {
-            relop();
-            simpleExpression();
+            OperationNode opNode = relop();
+            opNode.setLeft(left);
+            opNode.setRight(simpleExpression());
+            return opNode;
         }
+        return left;
     }
 
 
@@ -451,8 +462,8 @@ public class Parser {
     /**
      * Determines what type of addop the lookahead is, and prints an error if there is no match.
      */
-    public ExpressionNode addop() {
-        ExpressionNode opNode = null;
+    public OperationNode addop() {
+        OperationNode opNode = null;
         switch (lookahead.getType()) {
             case PLUS:
                 match(TokenType.PLUS);
@@ -475,8 +486,8 @@ public class Parser {
     /**
      * Determines what type of relop the lookahead is, and prints an error if there is no match.
      */
-    public ExpressionNode relop() {
-        ExpressionNode opNode = null;
+    public OperationNode relop() {
+        OperationNode opNode = null;
         switch (lookahead.getType()) {
             case EQUAL:
                 match(TokenType.EQUAL);
