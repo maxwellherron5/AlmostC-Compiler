@@ -5,6 +5,8 @@ import scanner.Scanner;
 import scanner.Token;
 import scanner.TokenType;
 import symboltable.SymbolTable;
+import syntaxtree.ExpressionNode;
+import syntaxtree.OperationNode;
 
 import java.io.*;
 
@@ -382,7 +384,8 @@ public class Parser {
      * Runs through the production for factor. Uses the first lookahead TokenType to determine
      * which diverging rule to follow.
      */
-    public void factor() {
+    public ExpressionNode factor() {
+        ExpressionNode expNode = null;
         switch (lookahead.getType()) {
             /* If type is identifier, it then checks to see if the identifier is followed by
             * either a left parentheses or a left bracket. If not, it ends. */
@@ -414,75 +417,95 @@ public class Parser {
             default:
                 error("Factor");
         }
+        return expNode;
     }
 
     /**
      * Determines what type of mulop the lookahead is, and prints an error if there is no match.
      */
-    public void mulop() {
+    public OperationNode mulop() {
+        OperationNode opNode = null;
         switch (lookahead.getType()) {
             case MULTIPLY:
                 match(TokenType.MULTIPLY);
+                opNode = new OperationNode(TokenType.MULTIPLY);
                 break;
             case DIVIDE:
                 match(TokenType.DIVIDE);
+                opNode = new OperationNode(TokenType.DIVIDE);
                 break;
             case MODULO:
                 match(TokenType.MODULO);
+                opNode = new OperationNode(TokenType.MODULO);
                 break;
             case AND:
                 match(TokenType.AND);
+                opNode = new OperationNode(TokenType.AND);
                 break;
             default:
                 error("Mulop");
         }
+        return opNode;
     }
 
     /**
      * Determines what type of addop the lookahead is, and prints an error if there is no match.
      */
-    public void addop() {
+    public ExpressionNode addop() {
+        ExpressionNode opNode = null;
         switch (lookahead.getType()) {
             case PLUS:
                 match(TokenType.PLUS);
+                opNode = new OperationNode(TokenType.PLUS);
                 break;
             case MINUS:
                 match(TokenType.MINUS);
+                opNode = new OperationNode(TokenType.MINUS);
                 break;
             case OR:
                 match(TokenType.OR);
+                opNode = new OperationNode(TokenType.OR);
                 break;
             default:
                 error("Addop");
         }
+        return opNode;
     }
 
     /**
      * Determines what type of relop the lookahead is, and prints an error if there is no match.
      */
-    public void relop() {
+    public ExpressionNode relop() {
+        ExpressionNode opNode = null;
         switch (lookahead.getType()) {
             case EQUAL:
                 match(TokenType.EQUAL);
+                opNode = new OperationNode(TokenType.EQUAL);
                 break;
             case NOT_EQUAL:
                 match(TokenType.NOT_EQUAL);
+                opNode = new OperationNode(TokenType.NOT_EQUAL);
                 break;
             case LESS_THAN:
                 match(TokenType.LESS_THAN);
+                opNode = new OperationNode(TokenType.LESS_THAN);
                 break;
             case LESS_THAN_EQUAL:
                 match(TokenType.LESS_THAN_EQUAL);
+                opNode = new OperationNode(TokenType.LESS_THAN_EQUAL);
                 break;
             case GREATER_THAN_EQUAL:
                 match(TokenType.GREATER_THAN_EQUAL);
+                opNode = new OperationNode(TokenType.GREATER_THAN_EQUAL);
                 break;
             case GREATER_THAN:
                 match(TokenType.GREATER_THAN);
+                opNode = new OperationNode(TokenType.GREATER_THAN);
                 break;
             default:
                 error("Relop");
         }
+        return opNode;
     }
 
     /**
