@@ -5,10 +5,7 @@ import scanner.Scanner;
 import scanner.Token;
 import scanner.TokenType;
 import symboltable.SymbolTable;
-import syntaxtree.ExpressionNode;
-import syntaxtree.FunctionNode;
-import syntaxtree.OperationNode;
-import syntaxtree.VariableNode;
+import syntaxtree.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -429,6 +426,7 @@ public class Parser {
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case NUMBER:
+                expNode = new ValueNode(lookahead.getLexeme());
                 match(TokenType.NUMBER);
                 break;
             case NOT:
