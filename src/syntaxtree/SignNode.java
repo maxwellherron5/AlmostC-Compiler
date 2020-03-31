@@ -4,7 +4,7 @@ import scanner.Token;
 import scanner.TokenType;
 
 /**
- * 
+ *
  * @author Maxwell Herron
  */
 public class SignNode extends SyntaxTreeNode {

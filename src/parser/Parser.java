@@ -236,15 +236,17 @@ public class Parser {
      * Runs through the production for statement. Uses the first lookahead tokenType value to
      * determine which diverging rule to follow.
      */
-    public void statement() {
+    public StatementNode statement() {
+        StatementNode stateNote = null;
         switch (lookahead.getType()) {
             case IDENTIFIER:
                 if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
-                    variable();
+                    AssignmentStatementNode assignOp = new AssignmentStatementNode();
+                    assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
-                    expression();
+                    assignOp.setExpression(expression());
                 } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
-                    procedureStatement();
+                    return procedureStatement();
                 } else {
                     error("statement");
                 }
@@ -256,11 +258,12 @@ public class Parser {
                 match(TokenType.RIGHT_CURLY);
                 break;
             case IF:
+                IfStatementNode ifNode = new IfStatementNode();
                 match(TokenType.IF);
-                expression();
-                compoundStatement();
+                ifNode.setTest(expression());
+                ifNode.setThenStatement(compoundStatement());
                 match(TokenType.ELSE);
-                compoundStatement();
+                ifNode.setElseStatement(compoundStatement());
                 break;
             case WHILE:
                 match(TokenType.WHILE);
@@ -283,15 +286,18 @@ public class Parser {
                 match(TokenType.RETURN);
                 expression();
         }
+        return stateNote;
     }
 
-    public void procedureStatement() {
+    public StatementNode procedureStatement() {
+        StatementNode stateNode = null;
         match(TokenType.IDENTIFIER);
         if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
             match(TokenType.LEFT_PARENTHESES);
             expressionList();
             match(TokenType.RIGHT_PARENTHESES);
         }
+        return stateNode;
     }
 
     /**
@@ -414,7 +420,7 @@ public class Parser {
                 } else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
                     FunctionNode funcNode = new FunctionNode(name);
                     match(TokenType.LEFT_PARENTHESES);
-                    funcNode.addParameter(expressionList());
+                    //funcNode.addParameter(expressionList());
                     match(TokenType.RIGHT_PARENTHESES);
                 } else if(!table.exists(name)) {
                     return new VariableNode(name);
@@ -530,17 +536,21 @@ public class Parser {
     /**
      * Determines what type of sign the lookahead is, and prints an error if there is no match.
      */
-    public void sign() {
+    public SignNode sign() {
+        SignNode sigNode = null;
         switch (lookahead.getType()) {
             case PLUS:
+                sigNode = new SignNode(TokenType.PLUS);
                 match(TokenType.PLUS);
                 break;
             case MINUS:
+                sigNode = new SignNode(TokenType.MINUS);
                 match(TokenType.MINUS);
                 break;
             default:
                 error("Sign");
         }
+        return sigNode;
     }
 
     /**
