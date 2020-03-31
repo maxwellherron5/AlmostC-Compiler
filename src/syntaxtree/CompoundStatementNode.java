@@ -25,6 +25,7 @@ public class CompoundStatementNode extends StatementNode {
     public void setVariables(DeclarationsNode variables) {
         this.variables = variables;
     }
+    public void setStatements(ArrayList<StatementNode> statements) { this.statements = statements; }
 
     /**
      * Adds a statement to this compound statement.

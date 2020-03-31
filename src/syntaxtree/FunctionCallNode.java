@@ -18,6 +18,7 @@ public class FunctionCallNode extends ExpressionNode {
     /** List of all parameters in func call. */
     private ArrayList<ExpressionNode> parameters = new ArrayList<>();
 
+    public FunctionCallNode() { }
     public FunctionCallNode(String name) { this.name = name; }
 
     // Getters
@@ -29,6 +30,10 @@ public class FunctionCallNode extends ExpressionNode {
     public void setName(String name) { this.name = name; }
     public void setType(DataType type) { this.type = type; }
     public void setParameters(ArrayList<ExpressionNode> parameters) { this.parameters = parameters; }
+
+    public void addArgument(ExpressionNode arg) {
+        this.parameters.add(arg);
+    }
 
     /**
      * Creates a String representation of this function call node and its children.

@@ -8,6 +8,7 @@ import symboltable.SymbolTable;
 import syntaxtree.*;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -209,32 +210,38 @@ public class Parser {
         CompoundStatementNode compNode = new CompoundStatementNode();
         match(TokenType.LEFT_CURLY);
         compNode.setVariables(declarations());
-        compNode.addStatement(optionalStatements());
+        ArrayList<StatementNode> stateList = optionalStatements();
+        compNode.setStatements(stateList);
         match(TokenType.RIGHT_CURLY);
+        return compNode;
     }
 
     /**
      * Runs through the production for optionalStatements. Note that there is a lambda option if no
      * statement is present.
      */
-    public void optionalStatements() {
+    public ArrayList<StatementNode> optionalStatements() {
+        ArrayList<StatementNode> stateList = new ArrayList<>();
         if(isStatement()) {
-            statementList();
+            stateList.addAll(statementList());
         } else {
             // Lambda option
         }
+        return stateList;
     }
 
     /**
      * Runs through the production for statementList. Note that if a semicolon is present, it will recursively
      * will recursively call itself until there is not one.
      */
-    public void statementList() {
-        statement();
+    public ArrayList<StatementNode> statementList() {
+        ArrayList<StatementNode> stateList = new ArrayList<>();
+        stateList.add(statement());
         if (lookahead.getType() == TokenType.SEMICOLON) {
             match(TokenType.SEMICOLON);
-            statementList();
+            stateList.addAll(statementList());
         }
+        return stateList;
     }
 
     /**
@@ -250,6 +257,7 @@ public class Parser {
                     assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
+                    stateNode = assignOp;
                 } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
                     return procedureStatement();
                 } else {
@@ -257,14 +265,7 @@ public class Parser {
                 }
                 break;
             case LEFT_CURLY:
-                match(TokenType.LEFT_CURLY);
-                CompoundStatementNode sstateNode = new CompoundStatementNode();
-                sstateNode.
-                declarations();
-                optionalStatements();
-                // just lecture stuff
-                stateNode = sstateNode;
-                match(TokenType.RIGHT_CURLY);
+                stateNode = compoundStatement();
                 break;
             case IF:
                 IfStatementNode ifNode = new IfStatementNode();
@@ -273,6 +274,7 @@ public class Parser {
                 ifNode.setThenStatement(compoundStatement());
                 match(TokenType.ELSE);
                 ifNode.setElseStatement(compoundStatement());
+                stateNode = ifNode;
                 break;
             case WHILE:
                 match(TokenType.WHILE);
@@ -295,15 +297,18 @@ public class Parser {
                 match(TokenType.RETURN);
                 expression();
         }
-        return stateNote;
+        return stateNode;
     }
 
     public StatementNode procedureStatement() {
-        StatementNode stateNode = null;
+        String name = lookahead.getLexeme();
+        ProcedureStatementNode stateNode = new ProcedureStatementNode(name);
         match(TokenType.IDENTIFIER);
         if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
             match(TokenType.LEFT_PARENTHESES);
-            expressionList();
+            ArrayList<ExpressionNode> expList = new ArrayList<>();
+            expressionList(expList);
+            stateNode.setParameters(expList);
             match(TokenType.RIGHT_PARENTHESES);
         }
         return stateNode;
@@ -318,7 +323,7 @@ public class Parser {
         match(TokenType.IDENTIFIER);
         if (lookahead.getType() == TokenType.LEFT_BRACKET) {
             match(TokenType.LEFT_BRACKET);
-            expressionList();
+            expression();
             match(TokenType.RIGHT_BRACKET);
         }
         return varNode;
@@ -328,14 +333,14 @@ public class Parser {
      * Runs through the production for expressionList. If there is a comma, it will match the comma
      * and call expression again.
      */
-    public ArrayList<ExpressionNode> expressionList() {
-        ArrayList<ExpressionNode> expList = new ArrayList<>();
+    public void expressionList(ArrayList<ExpressionNode> expList) {
         expList.add(expression());
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
-            expList.addAll(expressionList());
+            expressionList(expList);
+        } else {
+            // Lambda option
         }
-        return expList;
     }
 
     /**
@@ -413,7 +418,6 @@ public class Parser {
         return left;
     }
 
-
     /**
      * Runs through the production for factor. Uses the first lookahead TokenType to determine
      * which diverging rule to follow.
@@ -433,10 +437,13 @@ public class Parser {
                 } else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
                     FunctionCallNode funcNode = new FunctionCallNode(name);
                     match(TokenType.LEFT_PARENTHESES);
-                    funcNode.setParameters(expressionList());
+                    ArrayList<ExpressionNode> expList = new ArrayList<>();
+                    expressionList(expList);
+                    funcNode.setParameters(expList);
+                    expNode = funcNode;
                     match(TokenType.RIGHT_PARENTHESES);
-                } else if(!table.exists(name)) {
-                    return new VariableNode(name);
+                } else  {
+                    expNode = new VariableNode(name);
                 }
                 break;
             case LEFT_PARENTHESES:
