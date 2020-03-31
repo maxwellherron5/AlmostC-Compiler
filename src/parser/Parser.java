@@ -242,7 +242,7 @@ public class Parser {
      * determine which diverging rule to follow.
      */
     public StatementNode statement() {
-        StatementNode stateNote = null;
+        StatementNode stateNode = null;
         switch (lookahead.getType()) {
             case IDENTIFIER:
                 if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
@@ -258,8 +258,12 @@ public class Parser {
                 break;
             case LEFT_CURLY:
                 match(TokenType.LEFT_CURLY);
+                CompoundStatementNode sstateNode = new CompoundStatementNode();
+                sstateNode.
                 declarations();
                 optionalStatements();
+                // just lecture stuff
+                stateNode = sstateNode;
                 match(TokenType.RIGHT_CURLY);
                 break;
             case IF:
@@ -341,7 +345,11 @@ public class Parser {
     public ExpressionNode simpleExpression() {
         ExpressionNode expNode = null;
         if (lookahead.getType() == TokenType.PLUS || lookahead.getType() == TokenType.MINUS) {
-            sign();
+            SignNode opNode = sign();
+            expNode = term();
+            expNode = simplePart(expNode);
+            opNode.setExpNode(expNode);
+            return opNode;
         }
         expNode = term();
         expNode = simplePart(expNode);
@@ -423,9 +431,9 @@ public class Parser {
                     expression();
                     match(TokenType.RIGHT_BRACKET);
                 } else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
-                    FunctionNode funcNode = new FunctionNode(name);
+                    FunctionCallNode funcNode = new FunctionCallNode(name);
                     match(TokenType.LEFT_PARENTHESES);
-                    //funcNode.addParameter(expressionList());
+                    funcNode.setParameters(expressionList());
                     match(TokenType.RIGHT_PARENTHESES);
                 } else if(!table.exists(name)) {
                     return new VariableNode(name);
@@ -442,7 +450,7 @@ public class Parser {
                 break;
             case NOT:
                 match(TokenType.NOT);
-                factor();
+                expNode = new OperationNode(TokenType.NOT, null, factor());
                 break;
             default:
                 error("Factor");

@@ -20,6 +20,8 @@ public class CompoundStatementNode extends StatementNode {
         return variables;
     }
 
+    public CompoundStatementNode() { }
+
     public void setVariables(DeclarationsNode variables) {
         this.variables = variables;
     }

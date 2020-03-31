@@ -7,7 +7,7 @@ import scanner.TokenType;
  *
  * @author Maxwell Herron
  */
-public class SignNode extends SyntaxTreeNode {
+public class SignNode extends ExpressionNode {
 
     /** The expression dictated by the sign. */
     private ExpressionNode expNode;

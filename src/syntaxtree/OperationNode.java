@@ -24,6 +24,18 @@ public class OperationNode extends ExpressionNode {
     public OperationNode ( TokenType op) {
         this.operation = op;
     }
+
+    /**
+     * Used for setting up operation nodes for unary operators
+     * @param op
+     * @param left
+     * @param right
+     */
+    public OperationNode(TokenType op, ExpressionNode left, ExpressionNode right) {
+        this.operation = op;
+        this.left = left;
+        this.right = right;
+    }
     
     
     // Getters
