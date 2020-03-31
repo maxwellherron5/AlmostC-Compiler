@@ -6,9 +6,12 @@ import scanner.Token;
 import scanner.TokenType;
 import symboltable.SymbolTable;
 import syntaxtree.ExpressionNode;
+import syntaxtree.FunctionNode;
 import syntaxtree.OperationNode;
+import syntaxtree.VariableNode;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Parser.java
@@ -298,25 +301,29 @@ public class Parser {
      * Runs through the production for variable. If there is a left bracket present it will call
      * expressionList and then match for a right bracket.
      */
-    public void variable() {
+    public VariableNode variable() {
+        VariableNode varNode = new VariableNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
         if (lookahead.getType() == TokenType.LEFT_BRACKET) {
             match(TokenType.LEFT_BRACKET);
             expressionList();
             match(TokenType.RIGHT_BRACKET);
         }
+        return varNode;
     }
 
     /**
      * Runs through the production for expressionList. If there is a comma, it will match the comma
      * and call expression again.
      */
-    public void expressionList() {
-        expression();
+    public ArrayList<ExpressionNode> expressionList() {
+        ArrayList<ExpressionNode> expList = new ArrayList<>();
+        expList.add(expression());
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
-            expression();
+            expList.addAll(expressionList());
         }
+        return expList;
     }
 
     /**
@@ -401,16 +408,19 @@ public class Parser {
             /* If type is identifier, it then checks to see if the identifier is followed by
             * either a left parentheses or a left bracket. If not, it ends. */
             case IDENTIFIER:
+                String name = lookahead.getLexeme();
                 match(TokenType.IDENTIFIER);
                 if (lookahead.getType() == TokenType.LEFT_BRACKET) {
                     match(TokenType.LEFT_BRACKET);
                     expression();
                     match(TokenType.RIGHT_BRACKET);
-                }
-                else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+                } else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+                    FunctionNode funcNode = new FunctionNode(name);
                     match(TokenType.LEFT_PARENTHESES);
-                    expression();
+                    funcNode.addParameter(expressionList());
                     match(TokenType.RIGHT_PARENTHESES);
+                } else if(!table.exists(name)) {
+                    return new VariableNode(name);
                 }
                 break;
             case LEFT_PARENTHESES:
