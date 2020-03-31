@@ -67,33 +67,37 @@ public class Parser {
     /**
      * Runs through the production for program.
      */
-    public void program() {
-        functionDeclarations();
+    public ProgramNode program() {
+        ProgramNode progNode = new ProgramNode();
+        progNode.setFunctions(functionDeclarations());
         match(TokenType.MAIN);
         match(TokenType.LEFT_PARENTHESES);
         match(TokenType.RIGHT_PARENTHESES);
-        compoundStatement();
+        progNode.setMain(compoundStatement());
         functionDefinitions();
+        return progNode;
     }
 
     /**
      * Runs through the production for identifierList
      */
-    public void identifierList() {
+    public ArrayList<VariableNode> identifierList() {
+        ArrayList<VariableNode> varList = new ArrayList<>();
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addVariableName(name);
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
-            identifierList();
+            varList.addAll(identifierList());
         }
+        return varList;
     }
 
     /**
      * Runs through the production for declarations. Note that there is a lambda option
      * if no type is present.
      */
-    public void declarations() {
+    public DeclarationsNode declarations() {
         if (isType()) {
             type();
             identifierList();
@@ -201,10 +205,11 @@ public class Parser {
     /**
      * Runs through the production for compoundStatement.
      */
-    public void compoundStatement() {
+    public CompoundStatementNode compoundStatement() {
+        CompoundStatementNode compNode = new CompoundStatementNode();
         match(TokenType.LEFT_CURLY);
-        declarations();
-        optionalStatements();
+        compNode.setVariables(declarations());
+        compNode.addStatement(optionalStatements());
         match(TokenType.RIGHT_CURLY);
     }
 
