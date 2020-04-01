@@ -37,7 +37,6 @@ public class OperationNode extends ExpressionNode {
         this.right = right;
     }
     
-    
     // Getters
     public ExpressionNode getLeft() { return( this.left);}
     public ExpressionNode getRight() { return( this.right);}

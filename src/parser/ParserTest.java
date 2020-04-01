@@ -24,7 +24,7 @@ class ParserTest {
      */
     @Test
     void factorTest() {
-        Parser p = new Parser("!myVar", false);
+        Parser p = new Parser("myVar(22)", false);
         ExpressionNode e = p.factor();
 //        String expected = "Name: myVar123\n";
 //        String actual = e.indentedToString(0);
@@ -37,7 +37,7 @@ class ParserTest {
      */
     @Test
     void simpleExpressionTest() {
-        Parser p = new Parser("23 + myVariable", false);
+        Parser p = new Parser("1 + 1 * 3", false);
         ExpressionNode e = p.simpleExpression();
         System.out.println(e.indentedToString(0));
     }

@@ -398,7 +398,6 @@ public class Parser {
         }
         expNode = term();
         expNode = simplePart(expNode);
-        System.out.println("yo\n" + expNode.indentedToString(0));
         return expNode;
     }
 
@@ -412,7 +411,7 @@ public class Parser {
             ExpressionNode right = term();
             opNode.setLeft(possibleLeft);
             opNode.setRight(right);
-            return simplePart(possibleLeft);
+            return simplePart(opNode);
         } else {
             // Lambda option
         }
