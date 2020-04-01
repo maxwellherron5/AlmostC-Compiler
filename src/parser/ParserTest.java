@@ -3,6 +3,7 @@ package parser;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import syntaxtree.ExpressionNode;
+import syntaxtree.ProgramNode;
 import syntaxtree.StatementNode;
 
 import java.util.ArrayList;
@@ -12,11 +13,6 @@ import java.util.ArrayList;
  * @author Maxwell Herron
  */
 class ParserTest {
-
-    @Test
-    void testOperator() {
-
-    }
 
     /**
      * Asserts that the indentedToString() produced from a factor generated
@@ -42,7 +38,6 @@ class ParserTest {
         System.out.println(e.indentedToString(0));
     }
 
-
     /**
      *
      */
@@ -52,5 +47,37 @@ class ParserTest {
         p.getTable().addVariableName("myVar");
         StatementNode s = p.statement();
         System.out.println(s.indentedToString(0));
+    }
+
+    /**
+     *
+     */
+    @Test
+    void functionDefinitionTest() {
+
+    }
+
+    /**
+     *
+     */
+    @Test
+    void declarationsTest() {
+
+    }
+
+    /**
+     *
+     */
+    @Test
+    void programTest() {
+        Parser p = new Parser("main() {\n" +
+                "        int dollars, yen, bitcoins;\n" +
+                "        dollars = 1000000;\n" +
+                "        yen = dollars * 104;\n" +
+                "        bitcoins = dollars / 6058;\n" +
+                "     };", false);
+        ProgramNode pr = p.program();
+        System.out.println(pr.indentedToString(0));
+
     }
 }

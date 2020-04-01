@@ -14,7 +14,7 @@ public class CompoundStatementNode extends StatementNode {
     
     private DeclarationsNode variables;
     
-    private ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
+    private ArrayList<StatementNode> statements = new ArrayList<>();
     
     public DeclarationsNode getVariables() {
         return variables;
@@ -25,7 +25,8 @@ public class CompoundStatementNode extends StatementNode {
     public void setVariables(DeclarationsNode variables) {
         this.variables = variables;
     }
-    public void setStatements(ArrayList<StatementNode> statements) { this.statements = statements; }
+
+    public ArrayList<StatementNode> getStatements() { return this.statements; }
 
     /**
      * Adds a statement to this compound statement.
@@ -47,7 +48,9 @@ public class CompoundStatementNode extends StatementNode {
         answer += "Compound Statement\n";
         answer += variables.indentedToString(level + 1);
         for( StatementNode state : statements) {
-            answer += state.indentedToString( level + 1);
+            if (state != null) {
+                answer += state.indentedToString( level + 1);
+            }
         }
         return answer;
     }

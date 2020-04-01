@@ -70,7 +70,7 @@ public class Parser {
      */
     public ProgramNode program() {
         ProgramNode progNode = new ProgramNode();
-        progNode.setFunctions(functionDeclarations());
+        functionDeclarations();
         match(TokenType.MAIN);
         match(TokenType.LEFT_PARENTHESES);
         match(TokenType.RIGHT_PARENTHESES);
@@ -82,16 +82,17 @@ public class Parser {
     /**
      * Runs through the production for identifierList
      */
-    public ArrayList<VariableNode> identifierList() {
-        ArrayList<VariableNode> varList = new ArrayList<>();
+    public ArrayList<String> identifierList() {
+        ArrayList<String> varList = new ArrayList<>();
         String name = lookahead.getLexeme();
+        varList.add(name);
         match(TokenType.IDENTIFIER);
         table.addVariableName(name);
-        VariableNode var = new VariableNode(name);
-        varList.add(var);
-        if (lookahead.getType() == TokenType.COMMA) {
+        while (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
-            varList.addAll(identifierList());
+            varList.add(lookahead.getLexeme());
+            table.addVariableName(lookahead.getLexeme());
+            match(TokenType.IDENTIFIER);
         }
         return varList;
     }
@@ -101,18 +102,18 @@ public class Parser {
      * if no type is present.
      */
     public DeclarationsNode declarations() {
-        ArrayList<VariableNode> varList = new ArrayList<>();
         DeclarationsNode decsNode = new DeclarationsNode();
-        if (isType()) {
+        while (isType()) {
             type();
-            varList = identifierList();
-            match(TokenType.SEMICOLON);
-            declarations();
-            for (VariableNode var : varList) {
-                decsNode.addVariable(var);
+            ArrayList<String> varList = identifierList();
+            //declarations();
+            for (String var : varList) {
+                VariableNode varNode = new VariableNode(var);
+                decsNode.addVariable(varNode);
             }
-        } else {
-            // Lambda option
+            match(TokenType.SEMICOLON);
+//        } else {
+//            // Lambda option
         }
         return decsNode;
     }
@@ -140,32 +141,24 @@ public class Parser {
      * Runs through the production for functionDeclarations. Note that there is a lambda option if no
      * type is present.
      */
-    public FunctionsNode functionDeclarations() {
-        FunctionsNode funcsNode = new FunctionsNode();
+    public void functionDeclarations() {
         if (isType()) {
-            funcsNode.addFunctionDefinition(functionDeclaration());
+            functionDeclaration();
             match(TokenType.SEMICOLON);
             functionDeclarations();
         } else {
             // Lambda option
         }
-        return funcsNode;
     }
 
     /**
      * Runs through the production for functionDeclaration.
      */
-    public FunctionNode functionDeclaration() {
+    public void functionDeclaration() {
         type();
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addFunctionName(name);
-        FunctionNode funcNode = new FunctionNode(name);
-        ArrayList<VariableNode> params = parameters();
-        for (VariableNode var : params) {
-            funcNode.addParameter(var);
-        }
-        return funcNode;
     }
 
     /**
@@ -287,7 +280,6 @@ public class Parser {
                     assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
-                    System.out.println(assignOp.getExpression().indentedToString(0));
                     stateNode = assignOp;
                 } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
                     return procedureStatement();
