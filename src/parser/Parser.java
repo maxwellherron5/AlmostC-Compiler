@@ -211,7 +211,9 @@ public class Parser {
         match(TokenType.LEFT_CURLY);
         compNode.setVariables(declarations());
         ArrayList<StatementNode> stateList = optionalStatements();
-        compNode.setStatements(stateList);
+        for(StatementNode state : stateList) {
+            compNode.addStatement(state);
+        }
         match(TokenType.RIGHT_CURLY);
         return compNode;
     }
@@ -277,9 +279,11 @@ public class Parser {
                 stateNode = ifNode;
                 break;
             case WHILE:
+                WhileStatementNode whileNode = new WhileStatementNode();
                 match(TokenType.WHILE);
-                expression();
-                compoundStatement();
+                whileNode.setTest(expression());
+                whileNode.setDoStatement(compoundStatement());
+                stateNode = whileNode;
                 break;
             case READ:
                 match(TokenType.READ);
@@ -294,8 +298,10 @@ public class Parser {
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case RETURN:
+                ReturnStatementNode returnNode = new ReturnStatementNode();
                 match(TokenType.RETURN);
-                expression();
+                returnNode.setReturnValue(expression());
+                stateNode = returnNode;
         }
         return stateNode;
     }
