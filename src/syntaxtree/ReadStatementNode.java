@@ -7,11 +7,11 @@ package syntaxtree;
 public class ReadStatementNode extends StatementNode {
 
     /** input being read. */
-    private ExpressionNode output;
+    private String input;
 
-    private ExpressionNode getOutput() { return this.output; }
+    public String getInputput() { return this.input; }
 
-    private void setOutput(ExpressionNode output) { this.output = output; }
+    public void setInput(String input) { this.input = input; }
 
     /**
      * Creates a String representation of this node and its children.
@@ -21,8 +21,7 @@ public class ReadStatementNode extends StatementNode {
     @Override
     public String indentedToString( int level) {
         String answer = this.indentation( level);
-        answer += "If\n";
-        answer += this.output.indentedToString( level + 1);
+        answer += "Read: " + this.input + "\n";
         return answer;
     }
 

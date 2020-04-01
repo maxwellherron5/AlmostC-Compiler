@@ -4,14 +4,14 @@ package syntaxtree;
  *
  * @author Maxwell Herron
  */
-public class ReturnStatementNode extends StatementNode {
+public class WriteStatementNode extends StatementNode {
 
-    /** Return value of the statement. */
-    public ExpressionNode returnValue;
+    /** Output that will be written. */
+    private ExpressionNode output;
 
-    public ExpressionNode getReturnValue() { return this.returnValue; }
+    public ExpressionNode getOutput() { return this.output; }
 
-    public void setReturnValue(ExpressionNode returnValue) { this.returnValue = returnValue; }
+    public void setOutput(ExpressionNode output) { this.output = output; }
 
     /**
      * Creates a String representation of this node and its children.
@@ -21,9 +21,8 @@ public class ReturnStatementNode extends StatementNode {
     @Override
     public String indentedToString( int level) {
         String answer = this.indentation( level);
-        answer += "Return\n";
-        answer += this.returnValue.indentedToString( level + 1);
+        answer += "Write\n";
+        answer += this.output.indentedToString( level + 1);
         return answer;
     }
-
 }

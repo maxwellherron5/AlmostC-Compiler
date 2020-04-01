@@ -286,8 +286,10 @@ public class Parser {
                 stateNode = whileNode;
                 break;
             case READ:
+                ReadStatementNode readNode = new ReadStatementNode();
                 match(TokenType.READ);
                 match(TokenType.LEFT_PARENTHESES);
+                readNode.setInput(lookahead.getLexeme());
                 match(TokenType.IDENTIFIER);
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
