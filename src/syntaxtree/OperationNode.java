@@ -72,7 +72,7 @@ public class OperationNode extends ExpressionNode {
     public String indentedToString( int level) {
         String answer = this.indentation(level);
         answer += "Operation: " + this.operation + "\n";
-        answer += left.indentedToString(level + 1);
+        answer += left != null ? left.indentedToString(level + 1) : "";
         answer += right.indentedToString(level + 1);
         return( answer);
     }

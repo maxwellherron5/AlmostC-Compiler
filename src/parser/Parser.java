@@ -75,7 +75,7 @@ public class Parser {
         match(TokenType.LEFT_PARENTHESES);
         match(TokenType.RIGHT_PARENTHESES);
         progNode.setMain(compoundStatement());
-        functionDefinitions();
+        progNode.setFunctions(functionDefinitions());
         return progNode;
     }
 
@@ -87,6 +87,8 @@ public class Parser {
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addVariableName(name);
+        VariableNode var = new VariableNode(name);
+        varList.add(var);
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
             varList.addAll(identifierList());
@@ -99,14 +101,20 @@ public class Parser {
      * if no type is present.
      */
     public DeclarationsNode declarations() {
+        ArrayList<VariableNode> varList = new ArrayList<>();
+        DeclarationsNode decsNode = new DeclarationsNode();
         if (isType()) {
             type();
-            identifierList();
+            varList = identifierList();
             match(TokenType.SEMICOLON);
             declarations();
+            for (VariableNode var : varList) {
+                decsNode.addVariable(var);
+            }
         } else {
             // Lambda option
         }
+        return decsNode;
     }
 
     /**
@@ -132,57 +140,74 @@ public class Parser {
      * Runs through the production for functionDeclarations. Note that there is a lambda option if no
      * type is present.
      */
-    public void functionDeclarations() {
+    public FunctionsNode functionDeclarations() {
+        FunctionsNode funcsNode = new FunctionsNode();
         if (isType()) {
-            functionDeclaration();
+            funcsNode.addFunctionDefinition(functionDeclaration());
             match(TokenType.SEMICOLON);
             functionDeclarations();
         } else {
             // Lambda option
         }
+        return funcsNode;
     }
 
     /**
      * Runs through the production for functionDeclaration.
      */
-    public void functionDeclaration() {
+    public FunctionNode functionDeclaration() {
         type();
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addFunctionName(name);
-        parameters();
+        FunctionNode funcNode = new FunctionNode(name);
+        ArrayList<VariableNode> params = parameters();
+        for (VariableNode var : params) {
+            funcNode.addParameter(var);
+        }
+        return funcNode;
     }
 
     /**
      * Runs through the production for functionDefinitions. Note that there is a lambda option if no
      * type is present.
      */
-    public void functionDefinitions() {
+    public FunctionsNode functionDefinitions() {
+        FunctionsNode funcsNode = new FunctionsNode();
         if (isType()) {
             functionDefinition();
             functionDefinitions();
         } else {
             // Lambda option
         }
+        return funcsNode;
     }
 
     /**
      * Runs through the production for functionDefinition.
      */
-    public void functionDefinition() {
+    public FunctionNode functionDefinition() {
         type();
+        FunctionNode funcNode = new FunctionNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
-        parameters();
-        compoundStatement();
+        ArrayList<VariableNode> params = new ArrayList<>();
+        params = parameters();
+        for (VariableNode var : params) {
+            funcNode.addParameter(var);
+        }
+        funcNode.setBody(compoundStatement());
+        return funcNode;
     }
 
     /**
      * Runs through the production for parameters.
      */
-    public void parameters() {
+    public ArrayList<VariableNode> parameters() {
         match(TokenType.LEFT_PARENTHESES);
-        parameterList();
+        ArrayList<VariableNode> params = new ArrayList<>();
+        params = parameterList();
         match(TokenType.RIGHT_PARENTHESES);
+        return params;
     }
 
     /**
@@ -190,17 +215,20 @@ public class Parser {
      * a comma present, it will call itself again. Along with that, there is a lambda option, to allow
      * for functions that have no parameters.
      */
-    public void parameterList() {
+    public ArrayList<VariableNode> parameterList() {
+        ArrayList<VariableNode> varList = new ArrayList<>();
         if (isType()) {
             type();
+            VariableNode var = new VariableNode(lookahead.getLexeme());
             match(TokenType.IDENTIFIER);
             if (lookahead.getType() == TokenType.COMMA) {
                 match(TokenType.COMMA);
-                parameterList();
+                varList.addAll(parameterList());
             }
         } else {
             // Lambda option
         }
+        return varList;
     }
 
     /**
@@ -259,6 +287,7 @@ public class Parser {
                     assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
+                    System.out.println(assignOp.getExpression().indentedToString(0));
                     stateNode = assignOp;
                 } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
                     return procedureStatement();
@@ -290,13 +319,16 @@ public class Parser {
                 match(TokenType.READ);
                 match(TokenType.LEFT_PARENTHESES);
                 readNode.setInput(lookahead.getLexeme());
+                stateNode = readNode;
                 match(TokenType.IDENTIFIER);
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case WRITE:
+                WriteStatementNode writeNode = new WriteStatementNode();
                 match(TokenType.WRITE);
                 match(TokenType.LEFT_PARENTHESES);
-                expression();
+                writeNode.setOutput(expression());
+                stateNode = writeNode;
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case RETURN:
@@ -366,6 +398,7 @@ public class Parser {
         }
         expNode = term();
         expNode = simplePart(expNode);
+        System.out.println("yo\n" + expNode.indentedToString(0));
         return expNode;
     }
 
