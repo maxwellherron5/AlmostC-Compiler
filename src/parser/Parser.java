@@ -246,7 +246,7 @@ public class Parser {
     public ArrayList<StatementNode> optionalStatements() {
         ArrayList<StatementNode> stateList = new ArrayList<>();
         if(isStatement()) {
-            stateList.addAll(statementList());
+            stateList = statementList();
         } else {
             // Lambda option
         }
@@ -260,8 +260,8 @@ public class Parser {
     public ArrayList<StatementNode> statementList() {
         ArrayList<StatementNode> stateList = new ArrayList<>();
         stateList.add(statement());
-        if (lookahead.getType() == TokenType.SEMICOLON) {
-            match(TokenType.SEMICOLON);
+        match(TokenType.SEMICOLON);
+        if (isStatement()) {
             stateList.addAll(statementList());
         }
         return stateList;

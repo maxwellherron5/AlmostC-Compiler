@@ -48,9 +48,7 @@ public class CompoundStatementNode extends StatementNode {
         answer += "Compound Statement\n";
         answer += variables.indentedToString(level + 1);
         for( StatementNode state : statements) {
-            if (state != null) {
-                answer += state.indentedToString( level + 1);
-            }
+            answer += state.indentedToString( level + 1);
         }
         return answer;
     }
