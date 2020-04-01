@@ -6,4 +6,6 @@ package syntaxtree;
  */
 public class ReadStatementNode extends StatementNode {
 
+
+
 }

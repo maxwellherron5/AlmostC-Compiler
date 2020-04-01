@@ -261,8 +261,8 @@ public class Parser {
                 } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
                     return procedureStatement();
                 } else {
-                    error("statement");
-                }
+                error("statement");
+            }
                 break;
             case LEFT_CURLY:
                 stateNode = compoundStatement();
