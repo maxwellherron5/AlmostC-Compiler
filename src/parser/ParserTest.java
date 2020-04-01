@@ -2,9 +2,7 @@ package parser;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
-import syntaxtree.ExpressionNode;
-import syntaxtree.ProgramNode;
-import syntaxtree.StatementNode;
+import syntaxtree.*;
 
 import java.util.ArrayList;
 
@@ -20,11 +18,8 @@ class ParserTest {
      */
     @Test
     void factorTest() {
-        Parser p = new Parser("myVar(22)", false);
+        Parser p = new Parser("(2 + 2)", false);
         ExpressionNode e = p.factor();
-//        String expected = "Name: myVar123\n";
-//        String actual = e.indentedToString(0);
-//        assertEquals(expected, actual);
         System.out.println(e.indentedToString(0));
     }
 
@@ -54,7 +49,11 @@ class ParserTest {
      */
     @Test
     void functionDefinitionTest() {
-
+        Parser p = new Parser("int sum(int foo, int bar) {\n" +
+                "return foo + bar;\n" +
+                "}", false);
+        FunctionNode f = p.functionDefinition();
+        System.out.println(f.indentedToString(0));
     }
 
     /**
@@ -62,7 +61,9 @@ class ParserTest {
      */
     @Test
     void declarationsTest() {
-
+        Parser p = new Parser("int x, y, z;", false);
+        DeclarationsNode s = p.declarations();
+        System.out.println(s.indentedToString(0));
     }
 
     /**

@@ -183,8 +183,7 @@ public class Parser {
         type();
         FunctionNode funcNode = new FunctionNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
-        ArrayList<VariableNode> params = new ArrayList<>();
-        params = parameters();
+        ArrayList<VariableNode> params = parameters();
         for (VariableNode var : params) {
             funcNode.addParameter(var);
         }
@@ -464,7 +463,7 @@ public class Parser {
                 match(TokenType.IDENTIFIER);
                 if (lookahead.getType() == TokenType.LEFT_BRACKET) {
                     match(TokenType.LEFT_BRACKET);
-                    expression();
+                    expNode = expression();
                     match(TokenType.RIGHT_BRACKET);
                 } else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
                     FunctionCallNode funcNode = new FunctionCallNode(name);
@@ -480,7 +479,7 @@ public class Parser {
                 break;
             case LEFT_PARENTHESES:
                 match(TokenType.LEFT_PARENTHESES);
-                expression();
+                expNode = expression();
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case NUMBER:
