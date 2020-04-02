@@ -52,8 +52,16 @@ class ParserTest {
         Parser p = new Parser("int sum(int foo, int bar) {\n" +
                 "return foo + bar;\n" +
                 "}", false);
+        String expected = "Function: sum returns null\n" +
+                "|-- Compound Statement\n" +
+                "|-- --- Declarations\n" +
+                "|-- --- Return\n" +
+                "|-- --- --- Operation: PLUS\n" +
+                "|-- --- --- --- Name: foo\n" +
+                "|-- --- --- --- Name: bar\n";
         FunctionNode f = p.functionDefinition();
-        System.out.println(f.indentedToString(0));
+        String actual = f.indentedToString(0);
+        assertEquals(expected, actual);
     }
 
     /**
