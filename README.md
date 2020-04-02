@@ -24,7 +24,9 @@ symbol table is not yet integrated with the recognizer. To run the scanner, foll
 The best way to run the recognizer in its current state, is to navigate to the file `RecognizerTest.java`.
 Here, you can selectively run individual tests through your IDE, or you can run them all at once
 to see if they pass the tests. In its current state, all tests are happy tests, so none will fail unless
-you modify the input string. Enjoy!
+you modify the input string. The parser can be run in two different ways: through the command line using `CompilerMain.java`,
+or by running tests on it through your IDE in `ParserTest.java` . If you run it in main, you can enter your very own AlmostC
+program as an input through the command prompt, and it will write out the generated symbol table and syntax tree in an output file. Enjoy!
 
 Similarly to the recognizer, the only way to interact with the symbol table in the current state of this compiler is to
 run the tests that have been written for it. To do so, navigate to `SymbolTableTest.java`, which can be found in the

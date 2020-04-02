@@ -43,7 +43,7 @@ package scanner;    /* Declares this class to be a part of the scanner package *
 
 other         = .
 letter        = [A-Za-z]
-whitespace    = [ \n\t]+
+whitespace    = [ \n\t]+ | ' ' | " "
 //number 	      = [\-]?[1-9]\d*|0|[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
 number        = [\-]?\d+([eE][-+]?[0-9]+)?
 real_number   = [/-]?{number}\.([0-9]*)([eE][-+]?[0-9]+)?
@@ -62,7 +62,6 @@ identifier    = {letter}+[0-9]?+
 			 Token t = new Token();
 			 t.lexeme = yytext();
 			 t.type = TokenType.NUMBER;
-			 System.out.println(t.toString());
 			 return t;
 			}
             
@@ -74,7 +73,6 @@ identifier    = {letter}+[0-9]?+
 				Token t = new Token();
 				t.lexeme = yytext();
 				t.type = lookupTable.get(t.lexeme);
-				System.out.println(t.toString());
 				return t;
 			 }
 
@@ -82,7 +80,6 @@ identifier    = {letter}+[0-9]?+
                     Token t = new Token();
                     t.lexeme = yytext();
                     t.type = TokenType.REAL_NUMBER;
-                    System.out.println(t.toString());
                     return t;
                }
 
@@ -90,7 +87,6 @@ identifier    = {letter}+[0-9]?+
                 Token t = new Token();
                 t.lexeme = yytext();
                 t.type = lookupTable.get(t.lexeme);
-                System.out.println(t.toString());
                 return t;
            }
 
@@ -98,7 +94,6 @@ identifier    = {letter}+[0-9]?+
                 Token t = new Token();
                 t.lexeme = yytext();
                 t.type = lookupTable.get(t.lexeme);
-                System.out.println(t.toString());
                 return t;
            }
 
@@ -106,7 +101,6 @@ identifier    = {letter}+[0-9]?+
                         Token t = new Token();
                         t.lexeme = yytext();
                         t.type = TokenType.IDENTIFIER;
-                        System.out.println(t.toString());
                         return t;
             }
 

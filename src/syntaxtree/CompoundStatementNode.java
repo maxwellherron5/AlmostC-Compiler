@@ -14,15 +14,19 @@ public class CompoundStatementNode extends StatementNode {
     
     private DeclarationsNode variables;
     
-    private ArrayList<StatementNode> statements = new ArrayList<StatementNode>();
+    private ArrayList<StatementNode> statements = new ArrayList<>();
     
     public DeclarationsNode getVariables() {
         return variables;
     }
 
+    public CompoundStatementNode() { }
+
     public void setVariables(DeclarationsNode variables) {
         this.variables = variables;
     }
+
+    public ArrayList<StatementNode> getStatements() { return this.statements; }
 
     /**
      * Adds a statement to this compound statement.

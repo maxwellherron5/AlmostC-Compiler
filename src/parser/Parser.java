@@ -5,15 +5,19 @@ import scanner.Scanner;
 import scanner.Token;
 import scanner.TokenType;
 import symboltable.SymbolTable;
+import syntaxtree.*;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
+ * This class builds all the grammatical rules necessary for a functioning
+ * recursive descent parser. By running program, it will return a syntax tree generated
+ * from the input file/string.
+ * Tests for this class can be found in ParserTest.java
  * Parser.java
  * @author Maxwell Herron
- * This class builds all the grammatical rules necessary for a functioning
- * recursive descent parser.
- * Tests for this class can be found in ParserTest.java
  */
 public class Parser {
 
@@ -63,43 +67,60 @@ public class Parser {
     /////////////////////////
 
     /**
-     * Runs through the production for program.
+     * Top level function call. This will run through all the productions and return
+     * a program node.
+     * @return progNode
      */
-    public void program() {
+    public ProgramNode program() {
+        ProgramNode progNode = new ProgramNode();
         functionDeclarations();
         match(TokenType.MAIN);
         match(TokenType.LEFT_PARENTHESES);
         match(TokenType.RIGHT_PARENTHESES);
-        compoundStatement();
-        functionDefinitions();
+        progNode.setMain(compoundStatement());
+        progNode.setFunctions(functionDefinitions());
+        return progNode;
     }
 
     /**
-     * Runs through the production for identifierList
+     * Runs through the production for identifierList. Returns and arraylist of
+     * Strings representing identifier names.
+     * @return varList
      */
-    public void identifierList() {
+    public ArrayList<String> identifierList() {
+        ArrayList<String> varList = new ArrayList<>();
         String name = lookahead.getLexeme();
+        varList.add(name);
         match(TokenType.IDENTIFIER);
         table.addVariableName(name);
-        if (lookahead.getType() == TokenType.COMMA) {
+        while (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
-            identifierList();
+            varList.add(lookahead.getLexeme());
+            table.addVariableName(lookahead.getLexeme());
+            match(TokenType.IDENTIFIER);
         }
+        return varList;
     }
 
     /**
-     * Runs through the production for declarations. Note that there is a lambda option
-     * if no type is present.
+     * Runs through the production for declarations. Returns a DeclarationsNode.
+     * @return decsNode
      */
-    public void declarations() {
-        if (isType()) {
+    public DeclarationsNode declarations() {
+        DeclarationsNode decsNode = new DeclarationsNode();
+        while (isType()) {
             type();
-            identifierList();
+            ArrayList<String> varList = identifierList();
+            //declarations();
+            for (String var : varList) {
+                VariableNode varNode = new VariableNode(var);
+                decsNode.addVariable(varNode);
+            }
             match(TokenType.SEMICOLON);
-            declarations();
-        } else {
-            // Lambda option
+//        } else {
+//            // Lambda option
         }
+        return decsNode;
     }
 
     /**
@@ -136,7 +157,7 @@ public class Parser {
     }
 
     /**
-     * Runs through the production for functionDeclaration.
+     * Runs through the production for functionDeclaration. Adds function names to the symbol table.
      */
     public void functionDeclaration() {
         type();
@@ -148,357 +169,468 @@ public class Parser {
 
     /**
      * Runs through the production for functionDefinitions. Note that there is a lambda option if no
-     * type is present.
+     * type is present. Returns a functions node containing function definitions.
+     * @return funcsNode
      */
-    public void functionDefinitions() {
-        if (isType()) {
-            functionDefinition();
-            functionDefinitions();
-        } else {
-            // Lambda option
+    public FunctionsNode functionDefinitions() {
+        FunctionsNode funcsNode = new FunctionsNode();
+        while (isType()) {
+            funcsNode.addFunctionDefinition(functionDefinition());
         }
+        return funcsNode;
     }
 
     /**
-     * Runs through the production for functionDefinition.
+     * Runs through the production for functionDefinition. Returns a function node containing
+     * a function definition.
+     * @return funcNode
      */
-    public void functionDefinition() {
+    public FunctionNode functionDefinition() {
         type();
+        FunctionNode funcNode = new FunctionNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
-        parameters();
-        compoundStatement();
+        ArrayList<VariableNode> params = parameters();
+        for (VariableNode var : params) {
+            funcNode.addParameter(var);
+        }
+        funcNode.setBody(compoundStatement());
+        return funcNode;
     }
 
     /**
      * Runs through the production for parameters.
+     * @return params an arraylist of variablenodes that will be function parameters
      */
-    public void parameters() {
+    public ArrayList<VariableNode> parameters() {
         match(TokenType.LEFT_PARENTHESES);
-        parameterList();
+        ArrayList<VariableNode> params = new ArrayList<>();
+        params = parameterList();
         match(TokenType.RIGHT_PARENTHESES);
+        return params;
     }
 
     /**
      * Runs through the production for parameterList. Note that there are two diverging options; if there is
      * a comma present, it will call itself again. Along with that, there is a lambda option, to allow
      * for functions that have no parameters.
+     * @return paramerList an arraylist of variables
      */
-    public void parameterList() {
+    public ArrayList<VariableNode> parameterList() {
+        ArrayList<VariableNode> varList = new ArrayList<>();
         if (isType()) {
             type();
+            VariableNode var = new VariableNode(lookahead.getLexeme());
             match(TokenType.IDENTIFIER);
             if (lookahead.getType() == TokenType.COMMA) {
                 match(TokenType.COMMA);
-                parameterList();
+                varList.addAll(parameterList());
             }
         } else {
             // Lambda option
         }
+        return varList;
     }
 
     /**
      * Runs through the production for compoundStatement.
+     * @return compNode a CompoundStatementNode
      */
-    public void compoundStatement() {
+    public CompoundStatementNode compoundStatement() {
+        CompoundStatementNode compNode = new CompoundStatementNode();
         match(TokenType.LEFT_CURLY);
-        declarations();
-        optionalStatements();
+        compNode.setVariables(declarations());
+        ArrayList<StatementNode> stateList = optionalStatements();
+        for(StatementNode state : stateList) {
+            compNode.addStatement(state);
+        }
         match(TokenType.RIGHT_CURLY);
+        return compNode;
     }
 
     /**
      * Runs through the production for optionalStatements. Note that there is a lambda option if no
      * statement is present.
+     * @return stateList an arraylist of StatementNodes
      */
-    public void optionalStatements() {
+    public ArrayList<StatementNode> optionalStatements() {
+        ArrayList<StatementNode> stateList = new ArrayList<>();
         if(isStatement()) {
-            statementList();
+            stateList = statementList();
         } else {
             // Lambda option
         }
+        return stateList;
     }
 
     /**
      * Runs through the production for statementList. Note that if a semicolon is present, it will recursively
      * will recursively call itself until there is not one.
+     * @return stateList an arraylist of StatementNodes
      */
-    public void statementList() {
-        statement();
-        if (lookahead.getType() == TokenType.SEMICOLON) {
-            match(TokenType.SEMICOLON);
-            statementList();
+    public ArrayList<StatementNode> statementList() {
+        ArrayList<StatementNode> stateList = new ArrayList<>();
+        stateList.add(statement());
+        match(TokenType.SEMICOLON);
+        if (isStatement()) {
+            stateList.addAll(statementList());
         }
+        return stateList;
     }
 
     /**
      * Runs through the production for statement. Uses the first lookahead tokenType value to
      * determine which diverging rule to follow.
+     * @return stateNode a StatementNode generated from the statement production
      */
-    public void statement() {
+    public StatementNode statement() {
+        StatementNode stateNode = null;
         switch (lookahead.getType()) {
             case IDENTIFIER:
                 if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
-                    variable();
+                    AssignmentStatementNode assignOp = new AssignmentStatementNode();
+                    assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
-                    expression();
+                    assignOp.setExpression(expression());
+                    stateNode = assignOp;
                 } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
-                    procedureStatement();
+                    return procedureStatement();
                 } else {
-                    error("statement");
-                }
+                error("statement");
+            }
                 break;
             case LEFT_CURLY:
-                match(TokenType.LEFT_CURLY);
-                declarations();
-                optionalStatements();
-                match(TokenType.RIGHT_CURLY);
+                stateNode = compoundStatement();
                 break;
             case IF:
+                IfStatementNode ifNode = new IfStatementNode();
                 match(TokenType.IF);
-                expression();
-                compoundStatement();
+                ifNode.setTest(expression());
+                ifNode.setThenStatement(compoundStatement());
                 match(TokenType.ELSE);
-                compoundStatement();
+                ifNode.setElseStatement(compoundStatement());
+                stateNode = ifNode;
                 break;
             case WHILE:
+                WhileStatementNode whileNode = new WhileStatementNode();
                 match(TokenType.WHILE);
-                expression();
-                compoundStatement();
+                whileNode.setTest(expression());
+                whileNode.setDoStatement(compoundStatement());
+                stateNode = whileNode;
                 break;
             case READ:
+                ReadStatementNode readNode = new ReadStatementNode();
                 match(TokenType.READ);
                 match(TokenType.LEFT_PARENTHESES);
+                readNode.setInput(lookahead.getLexeme());
+                stateNode = readNode;
                 match(TokenType.IDENTIFIER);
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case WRITE:
+                WriteStatementNode writeNode = new WriteStatementNode();
                 match(TokenType.WRITE);
                 match(TokenType.LEFT_PARENTHESES);
-                expression();
+                writeNode.setOutput(expression());
+                stateNode = writeNode;
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case RETURN:
+                ReturnStatementNode returnNode = new ReturnStatementNode();
                 match(TokenType.RETURN);
-                expression();
+                returnNode.setReturnValue(expression());
+                stateNode = returnNode;
         }
+        return stateNode;
     }
 
-    public void procedureStatement() {
+    /**
+     * Production for a void function call.
+     * @return stateNode a ProcedureStatementNode of a void func call;
+     */
+    public StatementNode procedureStatement() {
+        String name = lookahead.getLexeme();
+        ProcedureStatementNode stateNode = new ProcedureStatementNode(name);
         match(TokenType.IDENTIFIER);
         if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
             match(TokenType.LEFT_PARENTHESES);
-            expressionList();
+            ArrayList<ExpressionNode> expList = new ArrayList<>();
+            expressionList(expList);
+            stateNode.setParameters(expList);
             match(TokenType.RIGHT_PARENTHESES);
         }
+        return stateNode;
     }
 
     /**
      * Runs through the production for variable. If there is a left bracket present it will call
      * expressionList and then match for a right bracket.
+     * @return varNode a VariableNode
      */
-    public void variable() {
+    public VariableNode variable() {
+        VariableNode varNode = new VariableNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
         if (lookahead.getType() == TokenType.LEFT_BRACKET) {
             match(TokenType.LEFT_BRACKET);
-            expressionList();
+            expression();
             match(TokenType.RIGHT_BRACKET);
         }
+        return varNode;
     }
 
     /**
      * Runs through the production for expressionList. If there is a comma, it will match the comma
      * and call expression again.
+     * @param expList an arrayList of expressions to be recursively added to
      */
-    public void expressionList() {
-        expression();
+    public void expressionList(ArrayList<ExpressionNode> expList) {
+        expList.add(expression());
         if (lookahead.getType() == TokenType.COMMA) {
             match(TokenType.COMMA);
-            expression();
+            expressionList(expList);
+        } else {
+            // Lambda option
         }
     }
 
     /**
      * Runs through the production for simpleExpression. If it detects a sign, it will call sign,
      * otherwise it will carry through with term and simplePart.
+     * @return expNode an ExpressionNode
      */
-    public void simpleExpression() {
+    public ExpressionNode simpleExpression() {
+        ExpressionNode expNode = null;
         if (lookahead.getType() == TokenType.PLUS || lookahead.getType() == TokenType.MINUS) {
-            sign();
+            SignNode opNode = sign();
+            expNode = term();
+            expNode = simplePart(expNode);
+            opNode.setExpNode(expNode);
+            return opNode;
         }
-        term();
-        simplePart();
+        expNode = term();
+        expNode = simplePart(expNode);
+        return expNode;
     }
 
     /**
      * Runs through the production for simplePart. Note that there is a lambda option if no addop
      * is present.
+     * @return possibleLeft an ExpressionNode containing data for the possible left side of an operation
      */
-    public void simplePart() {
+    public ExpressionNode simplePart(ExpressionNode possibleLeft) {
         if (isAddop()) {
-            addop();
-            term();
-            simplePart();
+            OperationNode opNode = addop();
+            ExpressionNode right = term();
+            opNode.setLeft(possibleLeft);
+            opNode.setRight(right);
+            return simplePart(opNode);
         } else {
             // Lambda option
         }
+        return possibleLeft;
     }
 
     /**
      * Runs through the production for term.
+     * @return left an ExpressionNode
      */
-    public void term() {
-        factor();
-        termPart();
+    public ExpressionNode term() {
+        ExpressionNode left = factor();
+        return termPart(left);
     }
 
     /**
      * Runs through the production for termPart. Note that there is a lambda option if no
      * mulop is present.
+     * @param possibleLeft an ExpressionNode containing data for the possible left side of an operation
+     * @return possibleLeft an ExpressionNode containing data for the left side of an operation
      */
-    public void termPart() {
+    public ExpressionNode termPart(ExpressionNode possibleLeft) {
         if (isMulop()) {
-            mulop();
-            factor();
-            termPart();
+            OperationNode opNode = mulop();
+            ExpressionNode right = factor();
+            opNode.setLeft(possibleLeft);
+            opNode.setRight(termPart(right));
+            return opNode;
         } else {
             // Lambda option
         }
+        return possibleLeft;
     }
 
     /**
      * Runs through the production for expression. Optionally calls relop and simpleExpression if
      * a relop is detected after initially calling simpleExpression.
+     * @return left an ExpressionNode containing data for the left side of an operation
      */
-    public void expression() {
-        simpleExpression();
+    public ExpressionNode expression() {
+        ExpressionNode left = simpleExpression();
         if (isRelop()) {
-            relop();
-            simpleExpression();
+            OperationNode opNode = relop();
+            opNode.setLeft(left);
+            opNode.setRight(simpleExpression());
+            return opNode;
         }
+        return left;
     }
-
 
     /**
      * Runs through the production for factor. Uses the first lookahead TokenType to determine
      * which diverging rule to follow.
+     * @return expNode an ExpressionNode that has its meaning derived from the internal switch statement.
      */
-    public void factor() {
+    public ExpressionNode factor() {
+        ExpressionNode expNode = null;
         switch (lookahead.getType()) {
             /* If type is identifier, it then checks to see if the identifier is followed by
             * either a left parentheses or a left bracket. If not, it ends. */
             case IDENTIFIER:
+                String name = lookahead.getLexeme();
                 match(TokenType.IDENTIFIER);
                 if (lookahead.getType() == TokenType.LEFT_BRACKET) {
                     match(TokenType.LEFT_BRACKET);
-                    expression();
+                    expNode = expression();
                     match(TokenType.RIGHT_BRACKET);
-                }
-                else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+                } else if (lookahead.getType() == TokenType.LEFT_PARENTHESES) {
+                    FunctionCallNode funcNode = new FunctionCallNode(name);
                     match(TokenType.LEFT_PARENTHESES);
-                    expression();
+                    ArrayList<ExpressionNode> expList = new ArrayList<>();
+                    expressionList(expList);
+                    funcNode.setParameters(expList);
+                    expNode = funcNode;
                     match(TokenType.RIGHT_PARENTHESES);
+                } else  {
+                    expNode = new VariableNode(name);
                 }
                 break;
             case LEFT_PARENTHESES:
                 match(TokenType.LEFT_PARENTHESES);
-                expression();
+                expNode = expression();
                 match(TokenType.RIGHT_PARENTHESES);
                 break;
             case NUMBER:
+                expNode = new ValueNode(lookahead.getLexeme());
                 match(TokenType.NUMBER);
                 break;
             case NOT:
                 match(TokenType.NOT);
-                factor();
+                expNode = new OperationNode(TokenType.NOT, null, factor());
                 break;
             default:
                 error("Factor");
         }
+        return expNode;
     }
 
     /**
      * Determines what type of mulop the lookahead is, and prints an error if there is no match.
+     * @return opNode an OperationNode specifically for mulops
      */
-    public void mulop() {
+    public OperationNode mulop() {
+        OperationNode opNode = null;
         switch (lookahead.getType()) {
             case MULTIPLY:
                 match(TokenType.MULTIPLY);
+                opNode = new OperationNode(TokenType.MULTIPLY);
                 break;
             case DIVIDE:
                 match(TokenType.DIVIDE);
+                opNode = new OperationNode(TokenType.DIVIDE);
                 break;
             case MODULO:
                 match(TokenType.MODULO);
+                opNode = new OperationNode(TokenType.MODULO);
                 break;
             case AND:
                 match(TokenType.AND);
+                opNode = new OperationNode(TokenType.AND);
                 break;
             default:
                 error("Mulop");
         }
+        return opNode;
     }
 
     /**
      * Determines what type of addop the lookahead is, and prints an error if there is no match.
+     * @return opNode an OperationNode specifically for addops
      */
-    public void addop() {
+    public OperationNode addop() {
+        OperationNode opNode = null;
         switch (lookahead.getType()) {
             case PLUS:
                 match(TokenType.PLUS);
+                opNode = new OperationNode(TokenType.PLUS);
                 break;
             case MINUS:
                 match(TokenType.MINUS);
+                opNode = new OperationNode(TokenType.MINUS);
                 break;
             case OR:
                 match(TokenType.OR);
+                opNode = new OperationNode(TokenType.OR);
                 break;
             default:
                 error("Addop");
         }
+        return opNode;
     }
 
     /**
      * Determines what type of relop the lookahead is, and prints an error if there is no match.
+     * @return opNode an OperationNode specifically for relops
      */
-    public void relop() {
+    public OperationNode relop() {
+        OperationNode opNode = null;
         switch (lookahead.getType()) {
             case EQUAL:
                 match(TokenType.EQUAL);
+                opNode = new OperationNode(TokenType.EQUAL);
                 break;
             case NOT_EQUAL:
                 match(TokenType.NOT_EQUAL);
+                opNode = new OperationNode(TokenType.NOT_EQUAL);
                 break;
             case LESS_THAN:
                 match(TokenType.LESS_THAN);
+                opNode = new OperationNode(TokenType.LESS_THAN);
                 break;
             case LESS_THAN_EQUAL:
                 match(TokenType.LESS_THAN_EQUAL);
+                opNode = new OperationNode(TokenType.LESS_THAN_EQUAL);
                 break;
             case GREATER_THAN_EQUAL:
                 match(TokenType.GREATER_THAN_EQUAL);
+                opNode = new OperationNode(TokenType.GREATER_THAN_EQUAL);
                 break;
             case GREATER_THAN:
                 match(TokenType.GREATER_THAN);
+                opNode = new OperationNode(TokenType.GREATER_THAN);
                 break;
             default:
                 error("Relop");
         }
+        return opNode;
     }
 
     /**
      * Determines what type of sign the lookahead is, and prints an error if there is no match.
+     * @return sigNode a SignNode used to denote the sign of a value
      */
-    public void sign() {
+    public SignNode sign() {
+        SignNode sigNode = null;
         switch (lookahead.getType()) {
             case PLUS:
+                sigNode = new SignNode(TokenType.PLUS);
                 match(TokenType.PLUS);
                 break;
             case MINUS:
+                sigNode = new SignNode(TokenType.MINUS);
                 match(TokenType.MINUS);
                 break;
             default:
                 error("Sign");
         }
+        return sigNode;
     }
 
     /**
@@ -591,7 +723,6 @@ public class Parser {
      * @param expected the expected TokenType
      */
     public void match(TokenType expected) {
-        System.out.println("match( " + expected + ")");
         if( this.lookahead.getType() == expected) {
             try {
                 this.lookahead = scanner.nextToken();
