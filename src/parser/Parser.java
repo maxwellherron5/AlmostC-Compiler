@@ -12,11 +12,12 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
+ * This class builds all the grammatical rules necessary for a functioning
+ * recursive descent parser. By running program, it will return a syntax tree generated
+ * from the input file/string.
+ * Tests for this class can be found in ParserTest.java
  * Parser.java
  * @author Maxwell Herron
- * This class builds all the grammatical rules necessary for a functioning
- * recursive descent parser.
- * Tests for this class can be found in ParserTest.java
  */
 public class Parser {
 
@@ -66,7 +67,9 @@ public class Parser {
     /////////////////////////
 
     /**
-     * Runs through the production for program.
+     * Top level function call. This will run through all the productions and return
+     * a program node.
+     * @return progNode
      */
     public ProgramNode program() {
         ProgramNode progNode = new ProgramNode();
@@ -80,7 +83,9 @@ public class Parser {
     }
 
     /**
-     * Runs through the production for identifierList
+     * Runs through the production for identifierList. Returns and arraylist of
+     * Strings representing identifier names.
+     * @return varList
      */
     public ArrayList<String> identifierList() {
         ArrayList<String> varList = new ArrayList<>();
@@ -98,8 +103,8 @@ public class Parser {
     }
 
     /**
-     * Runs through the production for declarations. Note that there is a lambda option
-     * if no type is present.
+     * Runs through the production for declarations. Returns a DeclarationsNode.
+     * @return decsNode
      */
     public DeclarationsNode declarations() {
         DeclarationsNode decsNode = new DeclarationsNode();
@@ -152,7 +157,7 @@ public class Parser {
     }
 
     /**
-     * Runs through the production for functionDeclaration.
+     * Runs through the production for functionDeclaration. Adds function names to the symbol table.
      */
     public void functionDeclaration() {
         type();
@@ -163,7 +168,8 @@ public class Parser {
 
     /**
      * Runs through the production for functionDefinitions. Note that there is a lambda option if no
-     * type is present.
+     * type is present. Returns a functions node containing function definitions.
+     * @return funcsNode
      */
     public FunctionsNode functionDefinitions() {
         FunctionsNode funcsNode = new FunctionsNode();
@@ -177,7 +183,9 @@ public class Parser {
     }
 
     /**
-     * Runs through the production for functionDefinition.
+     * Runs through the production for functionDefinition. Returns a function node containing
+     * a function definition.
+     * @return funcNode
      */
     public FunctionNode functionDefinition() {
         type();
@@ -193,6 +201,7 @@ public class Parser {
 
     /**
      * Runs through the production for parameters.
+     * @return params an arraylist of variablenodes that will be function parameters
      */
     public ArrayList<VariableNode> parameters() {
         match(TokenType.LEFT_PARENTHESES);
@@ -206,6 +215,7 @@ public class Parser {
      * Runs through the production for parameterList. Note that there are two diverging options; if there is
      * a comma present, it will call itself again. Along with that, there is a lambda option, to allow
      * for functions that have no parameters.
+     * @return paramerList an arraylist of variables
      */
     public ArrayList<VariableNode> parameterList() {
         ArrayList<VariableNode> varList = new ArrayList<>();
@@ -225,6 +235,7 @@ public class Parser {
 
     /**
      * Runs through the production for compoundStatement.
+     * @return compNode a CompoundStatementNode
      */
     public CompoundStatementNode compoundStatement() {
         CompoundStatementNode compNode = new CompoundStatementNode();
@@ -241,6 +252,7 @@ public class Parser {
     /**
      * Runs through the production for optionalStatements. Note that there is a lambda option if no
      * statement is present.
+     * @return stateList an arraylist of StatementNodes
      */
     public ArrayList<StatementNode> optionalStatements() {
         ArrayList<StatementNode> stateList = new ArrayList<>();
@@ -255,6 +267,7 @@ public class Parser {
     /**
      * Runs through the production for statementList. Note that if a semicolon is present, it will recursively
      * will recursively call itself until there is not one.
+     * @return stateList an arraylist of StatementNodes
      */
     public ArrayList<StatementNode> statementList() {
         ArrayList<StatementNode> stateList = new ArrayList<>();
@@ -269,6 +282,7 @@ public class Parser {
     /**
      * Runs through the production for statement. Uses the first lookahead tokenType value to
      * determine which diverging rule to follow.
+     * @return stateNode a StatementNode generated from the statement production
      */
     public StatementNode statement() {
         StatementNode stateNode = null;
@@ -331,6 +345,10 @@ public class Parser {
         return stateNode;
     }
 
+    /**
+     * Production for a void function call.
+     * @return stateNode a ProcedureStatementNode of a void func call;
+     */
     public StatementNode procedureStatement() {
         String name = lookahead.getLexeme();
         ProcedureStatementNode stateNode = new ProcedureStatementNode(name);
@@ -348,6 +366,7 @@ public class Parser {
     /**
      * Runs through the production for variable. If there is a left bracket present it will call
      * expressionList and then match for a right bracket.
+     * @return varNode a VariableNode
      */
     public VariableNode variable() {
         VariableNode varNode = new VariableNode(lookahead.getLexeme());
@@ -363,6 +382,7 @@ public class Parser {
     /**
      * Runs through the production for expressionList. If there is a comma, it will match the comma
      * and call expression again.
+     * @param expList an arrayList of expressions to be recursively added to
      */
     public void expressionList(ArrayList<ExpressionNode> expList) {
         expList.add(expression());
@@ -377,6 +397,7 @@ public class Parser {
     /**
      * Runs through the production for simpleExpression. If it detects a sign, it will call sign,
      * otherwise it will carry through with term and simplePart.
+     * @return expNode an ExpressionNode
      */
     public ExpressionNode simpleExpression() {
         ExpressionNode expNode = null;
@@ -395,6 +416,7 @@ public class Parser {
     /**
      * Runs through the production for simplePart. Note that there is a lambda option if no addop
      * is present.
+     * @return possibleLeft an ExpressionNode containing data for the possible left side of an operation
      */
     public ExpressionNode simplePart(ExpressionNode possibleLeft) {
         if (isAddop()) {
@@ -411,6 +433,7 @@ public class Parser {
 
     /**
      * Runs through the production for term.
+     * @return left an ExpressionNode
      */
     public ExpressionNode term() {
         ExpressionNode left = factor();
@@ -420,6 +443,8 @@ public class Parser {
     /**
      * Runs through the production for termPart. Note that there is a lambda option if no
      * mulop is present.
+     * @param possibleLeft an ExpressionNode containing data for the possible left side of an operation
+     * @return possibleLeft an ExpressionNode containing data for the left side of an operation
      */
     public ExpressionNode termPart(ExpressionNode possibleLeft) {
         if (isMulop()) {
@@ -437,6 +462,7 @@ public class Parser {
     /**
      * Runs through the production for expression. Optionally calls relop and simpleExpression if
      * a relop is detected after initially calling simpleExpression.
+     * @return left an ExpressionNode containing data for the left side of an operation
      */
     public ExpressionNode expression() {
         ExpressionNode left = simpleExpression();
@@ -452,6 +478,7 @@ public class Parser {
     /**
      * Runs through the production for factor. Uses the first lookahead TokenType to determine
      * which diverging rule to follow.
+     * @return expNode an ExpressionNode that has its meaning derived from the internal switch statement.
      */
     public ExpressionNode factor() {
         ExpressionNode expNode = null;
@@ -498,6 +525,7 @@ public class Parser {
 
     /**
      * Determines what type of mulop the lookahead is, and prints an error if there is no match.
+     * @return opNode an OperationNode specifically for mulops
      */
     public OperationNode mulop() {
         OperationNode opNode = null;
@@ -526,6 +554,7 @@ public class Parser {
 
     /**
      * Determines what type of addop the lookahead is, and prints an error if there is no match.
+     * @return opNode an OperationNode specifically for addops
      */
     public OperationNode addop() {
         OperationNode opNode = null;
@@ -550,6 +579,7 @@ public class Parser {
 
     /**
      * Determines what type of relop the lookahead is, and prints an error if there is no match.
+     * @return opNode an OperationNode specifically for relops
      */
     public OperationNode relop() {
         OperationNode opNode = null;
@@ -586,6 +616,7 @@ public class Parser {
 
     /**
      * Determines what type of sign the lookahead is, and prints an error if there is no match.
+     * @return sigNode a SignNode used to denote the sign of a value
      */
     public SignNode sign() {
         SignNode sigNode = null;
