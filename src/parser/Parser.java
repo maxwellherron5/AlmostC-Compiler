@@ -694,7 +694,6 @@ public class Parser {
      * @param expected the expected TokenType
      */
     public void match(TokenType expected) {
-        System.out.println("match( " + expected + ")");
         if( this.lookahead.getType() == expected) {
             try {
                 this.lookahead = scanner.nextToken();

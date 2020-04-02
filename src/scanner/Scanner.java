@@ -719,7 +719,6 @@ public class Scanner {
             { Token t = new Token();
                         t.lexeme = yytext();
                         t.type = TokenType.IDENTIFIER;
-                        System.out.println(t.toString());
                         return t;
             } 
             // fall through
@@ -728,7 +727,6 @@ public class Scanner {
             { Token t = new Token();
 				t.lexeme = yytext();
 				t.type = lookupTable.get(t.lexeme);
-				System.out.println(t.toString());
 				return t;
             } 
             // fall through
@@ -738,7 +736,6 @@ public class Scanner {
 			 Token t = new Token();
 			 t.lexeme = yytext();
 			 t.type = TokenType.NUMBER;
-			 System.out.println(t.toString());
 			 return t;
             } 
             // fall through
@@ -747,7 +744,6 @@ public class Scanner {
             { Token t = new Token();
                 t.lexeme = yytext();
                 t.type = lookupTable.get(t.lexeme);
-                System.out.println(t.toString());
                 return t;
             } 
             // fall through
@@ -756,7 +752,6 @@ public class Scanner {
             { Token t = new Token();
                     t.lexeme = yytext();
                     t.type = TokenType.REAL_NUMBER;
-                    System.out.println(t.toString());
                     return t;
             } 
             // fall through
