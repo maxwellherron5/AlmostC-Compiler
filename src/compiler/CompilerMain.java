@@ -10,8 +10,8 @@ import syntaxtree.ProgramNode;
 /**
  * CompilerMain.java
  * @author Maxwell Herron
- * Constructs and builds a Recognizer to be ran on a sample AlmostC program. It then
- * writes the tabular form of the symbol table to 'output.st'.
+ * Constructs and builds a Parser to be ran on a sample AlmostC program. It then
+ * writes the tabular form of the symbol table to 'output.st', along with the printed syntax tree.
  */
 public class CompilerMain {
 
