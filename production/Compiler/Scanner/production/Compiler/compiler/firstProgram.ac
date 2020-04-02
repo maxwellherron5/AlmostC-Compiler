@@ -3,10 +3,10 @@
 // Author: Maxwell Herron
 
 int x();
- int y();
- void z();
- void another();
- float yetAnother();
+int y();
+void z();
+void another();
+float yetAnother();
 
  main() {
      int a;

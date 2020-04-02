@@ -164,6 +164,7 @@ public class Parser {
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addFunctionName(name);
+        parameters();
     }
 
     /**
@@ -173,11 +174,8 @@ public class Parser {
      */
     public FunctionsNode functionDefinitions() {
         FunctionsNode funcsNode = new FunctionsNode();
-        if (isType()) {
-            functionDefinition();
-            functionDefinitions();
-        } else {
-            // Lambda option
+        while (isType()) {
+            funcsNode.addFunctionDefinition(functionDefinition());
         }
         return funcsNode;
     }
