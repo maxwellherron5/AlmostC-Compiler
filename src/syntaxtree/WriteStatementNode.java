@@ -1,7 +1,7 @@
 package syntaxtree;
 
 /**
- *
+ * Represents a write statement.
  * @author Maxwell Herron
  */
 public class WriteStatementNode extends StatementNode {

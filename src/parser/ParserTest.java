@@ -7,7 +7,8 @@ import syntaxtree.*;
 import java.util.ArrayList;
 
 /**
- *
+ * Runs through several of the main productions, and tests that the indented toStrings()
+ * generated from the output nodes are as expected.
  * @author Maxwell Herron
  */
 class ParserTest {
@@ -28,7 +29,8 @@ class ParserTest {
     }
 
     /**
-     *
+     * Asserts that the indentedToString() produced from a simpleExpression generated
+     * ExpressionNode is as expected.
      */
     @Test
     void simpleExpressionTest() {
@@ -44,7 +46,8 @@ class ParserTest {
     }
 
     /**
-     *
+     * Asserts that the indentedToString() produced from a statement generated
+     * StatementNode is as expected.
      */
     @Test
     void firstStatementTest() {
@@ -61,7 +64,8 @@ class ParserTest {
     }
 
     /**
-     *
+     * Asserts that the indentedToString() produced from a statement generated
+     * StatementNode is as expected.
      */
     @Test
     void secondStatementTest() {
@@ -76,7 +80,8 @@ class ParserTest {
     }
 
     /**
-     *
+     * Asserts that the indentedToString() produced from a statement generated
+     * StatementNode is as expected.
      */
     @Test
     void thirdStatementTest() {
@@ -116,7 +121,8 @@ class ParserTest {
     }
 
     /**
-     *
+     * Asserts that the indentedToString() produced from a functionDefinition generated
+     * FunctionNode is as expected.
      */
     @Test
     void functionDefinitionTest() {
@@ -136,7 +142,8 @@ class ParserTest {
     }
 
     /**
-     *
+     * Asserts that the indentedToString() produced from a declarations generated
+     * DeclarationNode is as expected.
      */
     @Test
     void declarationsTest() {
@@ -151,7 +158,8 @@ class ParserTest {
     }
 
     /**
-     * 
+     * Asserts that the indentedToString() produced from a program generated
+     * ProgramNode is as expected.
      */
     @Test
     void programTest() {

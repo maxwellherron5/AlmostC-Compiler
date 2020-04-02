@@ -1,7 +1,7 @@
 package syntaxtree;
 
 /**
- *
+ * Represents a read statement.
  * @author Maxwell Herron
  */
 public class ReadStatementNode extends StatementNode {

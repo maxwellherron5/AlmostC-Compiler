@@ -1,7 +1,7 @@
 package syntaxtree;
 
 /**
- *
+ * Represents a return statement.
  * @author Maxwell Herron
  */
 public class ReturnStatementNode extends StatementNode {

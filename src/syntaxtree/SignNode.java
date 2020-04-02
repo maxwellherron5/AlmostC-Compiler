@@ -4,7 +4,7 @@ import scanner.Token;
 import scanner.TokenType;
 
 /**
- *
+ * Represents a sign.
  * @author Maxwell Herron
  */
 public class SignNode extends ExpressionNode {

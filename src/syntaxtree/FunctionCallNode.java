@@ -4,7 +4,7 @@ import symboltable.SymbolTable.DataType;
 import java.util.ArrayList;
 
 /**
- *
+ * Represents a non-void function call.
  * @author Maxwell Herron
  */
 public class FunctionCallNode extends ExpressionNode {

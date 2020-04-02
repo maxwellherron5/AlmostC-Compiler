@@ -5,7 +5,7 @@ import symboltable.SymbolTable;
 import java.util.ArrayList;
 
 /**
- *
+ * Represents a void function call.
  * @author Maxwell Herron
  */
 public class ProcedureStatementNode extends StatementNode {

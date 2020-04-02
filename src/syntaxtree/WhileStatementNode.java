@@ -1,7 +1,7 @@
 package syntaxtree;
 
 /**
- *
+ * Represents a while statement.
  * @author Maxwell Herron
  */
 public class WhileStatementNode extends StatementNode {
