@@ -47,7 +47,7 @@ class ParserTest {
      *
      */
     @Test
-    void statementTest() {
+    void firstStatementTest() {
         Parser p = new Parser("myVar = 2 + 2", false);
         p.getTable().addVariableName("myVar");
         String expected = "Assignment\n" +
@@ -55,6 +55,61 @@ class ParserTest {
                 "|-- Operation: PLUS\n" +
                 "|-- --- Value: 2\n" +
                 "|-- --- Value: 2\n";
+        StatementNode s = p.statement();
+        String actual = s.indentedToString(0);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     *
+     */
+    @Test
+    void secondStatementTest() {
+        Parser p = new Parser("return 2 + 2;", false);
+        String expected = "Return\n" +
+                "|-- Operation: PLUS\n" +
+                "|-- --- Value: 2\n" +
+                "|-- --- Value: 2\n";
+        StatementNode s = p.statement();
+        String actual = s.indentedToString(0);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     *
+     */
+    @Test
+    void thirdStatementTest() {
+        Parser p = new Parser("{\n" +
+                "     int a;\n" +
+                "     float b;\n" +
+                "     int c;\n" +
+                "     float d;\n" +
+                "     int e;\n" +
+                "     float f;\n" +
+                "     float g, h, i;\n" +
+                "     a = 1 + 3;\n" +
+                "     b = a;\n" +
+                " }", false);
+        String expected = "Compound Statement\n" +
+                "|-- Declarations\n" +
+                "|-- --- Name: a\n" +
+                "|-- --- Name: b\n" +
+                "|-- --- Name: c\n" +
+                "|-- --- Name: d\n" +
+                "|-- --- Name: e\n" +
+                "|-- --- Name: f\n" +
+                "|-- --- Name: g\n" +
+                "|-- --- Name: h\n" +
+                "|-- --- Name: i\n" +
+                "|-- Assignment\n" +
+                "|-- --- Name: a\n" +
+                "|-- --- Operation: PLUS\n" +
+                "|-- --- --- Value: 1\n" +
+                "|-- --- --- Value: 3\n" +
+                "|-- Assignment\n" +
+                "|-- --- Name: b\n" +
+                "|-- --- Name: a\n";
         StatementNode s = p.statement();
         String actual = s.indentedToString(0);
         assertEquals(expected, actual);
@@ -96,7 +151,7 @@ class ParserTest {
     }
 
     /**
-     *
+     * 
      */
     @Test
     void programTest() {
