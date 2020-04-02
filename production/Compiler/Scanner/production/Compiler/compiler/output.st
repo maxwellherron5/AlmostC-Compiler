@@ -1,30 +1,47 @@
+*****PRINTING SYMBOL TABLE*****
 |Name      |Kind      |
-|----------|----------|
-|yetAnother|FUNCTION  |
 |----------|----------|
 |a         |VARIABLE  |
 |----------|----------|
 |b         |VARIABLE  |
 |----------|----------|
-|c         |VARIABLE  |
+|myFunc    |FUNCTION  |
 |----------|----------|
-|d         |VARIABLE  |
-|----------|----------|
-|e         |VARIABLE  |
-|----------|----------|
-|f         |VARIABLE  |
-|----------|----------|
-|another   |FUNCTION  |
-|----------|----------|
-|g         |VARIABLE  |
-|----------|----------|
-|h         |VARIABLE  |
-|----------|----------|
-|i         |VARIABLE  |
-|----------|----------|
-|x         |FUNCTION  |
-|----------|----------|
-|y         |FUNCTION  |
-|----------|----------|
-|z         |FUNCTION  |
-|----------|----------|
+
+
+*****PRINTING SYNTAX TREE*****
+Program:
+|-- FunctionDefinitions
+|-- --- Function: myFunc returns null
+|-- --- --- Compound Statement
+|-- --- --- --- Declarations
+|-- --- --- --- Return
+|-- --- --- --- --- Operation: MINUS
+|-- --- --- --- --- --- Name: one
+|-- --- --- --- --- --- Name: two
+|-- Compound Statement
+|-- --- Declarations
+|-- --- --- Name: a
+|-- --- --- Name: b
+|-- --- Assignment
+|-- --- --- Name: a
+|-- --- --- Operation: PLUS
+|-- --- --- --- Value: 1
+|-- --- --- --- Value: 3
+|-- --- Assignment
+|-- --- --- Name: b
+|-- --- --- Name: a
+|-- --- If
+|-- --- --- Operation: NOT_EQUAL
+|-- --- --- --- Function: yetAnother returns null
+|-- --- --- --- --- Name: a
+|-- --- --- --- --- Name: b
+|-- --- --- --- Value: 2
+|-- --- --- Compound Statement
+|-- --- --- --- Declarations
+|-- --- --- --- Return
+|-- --- --- --- --- Value: 5
+|-- --- --- Compound Statement
+|-- --- --- --- Declarations
+|-- --- --- --- Return
+|-- --- --- --- --- Value: 1

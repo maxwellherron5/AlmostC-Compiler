@@ -32,21 +32,5 @@ public class CompilerMain {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-//        Parser p = new Parser("int sum(int x, int y);\n" +
-//                "main() {\n" +
-//                "    int number1, number2;\n" +
-//                "    number1 = 2;\n" +
-//                "    number2 = 4;\n" +
-//                "    if(sum(number1 + number2) == 6) {\n" +
-//                "        // celebrate\n" +
-//                "    } else {\n" +
-//                "        // cry to sleep\n" +
-//                "    };\n" +
-//                "    return 0;\n" +
-//                "}\n" +
-//                "int sum(int x, int y) {\n" +
-//                "    return x + y;\n" +
-//                "}", false);
-//        System.out.println(p.program().indentedToString(0));
     }
 }
