@@ -19,8 +19,12 @@ class ParserTest {
     @Test
     void factorTest() {
         Parser p = new Parser("(2 + 2)", false);
+        String expected = "Operation: PLUS\n" +
+                "|-- Value: 2\n" +
+                "|-- Value: 2\n";
         ExpressionNode e = p.factor();
-        System.out.println(e.indentedToString(0));
+        String actual = e.indentedToString(0);
+        assertEquals(expected, actual);
     }
 
     /**
@@ -29,8 +33,14 @@ class ParserTest {
     @Test
     void simpleExpressionTest() {
         Parser p = new Parser("1 + 1 * 3", false);
+        String expected = "Operation: PLUS\n" +
+                "|-- Value: 1\n" +
+                "|-- Operation: MULTIPLY\n" +
+                "|-- --- Value: 1\n" +
+                "|-- --- Value: 3\n";
         ExpressionNode e = p.simpleExpression();
-        System.out.println(e.indentedToString(0));
+        String actual = e.indentedToString(0);
+        assertEquals(expected, actual);
     }
 
     /**
@@ -40,8 +50,14 @@ class ParserTest {
     void statementTest() {
         Parser p = new Parser("myVar = 2 + 2", false);
         p.getTable().addVariableName("myVar");
+        String expected = "Assignment\n" +
+                "|-- Name: myVar\n" +
+                "|-- Operation: PLUS\n" +
+                "|-- --- Value: 2\n" +
+                "|-- --- Value: 2\n";
         StatementNode s = p.statement();
-        System.out.println(s.indentedToString(0));
+        String actual = s.indentedToString(0);
+        assertEquals(expected, actual);
     }
 
     /**
@@ -70,8 +86,13 @@ class ParserTest {
     @Test
     void declarationsTest() {
         Parser p = new Parser("int x, y, z;", false);
+        String expected = "Declarations\n" +
+                "|-- Name: x\n" +
+                "|-- Name: y\n" +
+                "|-- Name: z\n";
         DeclarationsNode s = p.declarations();
-        System.out.println(s.indentedToString(0));
+        String actual = s.indentedToString(0);
+        assertEquals(expected, actual);
     }
 
     /**
@@ -85,8 +106,28 @@ class ParserTest {
                 "        yen = dollars * 104;\n" +
                 "        bitcoins = dollars / 6058;\n" +
                 "     };", false);
+        String expected = "Program:\n" +
+                "|-- FunctionDefinitions\n" +
+                "|-- Compound Statement\n" +
+                "|-- --- Declarations\n" +
+                "|-- --- --- Name: dollars\n" +
+                "|-- --- --- Name: yen\n" +
+                "|-- --- --- Name: bitcoins\n" +
+                "|-- --- Assignment\n" +
+                "|-- --- --- Name: dollars\n" +
+                "|-- --- --- Value: 1000000\n" +
+                "|-- --- Assignment\n" +
+                "|-- --- --- Name: yen\n" +
+                "|-- --- --- Operation: MULTIPLY\n" +
+                "|-- --- --- --- Name: dollars\n" +
+                "|-- --- --- --- Value: 104\n" +
+                "|-- --- Assignment\n" +
+                "|-- --- --- Name: bitcoins\n" +
+                "|-- --- --- Operation: DIVIDE\n" +
+                "|-- --- --- --- Name: dollars\n" +
+                "|-- --- --- --- Value: 6058\n";
         ProgramNode pr = p.program();
-        System.out.println(pr.indentedToString(0));
-
+        String actual = pr.indentedToString(0);
+        assertEquals(expected, actual);
     }
 }
