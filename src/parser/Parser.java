@@ -292,11 +292,9 @@ public class Parser {
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
                     stateNode = assignOp;
-                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
-                    return procedureStatement();
                 } else {
-                error("statement");
-            }
+                    stateNode = procedureStatement();
+                }
                 break;
             case LEFT_CURLY:
                 stateNode = compoundStatement();
