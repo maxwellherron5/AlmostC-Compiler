@@ -1,6 +1,7 @@
 package semanticanalyzer;
 
-import symboltable.*;
+import symboltable.SymbolTable.DataType;
+import symboltable.SymbolTable;
 import syntaxtree.*;
 
 import java.lang.reflect.Array;
@@ -37,8 +38,23 @@ public class SemanticAnalyzer {
     public void checkIdentifiersDeclaration() {
 
         ArrayList<String> variables = getVariables(progNode.getMain());
-
-
+        ArrayList<String> allVariables = new ArrayList();
+        String[] stringArray = progNode.indentedToString(0).split(" ");
+        for (int i = 0; i < stringArray.length; i++) {
+            if (stringArray[i].equals("Name:")) {
+                String var = stringArray[i+1];
+                var = var.split("\n")[0];
+                if (!allVariables.contains(var)) {
+                    allVariables.add(var);
+                }
+            }
+        }
+        for (String s : allVariables) {
+            if (!variables.contains(s)) {
+                System.out.println("Undeclared variable: " + s + ".\tPlease declare this variable.");
+                canWriteAssembly = false;
+            }
+        }
     }
 
     /**
@@ -50,10 +66,26 @@ public class SemanticAnalyzer {
 
         for (StatementNode statement : stateList) {
             if (statement instanceof AssignmentStatementNode) {
+                DataType lType = ((AssignmentStatementNode) statement).getLvalue().getType();
 
             }
             else if (statement instanceof WriteStatementNode) {
                 setExpressionType(((WriteStatementNode) statement).getOutput());
+            }
+            else if (statement instanceof ReadStatementNode) {
+
+            }
+            else if (statement instanceof CompoundStatementNode) {
+
+            }
+            else if (statement instanceof IfStatementNode) {
+
+            }
+            else if (statement instanceof WhileStatementNode) {
+
+            }
+            else if (statement instanceof ReturnStatementNode) {
+
             }
         }
     }
@@ -68,7 +100,7 @@ public class SemanticAnalyzer {
         for (StatementNode statement : stateList) {
             if (statement instanceof AssignmentStatementNode) {
                 VariableNode lNode = ((AssignmentStatementNode) statement).getLvalue();
-                SymbolTable.DataType
+                //SymbolTable.DataType;
             }
         }
     }
@@ -77,9 +109,20 @@ public class SemanticAnalyzer {
      * Sets the data type of the input ExpressionNode
      * @param expNode ExpressionNode that is having its type set
      */
-    public void setExpressionType(ExpressionNode expNode) {
+    private void setExpressionType(ExpressionNode expNode) {
 
+        if (expNode instanceof FunctionCallNode) {
 
+        }
+        else if(expNode instanceof OperationNode) {
+
+        }
+        else if (expNode instanceof ValueNode) {
+
+        }
+        else if (expNode instanceof VariableNode) {
+
+        }
     }
 
     /**
@@ -96,7 +139,6 @@ public class SemanticAnalyzer {
         }
         return variables;
     }
-
 
     // Getters
     public boolean getCanWriteAssembly() { return canWriteAssembly; }

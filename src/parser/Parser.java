@@ -292,7 +292,7 @@ public class Parser {
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
                     stateNode = assignOp;
-                } else {
+                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION ){
                     stateNode = procedureStatement();
                 }
                 break;

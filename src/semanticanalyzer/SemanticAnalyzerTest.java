@@ -18,10 +18,10 @@ class SemanticAnalyzerTest {
                 "        int dollars, yen, bitcoins;\n" +
                 "        dollars = 1000000;\n" +
                 "        yen = dollars * 104;\n" +
-                "        shitman = dollars / 6058;\n" +
+                "        if (myVar > 5) {\n" +
+                "        yen = myVar;   " +
+                "        } else { };\n" +
                 "     };", false);
-
-        p.getTable().addVariableName("shitman");
         ProgramNode progNode = p.program();
         SymbolTable st = p.getTable();
         SemanticAnalyzer s = new SemanticAnalyzer(progNode, st);
