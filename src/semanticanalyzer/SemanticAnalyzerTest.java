@@ -40,18 +40,12 @@ class SemanticAnalyzerTest {
                 "        myvar = dollars * 104;\n" +
                 "        if (myVar > 5) {\n" +
                 "        yen = myVar;   " +
-                "        } else { };\n" +
+                "        } else { yen = dollars + 22; };\n" +
                 "     };", false);
         ProgramNode progNode = p.program();
         SymbolTable st = p.getTable();
         SemanticAnalyzer s = new SemanticAnalyzer(progNode, st);
         s.assignDatatypes();
-        for (StatementNode state : progNode.getMain().getStatements()) {
-            if (state instanceof AssignmentStatementNode) {
-                System.out.println(state.indentedToString(0));
-                System.out.println(((AssignmentStatementNode) state).getLvalue().getType());
-                System.out.println(((AssignmentStatementNode) state).getExpression().getType() + "\n\n");
-            }
-        }
+        System.out.println(progNode.indentedToString(0));
     }
 }

@@ -98,6 +98,12 @@ public class SemanticAnalyzer {
         else if(expNode instanceof OperationNode) {
             assignDataType(((OperationNode) expNode).getLeft());
             assignDataType(((OperationNode) expNode).getRight());
+            if (((OperationNode) expNode).getLeft().getType() == DataType.FLOAT &&
+            ((OperationNode) expNode).getRight().getType() == DataType.FLOAT) {
+                expNode.setType(DataType.FLOAT);
+            } else {
+                expNode.setType(DataType.INT);
+            }
         }
         else if (expNode instanceof ValueNode) {
             if (((ValueNode) expNode).getAttribute().contains(".")) {
@@ -137,7 +143,7 @@ public class SemanticAnalyzer {
             //assignDataType(stateNode.);
         }
         else if (stateNode instanceof ReadStatementNode) {
-            //assignDataType(((ReadStatementNode) stateNode).getInput());
+            //
         }
         else if (stateNode instanceof ReturnStatementNode) {
             assignDataType(((ReturnStatementNode) stateNode).getReturnValue());

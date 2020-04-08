@@ -109,11 +109,12 @@ public class Parser {
     public DeclarationsNode declarations() {
         DeclarationsNode decsNode = new DeclarationsNode();
         while (isType()) {
-            type();
+            SymbolTable.DataType type = type();
             ArrayList<String> varList = identifierList();
             //declarations();
             for (String var : varList) {
                 VariableNode varNode = new VariableNode(var);
+                varNode.setType(type);
                 decsNode.addVariable(varNode);
             }
             match(TokenType.SEMICOLON);
@@ -126,20 +127,24 @@ public class Parser {
     /**
      * Determines which type keyword the token is. If there is no match, it will print an error.
      */
-    public void type() {
+    public SymbolTable.DataType type() {
+        SymbolTable.DataType type = null;
         switch (lookahead.getType()) {
             case VOID:
                 match(TokenType.VOID);
                 break;
             case INT:
                 match(TokenType.INT);
+                type = SymbolTable.DataType.INT;
                 break;
             case FLOAT:
                 match(TokenType.FLOAT);
+                type = SymbolTable.DataType.FLOAT;
                 break;
             default:
                 error("Type");
         }
+        return type;
     }
 
     /**
