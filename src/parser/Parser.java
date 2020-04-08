@@ -286,14 +286,14 @@ public class Parser {
         StatementNode stateNode = null;
         switch (lookahead.getType()) {
             case IDENTIFIER:
-                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
+                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION ){
+                    stateNode = procedureStatement();
+                } else {
                     AssignmentStatementNode assignOp = new AssignmentStatementNode();
                     assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
                     stateNode = assignOp;
-                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION ){
-                    stateNode = procedureStatement();
                 }
                 break;
             case LEFT_CURLY:

@@ -33,7 +33,9 @@ public class SemanticAnalyzer {
     }
 
     /**
-     * Checks ExpressionNodes to ensure that all variables within have been declared.
+     * Scans for all appearances of identifiers, and compares that list to the list
+     * of all declared identifiers. If a variable exists that has not been declared,
+     * it will print out the name of that variable, and set the canWriteAssembly flag to false.
      */
     public void checkIdentifiersDeclaration() {
 
