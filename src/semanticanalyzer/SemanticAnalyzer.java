@@ -67,28 +67,7 @@ public class SemanticAnalyzer {
         ArrayList<StatementNode> stateList = progNode.getMain().getStatements();
 
         for (StatementNode statement : stateList) {
-            if (statement instanceof AssignmentStatementNode) {
-                DataType lType = ((AssignmentStatementNode) statement).getLvalue().getType();
-
-            }
-            else if (statement instanceof WriteStatementNode) {
-                setExpressionType(((WriteStatementNode) statement).getOutput());
-            }
-            else if (statement instanceof ReadStatementNode) {
-
-            }
-            else if (statement instanceof CompoundStatementNode) {
-
-            }
-            else if (statement instanceof IfStatementNode) {
-
-            }
-            else if (statement instanceof WhileStatementNode) {
-
-            }
-            else if (statement instanceof ReturnStatementNode) {
-
-            }
+            assignDataType(statement);
         }
     }
 
@@ -111,16 +90,21 @@ public class SemanticAnalyzer {
      * Sets the data type of the input ExpressionNode
      * @param expNode ExpressionNode that is having its type set
      */
-    private void setExpressionType(ExpressionNode expNode) {
+    private void assignDataType(ExpressionNode expNode) {
 
         if (expNode instanceof FunctionCallNode) {
 
         }
         else if(expNode instanceof OperationNode) {
-
+            assignDataType(((OperationNode) expNode).getLeft());
+            assignDataType(((OperationNode) expNode).getRight());
         }
         else if (expNode instanceof ValueNode) {
-
+            if (((ValueNode) expNode).getAttribute().contains(".")) {
+                expNode.setType(DataType.FLOAT);
+            } else {
+                expNode.setType(DataType.INT);
+            }
         }
         else if (expNode instanceof VariableNode) {
 
@@ -129,10 +113,50 @@ public class SemanticAnalyzer {
 
     /**
      *
+     * @param stateNode StatementNode that is having its ExpressionNodes' type set
+     */
+    private void assignDataType(StatementNode stateNode) {
+
+        if (stateNode instanceof AssignmentStatementNode) {
+            assignDataType(((AssignmentStatementNode) stateNode).getLvalue());
+            assignDataType(((AssignmentStatementNode) stateNode).getExpression());
+        }
+        else if (stateNode instanceof CompoundStatementNode) {
+            for (StatementNode state : ((CompoundStatementNode) stateNode).getStatements()) {
+                assignDataType(state);
+            }
+        }
+        else if (stateNode instanceof IfStatementNode) {
+            assignDataType(((IfStatementNode) stateNode).getTest());
+            assignDataType(((IfStatementNode) stateNode).getThenStatement());
+            if (((IfStatementNode) stateNode).getElseStatement() != null) {
+                assignDataType(((IfStatementNode) stateNode).getElseStatement());
+            }
+        }
+        else if (stateNode instanceof ProcedureStatementNode) {
+            //assignDataType(stateNode.);
+        }
+        else if (stateNode instanceof ReadStatementNode) {
+            //assignDataType(((ReadStatementNode) stateNode).getInput());
+        }
+        else if (stateNode instanceof ReturnStatementNode) {
+            assignDataType(((ReturnStatementNode) stateNode).getReturnValue());
+        }
+        else if (stateNode instanceof WhileStatementNode) {
+            assignDataType(((WhileStatementNode) stateNode).getTest());
+            assignDataType(((WhileStatementNode) stateNode).getDoStatement());
+        }
+        else if (stateNode instanceof WriteStatementNode) {
+            assignDataType(((WriteStatementNode) stateNode).getOutput());
+        }
+    }
+
+    /**
+     *
      * @param body
      * @return
      */
-    public ArrayList<String> getVariables(CompoundStatementNode body) {
+    private ArrayList<String> getVariables(CompoundStatementNode body) {
 
         ArrayList<String> variables = new ArrayList();
         ArrayList<VariableNode> variableNodes = body.getVariables().getVars();

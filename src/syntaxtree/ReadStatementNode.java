@@ -9,7 +9,7 @@ public class ReadStatementNode extends StatementNode {
     /** input being read. */
     private String input;
 
-    public String getInputput() { return this.input; }
+    public String getInput() { return this.input; }
 
     public void setInput(String input) { this.input = input; }
 
