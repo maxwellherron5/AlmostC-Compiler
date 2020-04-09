@@ -52,8 +52,11 @@ public class SemanticAnalyzer {
      * it will print out the name of that variable, and set the canWriteAssembly flag to false.
      */
     public void checkIdentifiersDeclaration() {
-
         ArrayList<String> variables = getVariables(progNode.getMain());
+        for (FunctionNode funcNode : progNode.getFunctions().getDefinitions()) {
+            variables.addAll(getVariables(funcNode.getBody()));
+            variables.addAll(getVariables(funcNode.getParameters()));
+        }
         ArrayList<String> allVariables = new ArrayList();
         String[] stringArray = progNode.indentedToString(0).split(" ");
         for (int i = 0; i < stringArray.length; i++) {
@@ -73,6 +76,10 @@ public class SemanticAnalyzer {
         }
     }
 
+    public void checkIdentifierDeclaration(CompoundStatementNode stateNode) {
+
+    }
+
     /**
      * Assigns data types to all ExpressionNodes. It does so by recursively calling the
      * method assignDataType(), which is overloaded by having an ExpressionNode param
@@ -81,6 +88,10 @@ public class SemanticAnalyzer {
     public void assignDatatypes() {
 
         ArrayList<StatementNode> stateList = progNode.getMain().getStatements();
+
+        for (FunctionNode funcNode : progNode.getFunctions().getDefinitions()) {
+            stateList.addAll(funcNode.getBody().getStatements());
+        }
 
         for (StatementNode statement : stateList) {
             assignDataType(statement);
@@ -201,6 +212,20 @@ public class SemanticAnalyzer {
         ArrayList<String> variables = new ArrayList();
         ArrayList<VariableNode> variableNodes = body.getVariables().getVars();
         for (VariableNode node : variableNodes) {
+            variables.add(node.getName());
+        }
+        return variables;
+    }
+
+    /**
+     * Overload that takes ArrayList of VariableNodes as input
+     * @param vars
+     * @return
+     */
+    private ArrayList<String> getVariables(ArrayList<VariableNode> vars) {
+        ArrayList<String> variables = new ArrayList();
+        for (VariableNode node : vars) {
+            System.out.println(node.getName());
             variables.add(node.getName());
         }
         return variables;

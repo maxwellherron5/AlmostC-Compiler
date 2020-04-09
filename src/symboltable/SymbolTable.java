@@ -208,7 +208,7 @@ public class SymbolTable {
         output.append(String.format(format, "----------", "----------"));
         // Iterating through each the table to grab/print the key and value
         map.entrySet().forEach(entry->{
-            output.append(String.format(format, entry.getKey(), entry.getValue()));
+            output.append(String.format(format, entry.getKey(), entry.getValue().getKind()));
             output.append(String.format(format, "----------", "----------"));
         });
         return output.toString();

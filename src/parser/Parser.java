@@ -193,7 +193,7 @@ public class Parser {
      * @return funcNode
      */
     public FunctionNode functionDefinition() {
-        type();
+        DataType type = type();
         FunctionNode funcNode = new FunctionNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
         ArrayList<VariableNode> params = parameters();
@@ -201,6 +201,7 @@ public class Parser {
             funcNode.addParameter(var);
         }
         funcNode.setBody(compoundStatement());
+        funcNode.setReturnType(type);
         return funcNode;
     }
 
@@ -225,12 +226,30 @@ public class Parser {
     public ArrayList<VariableNode> parameterList() {
         ArrayList<VariableNode> varList = new ArrayList<>();
         if (isType()) {
-            type();
+            DataType type = type();
             VariableNode var = new VariableNode(lookahead.getLexeme());
+            varList.add(var);
+            if (!table.exists(var.getName())) {
+                table.addVariableName(var.getName());
+                table.setType(var.getName(), type);
+            }
+            var.setType(type);
             match(TokenType.IDENTIFIER);
-            if (lookahead.getType() == TokenType.COMMA) {
+            while (lookahead.getType() == TokenType.COMMA) {
                 match(TokenType.COMMA);
-                varList.addAll(parameterList());
+                if (isType()) {
+                    type();
+                    var = new VariableNode(lookahead.getLexeme());
+                    varList.add(var);
+                    if (!table.exists(var.getName())) {
+                        table.addVariableName(var.getName());
+                        table.setType(var.getName(), type);
+                    }
+                    var.setType(type);
+                    match(TokenType.IDENTIFIER);
+                } else {
+                    // Lambda
+                }
             }
         } else {
             // Lambda option
