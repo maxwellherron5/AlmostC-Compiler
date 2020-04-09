@@ -10,7 +10,7 @@ import syntaxtree.StatementNode;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Runs tests on the
+ * Runs tests on the three main Semantic Analyzer methods.
  * @author Maxwell Herron
  */
 class SemanticAnalyzerTest {
