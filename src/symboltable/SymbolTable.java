@@ -77,7 +77,7 @@ public class SymbolTable {
      */
     public boolean isVariableName(String name) {
         boolean answer = false;
-        if (map.get(name).kind == IdentifierKind.VARIABLE) {
+        if (map.get(name).getKind() == IdentifierKind.VARIABLE) {
             answer = true;
         }
         return answer;
@@ -90,7 +90,7 @@ public class SymbolTable {
      */
     public boolean isFunctionName(String name) {
         boolean answer = false;
-        if (map.get(name).kind == IdentifierKind.FUNCTION) {
+        if (map.get(name).getKind() == IdentifierKind.FUNCTION) {
             answer = true;
         }
         return answer;
@@ -103,7 +103,7 @@ public class SymbolTable {
      */
     public boolean isProgramName(String name) {
         boolean answer = false;
-        if (map.get(name).kind == IdentifierKind.PROGRAM) {
+        if (map.get(name).getKind() == IdentifierKind.PROGRAM) {
             answer = true;
         }
         return answer;
@@ -116,7 +116,7 @@ public class SymbolTable {
      */
     public boolean isArrayName(String name) {
         boolean answer = false;
-        if (map.get(name).kind == IdentifierKind.ARRAY) {
+        if (map.get(name).getKind() == IdentifierKind.ARRAY) {
             answer = true;
         }
         return answer;
@@ -135,8 +135,13 @@ public class SymbolTable {
         return answer;
     }
 
+    /**
+     * Sets the datatype of the specified Identifier in the symbol table
+     * @param name
+     * @param type
+     */
     public void setType(String name, DataType type) {
-        map.get(name).type = type;
+        map.get(name).setType(type);
     }
 
     /**
@@ -159,16 +164,24 @@ public class SymbolTable {
     /**
      * This internal class encapsulates the identifier name and datatype
      */
-    private class Data {
-        String id;
-        IdentifierKind kind;
-        DataType type;
+    public class Data {
+        private String id;
+        private IdentifierKind kind;
+        private DataType type;
 
-        Data(String inID, IdentifierKind inKind) {
+        public Data(String inID, IdentifierKind inKind) {
             this.id = inID;
             this.kind = inKind;
             this.type = null;
         }
+
+        // Getters
+        public IdentifierKind getKind() { return this.kind; }
+        public DataType getType() { return this.type; }
+
+        // Setters
+        public void setKind(IdentifierKind kind) { this.kind = kind; }
+        public void setType(DataType type) { this.type = type; }
     }
 
     /**
@@ -177,8 +190,8 @@ public class SymbolTable {
      * @param key the identifier name
      * @return the kind value associated with the key input
      */
-    public IdentifierKind get(String key) {
-        return map.get(key).kind;
+    public Data get(String key) {
+        return map.get(key);
     }
 
     /**

@@ -50,4 +50,22 @@ class SemanticAnalyzerTest {
         s.assignDatatypes();
         System.out.println(progNode.indentedToString(0));
     }
+
+    @Test
+    public void checkAssignmentTypesTest() {
+        Parser p = new Parser("main() {\n" +
+                "        int dollars, yen, bitcoins;\n" +
+                "        float myFloat;\n" +
+                "        myFloat = 22.347;\n" +
+                "        dollars = 1000000;\n" +
+                "        myvar = dollars * 104;\n" +
+                "        if (myVar > 5) {\n" +
+                "        yen = myVar;   " +
+                "        } else { yen = dollars + 22; };\n" +
+                "     };", false);
+        ProgramNode progNode = p.program();
+        SymbolTable st = p.getTable();
+        SemanticAnalyzer s = new SemanticAnalyzer(progNode, st);
+        s.checkAssignmentTypes();
+    }
 }

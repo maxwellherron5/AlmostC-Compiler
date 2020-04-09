@@ -4,11 +4,11 @@ import scanner.BadCharacterException;
 import scanner.Scanner;
 import scanner.Token;
 import scanner.TokenType;
+import symboltable.SymbolTable.DataType;
 import symboltable.SymbolTable;
 import syntaxtree.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -109,12 +109,13 @@ public class Parser {
     public DeclarationsNode declarations() {
         DeclarationsNode decsNode = new DeclarationsNode();
         while (isType()) {
-            SymbolTable.DataType type = type();
+            DataType type = type();
             ArrayList<String> varList = identifierList();
             //declarations();
             for (String var : varList) {
                 VariableNode varNode = new VariableNode(var);
                 varNode.setType(type);
+                table.setType(varNode.getName(), type);
                 decsNode.addVariable(varNode);
             }
             match(TokenType.SEMICOLON);
@@ -127,19 +128,19 @@ public class Parser {
     /**
      * Determines which type keyword the token is. If there is no match, it will print an error.
      */
-    public SymbolTable.DataType type() {
-        SymbolTable.DataType type = null;
+    public DataType type() {
+        DataType type = null;
         switch (lookahead.getType()) {
             case VOID:
                 match(TokenType.VOID);
                 break;
             case INT:
                 match(TokenType.INT);
-                type = SymbolTable.DataType.INT;
+                type = DataType.INT;
                 break;
             case FLOAT:
                 match(TokenType.FLOAT);
-                type = SymbolTable.DataType.FLOAT;
+                type = DataType.FLOAT;
                 break;
             default:
                 error("Type");
@@ -165,10 +166,11 @@ public class Parser {
      * Runs through the production for functionDeclaration. Adds function names to the symbol table.
      */
     public void functionDeclaration() {
-        type();
+        DataType type = type();
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addFunctionName(name);
+        table.setType(name, type);
         parameters();
     }
 
@@ -291,7 +293,8 @@ public class Parser {
         StatementNode stateNode = null;
         switch (lookahead.getType()) {
             case IDENTIFIER:
-                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION ){
+                if (table.exists(lookahead.getLexeme()) &&
+                        table.get(lookahead.getLexeme()).getKind() == SymbolTable.IdentifierKind.FUNCTION ){
                     stateNode = procedureStatement();
                 } else {
                     AssignmentStatementNode assignOp = new AssignmentStatementNode();

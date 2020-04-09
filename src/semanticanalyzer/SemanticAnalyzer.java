@@ -93,6 +93,7 @@ public class SemanticAnalyzer {
                 VariableNode lNode = ((AssignmentStatementNode) statement).getLvalue();
                 ExpressionNode expNode = ((AssignmentStatementNode) statement).getExpression();
                 if (lNode.getType() != expNode.getType()) {
+                    System.out.println("uh oh spaghetti-o!");
                     canWriteAssembly = false;
                 }
             }
@@ -123,14 +124,24 @@ public class SemanticAnalyzer {
             }
         }
         else if (expNode instanceof VariableNode) {
-
+            // If variable is undeclared, assume it is an INT to prevent null pointer exception
+            if (table.exists(((VariableNode) expNode).getName())) {
+                expNode.setType(table.get(((VariableNode) expNode).getName()).getType());
+            } else {
+                expNode.setType(DataType.INT);
+            }
         }
         else if (expNode instanceof FunctionCallNode) {
             ArrayList<ExpressionNode> expList = ((FunctionCallNode) expNode).getParameters();
             for (ExpressionNode exp : expList) {
                 assignDataType(exp);
             }
-            //expNode.setType();
+            // If function is undeclared, assume it is an INT to prevent null pointer exception
+            if (table.exists(((FunctionCallNode) expNode).getName())) {
+                expNode.setType(table.get(((FunctionCallNode) expNode).getName()).getType());
+            } else {
+                expNode.setType(DataType.INT);
+            }
         }
     }
 
