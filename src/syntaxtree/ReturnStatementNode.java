@@ -7,7 +7,7 @@ package syntaxtree;
 public class ReturnStatementNode extends StatementNode {
 
     /** Return value of the statement. */
-    public ExpressionNode returnValue;
+    private ExpressionNode returnValue;
 
     public ExpressionNode getReturnValue() { return this.returnValue; }
 

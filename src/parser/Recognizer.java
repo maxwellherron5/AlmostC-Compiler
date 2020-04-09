@@ -237,11 +237,11 @@ public class Recognizer {
     public void statement() {
         switch (lookahead.getType()) {
             case IDENTIFIER:
-                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
+                if (table.get(lookahead.getLexeme()).getKind() == SymbolTable.IdentifierKind.VARIABLE) {
                     variable();
                     match(TokenType.ASSIGNMENT);
                     expression();
-                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
+                } else if (table.get(lookahead.getLexeme()).getKind() == SymbolTable.IdentifierKind.FUNCTION) {
                     procedureStatement();
                 } else {
                     error("statement");

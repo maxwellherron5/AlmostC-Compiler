@@ -1,13 +1,14 @@
 # Maxwell Herron's Micro-C Compiler
 
-This project is to be used to compile and run Micro-C programs. It is to be comprised of four main packages:
+This project is to be used to compile and run Micro-C programs. It is to be comprised of seven main packages:
 
 1. scanner
 2. parser
 3. symboltable
-4. semantic analyzer
-5. code generator
-6. compiler
+4. syntaxtree
+5. semanticanalyzer
+6. code generator
+7. compiler
  
 In its current state, only the scanner, recognizer, and symbol table are written. However, the 
 symbol table is not yet integrated with the recognizer. To run the scanner, follow these steps:
@@ -35,7 +36,12 @@ parser package. Once in this file, run the tests just as you have done with the 
 To mess around with the syntax tree, the best way to do so is to navigate to `SyntaxTreeTest.java`. Here, there are tests available
 to be ran, and you can play around and verify that correct syntax trees are being generated based on a given input.
 
+To run the individual components of the Semantic Analyzer, navigate to `SemanticAnalyzerTest.java`, which is located in
+the semanticanalyzer package. There, you can run individual tests through your IDE. You can also run it, along with other
+previous components, from the command line, by using `CompilerMain.java` found in the compiler package.
+
 The compiler package is the easiest way to run the Compiler in its entirety. To do so, navigate to `CompilerMain.java`,
-compile the file, and run it, providing the name of the input file as a command line argument. This will run the recognizer on an input file in the same package, 
-and then write the 
-tabular form of the generated symbol table to an output file.
+compile the file, and run it, providing the name of the input file as a command line argument, like so - `java compiler/CompilerMain <FILE_OF_YOUR_CHOOSING>`.
+ This will run all the built components on an input file in the same package. It will then write the 
+tabular form of the generated symbol table to an output file. It will also write out the generated syntax tree to another file,
+along with the new syntax tree overwritten by the Semantic Analyzer to another file.

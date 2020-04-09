@@ -44,6 +44,8 @@ public class FunctionNode extends SyntaxTreeNode {
     public void addParameter( VariableNode aParameter) {
         parameters.add( aParameter);
     }
+
+    public ArrayList<VariableNode> getParameters() { return this.parameters; }
     
     /**
      * Creates a String representation of this function definition node and its children.

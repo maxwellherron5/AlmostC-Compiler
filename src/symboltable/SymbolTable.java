@@ -9,7 +9,7 @@ import java.util.HashMap;
  */
 public class SymbolTable {
 
-    private HashMap<String, IdentifierKind> map;
+    private HashMap<String, Data> map;
 
     /**
      * Default constructor
@@ -25,7 +25,7 @@ public class SymbolTable {
      */
     public void addVariableName(String name) {
         if (!exists(name)) {
-            map.put(name, IdentifierKind.VARIABLE);
+            map.put(name, new Data(name, IdentifierKind.VARIABLE));
         } else {
             throw new RuntimeException("ERROR: " + name + " already exists in the table.");
         }
@@ -38,7 +38,7 @@ public class SymbolTable {
      */
     public void addFunctionName(String name) {
         if (!exists(name)) {
-            map.put(name, IdentifierKind.FUNCTION);
+            map.put(name, new Data(name, IdentifierKind.FUNCTION));
         } else {
             throw new RuntimeException("ERROR: " + name + " already exists in the table.");
         }
@@ -51,7 +51,7 @@ public class SymbolTable {
      */
     public void addProgramName(String name) {
         if (!exists(name)) {
-            map.put(name, IdentifierKind.PROGRAM);
+            map.put(name, new Data(name, IdentifierKind.PROGRAM));
         } else {
             throw new RuntimeException("ERROR: " + name + " already exists in the table.");
         }
@@ -64,7 +64,7 @@ public class SymbolTable {
      */
     public void addArrayName(String name) {
         if (!exists(name)) {
-            map.put(name, IdentifierKind.ARRAY);
+            map.put(name, new Data(name, IdentifierKind.ARRAY));
         } else {
             throw new RuntimeException("ERROR: " + name + " already exists in the table.");
         }
@@ -77,7 +77,7 @@ public class SymbolTable {
      */
     public boolean isVariableName(String name) {
         boolean answer = false;
-        if (map.get(name) == IdentifierKind.VARIABLE) {
+        if (map.get(name).getKind() == IdentifierKind.VARIABLE) {
             answer = true;
         }
         return answer;
@@ -90,7 +90,7 @@ public class SymbolTable {
      */
     public boolean isFunctionName(String name) {
         boolean answer = false;
-        if (map.get(name) == IdentifierKind.FUNCTION) {
+        if (map.get(name).getKind() == IdentifierKind.FUNCTION) {
             answer = true;
         }
         return answer;
@@ -103,7 +103,7 @@ public class SymbolTable {
      */
     public boolean isProgramName(String name) {
         boolean answer = false;
-        if (map.get(name) == IdentifierKind.PROGRAM) {
+        if (map.get(name).getKind() == IdentifierKind.PROGRAM) {
             answer = true;
         }
         return answer;
@@ -116,7 +116,7 @@ public class SymbolTable {
      */
     public boolean isArrayName(String name) {
         boolean answer = false;
-        if (map.get(name) == IdentifierKind.ARRAY) {
+        if (map.get(name).getKind() == IdentifierKind.ARRAY) {
             answer = true;
         }
         return answer;
@@ -133,6 +133,15 @@ public class SymbolTable {
             answer = true;
         }
         return answer;
+    }
+
+    /**
+     * Sets the datatype of the specified Identifier in the symbol table
+     * @param name
+     * @param type
+     */
+    public void setType(String name, DataType type) {
+        map.get(name).setType(type);
     }
 
     /**
@@ -155,14 +164,24 @@ public class SymbolTable {
     /**
      * This internal class encapsulates the identifier name and datatype
      */
-    private class Data {
-        String id;
-        IdentifierKind kind;
+    public class Data {
+        private String id;
+        private IdentifierKind kind;
+        private DataType type;
 
-        Data(String inID, IdentifierKind inKind) {
+        public Data(String inID, IdentifierKind inKind) {
             this.id = inID;
             this.kind = inKind;
+            this.type = null;
         }
+
+        // Getters
+        public IdentifierKind getKind() { return this.kind; }
+        public DataType getType() { return this.type; }
+
+        // Setters
+        public void setKind(IdentifierKind kind) { this.kind = kind; }
+        public void setType(DataType type) { this.type = type; }
     }
 
     /**
@@ -171,7 +190,7 @@ public class SymbolTable {
      * @param key the identifier name
      * @return the kind value associated with the key input
      */
-    public IdentifierKind get(String key) {
+    public Data get(String key) {
         return map.get(key);
     }
 
@@ -189,7 +208,7 @@ public class SymbolTable {
         output.append(String.format(format, "----------", "----------"));
         // Iterating through each the table to grab/print the key and value
         map.entrySet().forEach(entry->{
-            output.append(String.format(format, entry.getKey(), entry.getValue()));
+            output.append(String.format(format, entry.getKey(), entry.getValue().getKind()));
             output.append(String.format(format, "----------", "----------"));
         });
         return output.toString();

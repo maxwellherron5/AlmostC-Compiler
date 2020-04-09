@@ -2,9 +2,8 @@ package compiler;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import parser.Recognizer;
 import parser.Parser;
-import syntaxtree.ExpressionNode;
+import semanticanalyzer.SemanticAnalyzer;
 import syntaxtree.ProgramNode;
 
 /**
@@ -19,15 +18,35 @@ public class CompilerMain {
         // Takes the name of the file as a command line argument
         Parser p = new Parser(args[0], true);
         ProgramNode pr = p.program();
+        SemanticAnalyzer sa = new SemanticAnalyzer(pr, p.getTable());
         try {
-            FileWriter writer = new FileWriter("compiler/output.st");
-            writer.write("*****PRINTING SYMBOL TABLE*****");
+            FileWriter writer = new FileWriter("compiler/symbol_table_output.st");
             writer.write("\n");
             writer.write(p.getTable().toString());
-            writer.write("\n\n");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            FileWriter writer = new FileWriter("compiler/syntax_tree_output.st");
             writer.write("*****PRINTING SYNTAX TREE*****");
             writer.write("\n");
             writer.write(pr.indentedToString(0));
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            FileWriter writer = new FileWriter("compiler/semantic_analyzer_tree_.sa");
+            sa.checkIdentifiersDeclaration();
+            sa.assignDatatypes();
+            sa.checkAssignmentTypes();
+            writer.write(pr.indentedToString(0));
+            if (sa.getCanWriteAssembly()) {
+                writer.write("\nThis program can produce assembly!");
+            } else {
+                writer.write("\nThis program cannot produce assembly :(");
+            }
             writer.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());

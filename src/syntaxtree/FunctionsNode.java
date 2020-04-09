@@ -14,7 +14,10 @@ public class FunctionsNode extends SyntaxTreeNode {
     public void addFunctionDefinition( FunctionNode aFunction) {
         definitions.add( aFunction);
     }
-    
+
+    // Getter
+    public ArrayList<FunctionNode> getDefinitions() { return this.definitions; }
+
     /**
      * Creates a String representation of this node and its children.
      * @param level The tree level at which this node resides.

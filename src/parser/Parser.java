@@ -4,11 +4,11 @@ import scanner.BadCharacterException;
 import scanner.Scanner;
 import scanner.Token;
 import scanner.TokenType;
+import symboltable.SymbolTable.DataType;
 import symboltable.SymbolTable;
 import syntaxtree.*;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -109,11 +109,13 @@ public class Parser {
     public DeclarationsNode declarations() {
         DeclarationsNode decsNode = new DeclarationsNode();
         while (isType()) {
-            type();
+            DataType type = type();
             ArrayList<String> varList = identifierList();
             //declarations();
             for (String var : varList) {
                 VariableNode varNode = new VariableNode(var);
+                varNode.setType(type);
+                table.setType(varNode.getName(), type);
                 decsNode.addVariable(varNode);
             }
             match(TokenType.SEMICOLON);
@@ -126,20 +128,24 @@ public class Parser {
     /**
      * Determines which type keyword the token is. If there is no match, it will print an error.
      */
-    public void type() {
+    public DataType type() {
+        DataType type = null;
         switch (lookahead.getType()) {
             case VOID:
                 match(TokenType.VOID);
                 break;
             case INT:
                 match(TokenType.INT);
+                type = DataType.INT;
                 break;
             case FLOAT:
                 match(TokenType.FLOAT);
+                type = DataType.FLOAT;
                 break;
             default:
                 error("Type");
         }
+        return type;
     }
 
     /**
@@ -160,10 +166,11 @@ public class Parser {
      * Runs through the production for functionDeclaration. Adds function names to the symbol table.
      */
     public void functionDeclaration() {
-        type();
+        DataType type = type();
         String name = lookahead.getLexeme();
         match(TokenType.IDENTIFIER);
         table.addFunctionName(name);
+        table.setType(name, type);
         parameters();
     }
 
@@ -186,7 +193,7 @@ public class Parser {
      * @return funcNode
      */
     public FunctionNode functionDefinition() {
-        type();
+        DataType type = type();
         FunctionNode funcNode = new FunctionNode(lookahead.getLexeme());
         match(TokenType.IDENTIFIER);
         ArrayList<VariableNode> params = parameters();
@@ -194,6 +201,7 @@ public class Parser {
             funcNode.addParameter(var);
         }
         funcNode.setBody(compoundStatement());
+        funcNode.setReturnType(type);
         return funcNode;
     }
 
@@ -218,12 +226,30 @@ public class Parser {
     public ArrayList<VariableNode> parameterList() {
         ArrayList<VariableNode> varList = new ArrayList<>();
         if (isType()) {
-            type();
+            DataType type = type();
             VariableNode var = new VariableNode(lookahead.getLexeme());
+            varList.add(var);
+            if (!table.exists(var.getName())) {
+                table.addVariableName(var.getName());
+                table.setType(var.getName(), type);
+            }
+            var.setType(type);
             match(TokenType.IDENTIFIER);
-            if (lookahead.getType() == TokenType.COMMA) {
+            while (lookahead.getType() == TokenType.COMMA) {
                 match(TokenType.COMMA);
-                varList.addAll(parameterList());
+                if (isType()) {
+                    type();
+                    var = new VariableNode(lookahead.getLexeme());
+                    varList.add(var);
+                    if (!table.exists(var.getName())) {
+                        table.addVariableName(var.getName());
+                        table.setType(var.getName(), type);
+                    }
+                    var.setType(type);
+                    match(TokenType.IDENTIFIER);
+                } else {
+                    // Lambda
+                }
             }
         } else {
             // Lambda option
@@ -286,17 +312,16 @@ public class Parser {
         StatementNode stateNode = null;
         switch (lookahead.getType()) {
             case IDENTIFIER:
-                if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.VARIABLE) {
+                if (table.exists(lookahead.getLexeme()) &&
+                        table.get(lookahead.getLexeme()).getKind() == SymbolTable.IdentifierKind.FUNCTION ){
+                    stateNode = procedureStatement();
+                } else {
                     AssignmentStatementNode assignOp = new AssignmentStatementNode();
                     assignOp.setLvalue(variable());
                     match(TokenType.ASSIGNMENT);
                     assignOp.setExpression(expression());
                     stateNode = assignOp;
-                } else if (table.get(lookahead.getLexeme()) == SymbolTable.IdentifierKind.FUNCTION) {
-                    return procedureStatement();
-                } else {
-                error("statement");
-            }
+                }
                 break;
             case LEFT_CURLY:
                 stateNode = compoundStatement();
@@ -510,6 +535,10 @@ public class Parser {
             case NUMBER:
                 expNode = new ValueNode(lookahead.getLexeme());
                 match(TokenType.NUMBER);
+                break;
+            case REAL_NUMBER:
+                expNode = new ValueNode(lookahead.getLexeme());
+                match(TokenType.REAL_NUMBER);
                 break;
             case NOT:
                 match(TokenType.NOT);
