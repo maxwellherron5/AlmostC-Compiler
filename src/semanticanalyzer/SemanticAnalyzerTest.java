@@ -57,7 +57,7 @@ class SemanticAnalyzerTest {
                 "        int dollars, yen, bitcoins;\n" +
                 "        float myFloat;\n" +
                 "        myFloat = 22.347;\n" +
-                "        dollars = 1000000;\n" +
+                "        dollars = 150 + myFloat;\n" +
                 "        myvar = dollars * 104;\n" +
                 "        if (myVar > 5) {\n" +
                 "        yen = myVar;   " +
@@ -66,6 +66,9 @@ class SemanticAnalyzerTest {
         ProgramNode progNode = p.program();
         SymbolTable st = p.getTable();
         SemanticAnalyzer s = new SemanticAnalyzer(progNode, st);
+        s.assignDatatypes();
+        System.out.println(progNode.indentedToString(0));
         s.checkAssignmentTypes();
+        System.out.println(s.getCanWriteAssembly());
     }
 }

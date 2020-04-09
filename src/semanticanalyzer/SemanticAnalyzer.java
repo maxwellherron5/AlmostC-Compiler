@@ -93,7 +93,6 @@ public class SemanticAnalyzer {
                 VariableNode lNode = ((AssignmentStatementNode) statement).getLvalue();
                 ExpressionNode expNode = ((AssignmentStatementNode) statement).getExpression();
                 if (lNode.getType() != expNode.getType()) {
-                    System.out.println("uh oh spaghetti-o!");
                     canWriteAssembly = false;
                 }
             }
@@ -109,7 +108,7 @@ public class SemanticAnalyzer {
         if(expNode instanceof OperationNode) {
             assignDataType(((OperationNode) expNode).getLeft());
             assignDataType(((OperationNode) expNode).getRight());
-            if (((OperationNode) expNode).getLeft().getType() == DataType.FLOAT &&
+            if (((OperationNode) expNode).getLeft().getType() == DataType.FLOAT |
             ((OperationNode) expNode).getRight().getType() == DataType.FLOAT) {
                 expNode.setType(DataType.FLOAT);
             } else {
