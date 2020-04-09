@@ -36,6 +36,8 @@ class SemanticAnalyzerTest {
     public void assignDataTypesTest() {
         Parser p = new Parser("main() {\n" +
                 "        int dollars, yen, bitcoins;\n" +
+                "        float myFloat;\n" +
+                "        myFloat = 22.347;\n" +
                 "        dollars = 1000000;\n" +
                 "        myvar = dollars * 104;\n" +
                 "        if (myVar > 5) {\n" +

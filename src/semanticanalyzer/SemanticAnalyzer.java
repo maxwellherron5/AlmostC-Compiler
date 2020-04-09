@@ -4,6 +4,7 @@ import symboltable.SymbolTable.DataType;
 import symboltable.SymbolTable;
 import syntaxtree.*;
 
+import java.beans.Expression;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -81,7 +82,10 @@ public class SemanticAnalyzer {
         for (StatementNode statement : stateList) {
             if (statement instanceof AssignmentStatementNode) {
                 VariableNode lNode = ((AssignmentStatementNode) statement).getLvalue();
-                //SymbolTable.DataType;
+                ExpressionNode expNode = ((AssignmentStatementNode) statement).getExpression();
+                if (lNode.getType() != expNode.getType()) {
+                    canWriteAssembly = false;
+                }
             }
         }
     }
@@ -92,10 +96,7 @@ public class SemanticAnalyzer {
      */
     private void assignDataType(ExpressionNode expNode) {
 
-        if (expNode instanceof FunctionCallNode) {
-
-        }
-        else if(expNode instanceof OperationNode) {
+        if(expNode instanceof OperationNode) {
             assignDataType(((OperationNode) expNode).getLeft());
             assignDataType(((OperationNode) expNode).getRight());
             if (((OperationNode) expNode).getLeft().getType() == DataType.FLOAT &&
@@ -114,6 +115,13 @@ public class SemanticAnalyzer {
         }
         else if (expNode instanceof VariableNode) {
 
+
+        }
+        else if (expNode instanceof FunctionCallNode) {
+            ArrayList<ExpressionNode> expList = ((FunctionCallNode) expNode).getParameters();
+            for (ExpressionNode exp : expList) {
+                assignDataType(exp);
+            }
 
         }
     }
@@ -141,10 +149,10 @@ public class SemanticAnalyzer {
             }
         }
         else if (stateNode instanceof ProcedureStatementNode) {
-            //assignDataType(stateNode.);
-        }
-        else if (stateNode instanceof ReadStatementNode) {
-            //
+            ArrayList<ExpressionNode> expList = ((ProcedureStatementNode) stateNode).getParameters();
+            for (ExpressionNode exp : expList) {
+                assignDataType(exp);
+            }
         }
         else if (stateNode instanceof ReturnStatementNode) {
             assignDataType(((ReturnStatementNode) stateNode).getReturnValue());

@@ -514,6 +514,10 @@ public class Parser {
                 expNode = new ValueNode(lookahead.getLexeme());
                 match(TokenType.NUMBER);
                 break;
+            case REAL_NUMBER:
+                expNode = new ValueNode(lookahead.getLexeme());
+                match(TokenType.REAL_NUMBER);
+                break;
             case NOT:
                 match(TokenType.NOT);
                 expNode = new OperationNode(TokenType.NOT, null, factor());
