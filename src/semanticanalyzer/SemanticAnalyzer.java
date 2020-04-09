@@ -6,7 +6,11 @@ import syntaxtree.*;
 import java.util.ArrayList;
 
 /**
- *
+ * This class builds the Semantic Analyzer for the compiler. It relies on three
+ * primary methods: checkIdentifierDeclaration(), assignDatatypes(), and
+ * checkAssignmentTypes(). The first and last of those methods may set the boolean
+ * flag canWriteAssembly to false if a semantic error is encountered, while the second
+ * method simply assigns a type to all expression nodes.
  * @author Maxwell Herron
  */
 public class SemanticAnalyzer {
@@ -70,7 +74,9 @@ public class SemanticAnalyzer {
     }
 
     /**
-     * Assigns data types to all ExpressionNodes.
+     * Assigns data types to all ExpressionNodes. It does so by recursively calling the
+     * method assignDataType(), which is overloaded by having an ExpressionNode param
+     * or a StatementNode param.
      */
     public void assignDatatypes() {
 
@@ -82,7 +88,8 @@ public class SemanticAnalyzer {
     }
 
     /**
-     * Checks type matching across assignment
+     * Iterates through all StatementNodes and determines if all AssignmentStatementNodes
+     * are of a legal assignment. This means floats and ints cannot intermingle.
      */
     public void checkAssignmentTypes() {
 
@@ -145,7 +152,7 @@ public class SemanticAnalyzer {
     }
 
     /**
-     *
+     * Sets the datatype of the ExpressionNode associated with the input StatementNode
      * @param stateNode StatementNode that is having its ExpressionNodes' type set
      */
     private void assignDataType(StatementNode stateNode) {
@@ -185,7 +192,7 @@ public class SemanticAnalyzer {
     }
 
     /**
-     *
+     * Returns an ArrayList of declared variables.
      * @param body
      * @return
      */
