@@ -36,13 +36,45 @@ public class CodeGenerator {
         return code.toString();
     }
 
+    public String writeCode(StatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+        if (node instanceof AssignmentStatementNode) {
+
+        }
+        else if (node instanceof CompoundStatementNode) {
+
+        }
+        else if (node instanceof IfStatementNode) {
+
+        }
+        else if (node instanceof ProcedureStatementNode) {
+
+        }
+        else if (node instanceof ReadStatementNode) {
+
+        }
+        else if (node instanceof ReturnStatementNode) {
+
+        }
+        else if (node instanceof WhileStatementNode) {
+
+        }
+        else if (node instanceof WriteStatementNode) {
+
+        }
+
+        return nodeCode;
+    }
+
     /**
      * Generates assembly for the given ExpressionNode
      * @param node
-     * @param reg
+     * @param resultRegister
      * @return
      */
-    public String writeCode(ExpressionNode node, String reg) {
+    public String writeCode(ExpressionNode node, String resultRegister) {
 
         String nodeCode = null;
 
@@ -59,6 +91,24 @@ public class CodeGenerator {
         return nodeCode;
     }
 
+    public String writeCode(OperationNode opNode, String resultRegister) {
+        
+    }
+
+    /**
+     * Generates assembly for the given FunctionCallNode
+     * @param funcNode
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(FunctionCallNode funcNode, String resultRegister) {
+
+        String name = funcNode.getName();
+        String code = "jal " + name;
+
+        return code;
+    }
+
     /**
      * Generates the assembly for the given VariableNode
      * @param varNode
@@ -68,7 +118,8 @@ public class CodeGenerator {
     public String writeCode(VariableNode varNode, String resultRegister) {
 
         String name = varNode.getName();
-        String code = "lw\t" + name + ", " + 
+        String code = "lw\t" + resultRegister + ", " + name;
+        return name;
     }
 
     /**
