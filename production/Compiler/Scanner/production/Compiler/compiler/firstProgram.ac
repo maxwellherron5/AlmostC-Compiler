@@ -17,5 +17,5 @@
    }
 
    int myFunc(int foo, int bar) {
-      return one - two;
+      return foo - bar;
    }
