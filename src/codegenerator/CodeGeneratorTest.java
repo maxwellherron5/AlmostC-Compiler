@@ -29,6 +29,6 @@ class CodeGeneratorTest {
         s.assignDatatypes();
         s.checkAssignmentTypes();
         CodeGenerator c = new CodeGenerator();
-        System.out.println(s.getCanWriteAssembly());
+        System.out.println(c.writeCodeForRoot(progNode));
     }
 }

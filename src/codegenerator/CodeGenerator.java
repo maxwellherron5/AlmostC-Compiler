@@ -37,37 +37,172 @@ public class CodeGenerator {
         return code.toString();
     }
 
+    ///////////////////////////
+    // METHODS FOR STATEMENTS
+    ///////////////////////////
+
     public String writeCode(StatementNode node, String resultRegister) {
 
         String nodeCode = null;
 
         if (node instanceof AssignmentStatementNode) {
-
+            nodeCode = writeCode((AssignmentStatementNode) node, resultRegister);
         }
         else if (node instanceof CompoundStatementNode) {
-
+            nodeCode = writeCode((CompoundStatementNode) node, resultRegister);
         }
         else if (node instanceof IfStatementNode) {
-
+            nodeCode = writeCode((IfStatementNode) node, resultRegister);
         }
         else if (node instanceof ProcedureStatementNode) {
-
+            nodeCode = writeCode((ProcedureStatementNode) node, resultRegister);
         }
         else if (node instanceof ReadStatementNode) {
-
+            nodeCode = writeCode((ReadStatementNode) node, resultRegister);
         }
         else if (node instanceof ReturnStatementNode) {
-
+            nodeCode = writeCode((ReturnStatementNode) node, resultRegister);
         }
         else if (node instanceof WhileStatementNode) {
-
+            nodeCode = writeCode((WhileStatementNode) node, resultRegister);
         }
         else if (node instanceof WriteStatementNode) {
-
+            nodeCode = writeCode((WriteStatementNode) node, resultRegister);
         }
 
         return nodeCode;
     }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(IfStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(AssignmentStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(CompoundStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(ProcedureStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(ReadStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(WriteStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(ReturnStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+
+    }
+
+    /**
+     *
+     * @param node
+     * @param resultRegister
+     * @return
+     */
+    public String writeCode(WhileStatementNode node, String resultRegister) {
+
+        String nodeCode = null;
+
+
+
+        return nodeCode;
+    }
+
+    ///////////////////////////
+    // METHODS FOR EXPRESSIONS
+    ///////////////////////////
 
     /**
      * Generates assembly for the given ExpressionNode
@@ -80,7 +215,7 @@ public class CodeGenerator {
         String nodeCode = null;
 
         if (node instanceof FunctionCallNode) {
-
+            nodeCode = writeCode((FunctionCallNode) node, resultRegister);
         }
         else if(node instanceof VariableNode) {
             nodeCode = writeCode((VariableNode) node, resultRegister);
@@ -133,31 +268,30 @@ public class CodeGenerator {
                 break;
             }
             case OR: {
-                nodeCode += "and  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "or  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case EQUAL: {
-
+                nodeCode += "beq  " + leftReg + ",  " + rightReg + ",  ";
                 break;
             }
             case LESS_THAN: {
-
+                nodeCode += "blt  " + leftReg + ",  " + rightReg + ",  ";
                 break;
             }
             case GREATER_THAN: {
-
+                nodeCode += "bgt  " + leftReg + ",  " + rightReg + ",  ";
                 break;
             }
             case LESS_THAN_EQUAL: {
-
+                nodeCode += "ble  " + leftReg + ",  " + rightReg + ",  ";
                 break;
             }
             case GREATER_THAN_EQUAL: {
-
+                nodeCode += "bge  " + leftReg + ",  " + rightReg + ",  ";
                 break;
             }
         }
-
         return nodeCode;
     }
 
