@@ -1,5 +1,6 @@
 package codegenerator;
 
+import scanner.TokenType;
 import syntaxtree.*;
 
 /**
@@ -82,17 +83,82 @@ public class CodeGenerator {
 
         }
         else if(node instanceof VariableNode) {
-
+            nodeCode = writeCode((VariableNode) node, resultRegister);
         }
         else if (node instanceof ValueNode) {
-
+            writeCode((ValueNode) node, resultRegister);
         }
 
         return nodeCode;
     }
 
     public String writeCode(OperationNode opNode, String resultRegister) {
-        
+
+        String nodeCode = null;
+        ExpressionNode lValue = opNode.getLeft();
+        ExpressionNode rValue = opNode.getRight();
+
+        String leftReg = "t" + currentRegister++;
+        nodeCode = writeCode(lValue, leftReg);
+
+        String rightReg = "t" + currentRegister++;
+        nodeCode += writeCode(rValue, rightReg);
+
+        switch (opNode.getOperation()) {
+            case PLUS: {
+                nodeCode += "add  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                break;
+            }
+            case MINUS: {
+                nodeCode += "sub  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                break;
+            }
+            case MULTIPLY: {
+                nodeCode += "mult  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "mflo  " + resultRegister + "\n";
+                break;
+            }
+            case DIVIDE: {
+                nodeCode += "div  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "mflo  " + resultRegister + "\n";
+                break;
+            }
+            case MODULO: {
+                nodeCode += "div  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "mfhi  " + resultRegister + "\n";
+                break;
+            }
+            case AND: {
+                nodeCode += "and  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                break;
+            }
+            case OR: {
+                nodeCode += "and  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                break;
+            }
+            case EQUAL: {
+
+                break;
+            }
+            case LESS_THAN: {
+
+                break;
+            }
+            case GREATER_THAN: {
+
+                break;
+            }
+            case LESS_THAN_EQUAL: {
+
+                break;
+            }
+            case GREATER_THAN_EQUAL: {
+
+                break;
+            }
+        }
+
+        return nodeCode;
     }
 
     /**
@@ -104,7 +170,7 @@ public class CodeGenerator {
     public String writeCode(FunctionCallNode funcNode, String resultRegister) {
 
         String name = funcNode.getName();
-        String code = "jal " + name;
+        String code = "jal " + name + "\n";
 
         return code;
     }
@@ -118,7 +184,7 @@ public class CodeGenerator {
     public String writeCode(VariableNode varNode, String resultRegister) {
 
         String name = varNode.getName();
-        String code = "lw\t" + resultRegister + ", " + name;
+        String code = "lw\t" + resultRegister + ", " + name + "\n";
         return name;
     }
 
