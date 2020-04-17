@@ -52,11 +52,9 @@ public class CodeGenerator {
         code.append("#------\n");
         code.append("main:\n");
         code.append("addi  $sp, $sp, -4\n");
-        code.append("sw    $ra, 0 ($sp\n");
+        code.append("sw    $ra, 0 ($sp)\n");
 
-        for (StatementNode state : progNode.getMain().getStatements()) {
-            code.append(writeCode(state, "$s"));
-        }
+        code.append(writeCode(progNode.getMain()));
 
         code.append("\n\nlw    $s0, 4($sp)\n");
         code.append("lw    $ra, 0($sp)\n");
@@ -70,33 +68,38 @@ public class CodeGenerator {
     // METHODS FOR STATEMENTS
     ///////////////////////////
 
-    public String writeCode(StatementNode node, String resultRegister) {
+    /**
+     *
+     * @param node
+     * @return
+     */
+    public String writeCode(StatementNode node) {
 
-        String nodeCode = ""    ;
+        String nodeCode = "";
 
         if (node instanceof AssignmentStatementNode) {
-            nodeCode = writeCode((AssignmentStatementNode) node, resultRegister);
+            nodeCode = writeCode((AssignmentStatementNode) node);
         }
         else if (node instanceof CompoundStatementNode) {
-            nodeCode = writeCode((CompoundStatementNode) node, resultRegister);
+            nodeCode = writeCode((CompoundStatementNode) node);
         }
         else if (node instanceof IfStatementNode) {
-            nodeCode = writeCode((IfStatementNode) node, resultRegister);
+            nodeCode = writeCode((IfStatementNode) node);
         }
         else if (node instanceof ProcedureStatementNode) {
-            nodeCode = writeCode((ProcedureStatementNode) node, resultRegister);
+            nodeCode = writeCode((ProcedureStatementNode) node);
         }
         else if (node instanceof ReadStatementNode) {
-            nodeCode = writeCode((ReadStatementNode) node, resultRegister);
+            nodeCode = writeCode((ReadStatementNode) node);
         }
         else if (node instanceof ReturnStatementNode) {
-            nodeCode = writeCode((ReturnStatementNode) node, resultRegister);
+            nodeCode = writeCode((ReturnStatementNode) node);
         }
         else if (node instanceof WhileStatementNode) {
-            nodeCode = writeCode((WhileStatementNode) node, resultRegister);
+            nodeCode = writeCode((WhileStatementNode) node);
         }
         else if (node instanceof WriteStatementNode) {
-            nodeCode = writeCode((WriteStatementNode) node, resultRegister);
+            nodeCode = writeCode((WriteStatementNode) node);
         }
 
         return nodeCode;
@@ -105,13 +108,11 @@ public class CodeGenerator {
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(IfStatementNode node, String resultRegister) {
+    public String writeCode(IfStatementNode node) {
 
-        String nodeCode = ""    ;
-
+        String nodeCode = "";
 
 
         return nodeCode;
@@ -121,43 +122,40 @@ public class CodeGenerator {
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(AssignmentStatementNode node, String resultRegister) {
+    public String writeCode(AssignmentStatementNode node) {
 
         String nodeCode = "\n#++++++ Assignment ++++++\n";
-        nodeCode += writeCode(node.getExpression(), resultRegister);
-        nodeCode += "sw    " + resultRegister + currentSRegister + ", " + node.getLvalue().getName() + "\n";
-        currentSRegister++;
+        String reg = "$t" + ++currentTRegister;
+        nodeCode += writeCode(node.getExpression(), reg);
+        nodeCode += "sw    " + reg + ", " + node.getLvalue().getName() + "\n";
         return nodeCode;
     }
 
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(CompoundStatementNode node, String resultRegister) {
+    public String writeCode(CompoundStatementNode node) {
 
-        String nodeCode = ""    ;
+        String nodeCode = "";
 
-
-
+        for (StatementNode state : node.getStatements()) {
+            nodeCode += writeCode(state);
+        }
         return nodeCode;
-
     }
 
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(ProcedureStatementNode node, String resultRegister) {
+    public String writeCode(ProcedureStatementNode node) {
 
-        String nodeCode = ""    ;
+        String nodeCode = "";
 
 
 
@@ -168,12 +166,11 @@ public class CodeGenerator {
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(ReadStatementNode node, String resultRegister) {
+    public String writeCode(ReadStatementNode node) {
 
-        String nodeCode = ""    ;
+        String nodeCode = "";
 
         return nodeCode;
     }
@@ -181,12 +178,11 @@ public class CodeGenerator {
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(WriteStatementNode node, String resultRegister) {
+    public String writeCode(WriteStatementNode node) {
 
-        String nodeCode = ""    ;
+        String nodeCode = "";
 
         return nodeCode;
     }
@@ -194,10 +190,9 @@ public class CodeGenerator {
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(ReturnStatementNode node, String resultRegister) {
+    public String writeCode(ReturnStatementNode node) {
 
         return writeCode(node.getReturnValue(), "$v0");
     }
@@ -205,18 +200,17 @@ public class CodeGenerator {
     /**
      *
      * @param node
-     * @param resultRegister
      * @return
      */
-    public String writeCode(WhileStatementNode node, String resultRegister) {
+    public String writeCode(WhileStatementNode node) {
 
         String nodeCode = "\n#++++++ While Loop ++++++\n";
         nodeCode += "while" + labelNum + "\n";
         labelNum++;
 
-        nodeCode += writeCode(node.getTest(), resultRegister);
-        resultRegister = "$s" + ++currentTRegister;
-        nodeCode += writeCode(node.getDoStatement(), resultRegister);
+        nodeCode += writeCode(node.getTest(), "$t");
+        currentSRegister++;
+        nodeCode += writeCode(node.getDoStatement());
 
         nodeCode += "j while" + (labelNum - 1) + "\n";
         nodeCode += "end-while" + labelNum + "\n";
@@ -248,18 +242,21 @@ public class CodeGenerator {
         else if (node instanceof ValueNode) {
             nodeCode = writeCode((ValueNode) node, resultRegister);
         }
+        else if (node instanceof OperationNode) {
+            nodeCode = writeCode((OperationNode) node, resultRegister);
+        }
 
         return nodeCode;
     }
 
     public String writeCode(OperationNode opNode, String resultRegister) {
 
-        String nodeCode;
+        String nodeCode = "\n   #+++ Operation +++\n";
         ExpressionNode lValue = opNode.getLeft();
         ExpressionNode rValue = opNode.getRight();
 
         String leftReg = "$t" + currentTRegister++;
-        nodeCode = writeCode(lValue, leftReg);
+        nodeCode += writeCode(lValue, leftReg);
 
         String rightReg = "$t" + currentTRegister++;
         nodeCode += writeCode(rValue, rightReg);
@@ -345,8 +342,8 @@ public class CodeGenerator {
     public String writeCode(VariableNode varNode, String resultRegister) {
 
         String name = varNode.getName();
-        String code = "lw    " + resultRegister + currentTRegister + ", " + name + "\n";
-        return name;
+        String code = "lw    " + resultRegister + ", " + name + "\n";
+        return code;
     }
 
     /**
@@ -358,7 +355,7 @@ public class CodeGenerator {
     public String writeCode(ValueNode valNode, String resultRegister) {
 
         String value = valNode.getAttribute();
-        String code = "addi    " + resultRegister + currentTRegister + ",  $zero, " + value + "\n";
+        String code = "addi    " + resultRegister + ",  $zero, " + value + "\n";
         return code;
     }
 }

@@ -19,9 +19,9 @@ class CodeGeneratorTest {
         Parser p = new Parser("main() {\n" +
                 "        int dollars, yen, bitcoins;\n" +
                 "        float myFloat;\n" +
-                "        myFloat = 22.347;\n" +
-                "        dollars = 150 + myFloat;\n" +
-                "        myvar = dollars * 104;\n" +
+                "        myFloat = 1;\n" +
+                "        dollars = 12 + myFloat;\n" +
+                "        yen = dollars * 3;\n" +
                 "        if (myVar > 5) {\n" +
                 "        yen = myVar;   " +
                 "        } else { yen = dollars + 22; };\n" +
