@@ -21,10 +21,10 @@ class CodeGeneratorTest {
                 "        float myFloat;\n" +
                 "        myFloat = 1;\n" +
                 "        dollars = 12 + myFloat;\n" +
-                "        yen = dollars * 3;\n" +
-                "        if (myVar > 5) {\n" +
-                "        yen = myVar;   " +
-                "        } else { yen = dollars + 22; };\n" +
+                "        yen = 1 + 20;\n" +
+                "        while (yen < 8) {\n" +
+                "        yen = yen - 1;   " +
+                "        };\n" +
                 "     };", false);
         ProgramNode progNode = p.program();
         SymbolTable st = p.getTable();
@@ -32,9 +32,7 @@ class CodeGeneratorTest {
         s.assignDatatypes();
         s.checkAssignmentTypes();
         CodeGenerator c = new CodeGenerator();
-        if (s.getCanWriteAssembly()) {
-            System.out.println(c.writeCodeForRoot(progNode));
-        }
+        System.out.println(c.writeCodeForRoot(progNode));
     }
 
     @Test

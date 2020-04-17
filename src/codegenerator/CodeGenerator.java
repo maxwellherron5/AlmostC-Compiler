@@ -205,15 +205,19 @@ public class CodeGenerator {
     public String writeCode(WhileStatementNode node) {
 
         String nodeCode = "\n#++++++ While Loop ++++++\n";
-        nodeCode += "while" + labelNum + "\n";
+        nodeCode += "while" + labelNum + ":\n";
         labelNum++;
 
-        nodeCode += writeCode(node.getTest(), "$t");
+        nodeCode += writeCode(node.getTest(), "$s");
+
+        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, end-while" + labelNum;
+
         currentSRegister++;
+
         nodeCode += writeCode(node.getDoStatement());
 
         nodeCode += "j while" + (labelNum - 1) + "\n";
-        nodeCode += "end-while" + labelNum + "\n";
+        nodeCode += "end-while" + labelNum + ":\n";
         labelNum++;
         nodeCode += "\n#------ End While Loop ------\n";
         return nodeCode;
@@ -298,11 +302,11 @@ public class CodeGenerator {
                 break;
             }
             case LESS_THAN: {
-                nodeCode += "slt  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "slt  " + resultRegister + currentSRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case GREATER_THAN: {
-                nodeCode += "sgt  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "sgt  " + resultRegister + currentSRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case LESS_THAN_EQUAL: {
