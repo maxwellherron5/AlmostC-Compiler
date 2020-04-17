@@ -16,6 +16,10 @@ public class CodeGenerator {
     /** Keeps track of the current register. */
     private int currentRegister = 0;
 
+    /** Keeps track of the label number. */
+    private int labelNum = 0;
+
+
     /////////////////////////
     //      METHODS
     /////////////////////////
@@ -28,12 +32,32 @@ public class CodeGenerator {
     public String writeCodeForRoot(ProgramNode progNode) {
 
         StringBuilder code = new StringBuilder();
+        // Boilerplate
+        code.append("#++++++\n");
+        code.append("# Data Segment\n");
+        code.append("#------\n");
         code.append(".data\n");
         for (VariableNode varNode : progNode.getMain().getVariables().getVars()) {
-            code.append(varNode.getName() + ":\t.word\t0\n");
+            code.append(varNode.getName() + ":    .word    0\n");
         }
-        code.append("\n\n\n.text\n");
+        code.append("\n\n#++++++\n");
+        code.append("# Program Segment\n");
+        code.append("#------\n");
+        code.append(".text\n");
+        code.append("\n\n#++++++\n");
+        code.append("# Main Function \n");
+        code.append("#------\n");
         code.append("main:\n");
+        code.append("addi  $sp, $sp, -4\n");
+        code.append("sw    $ra, 0 ($sp\n");
+
+        code.append(writeCode(progNode.getMain(), "$s0"));
+
+        code.append("lw    $s0, 4($sp)\n");
+        code.append("lw    $ra, 0($sp)\n");
+        code.append("addi  $sp, $sp, 8\n");
+        code.append("jr    $ra\n");
+
         return code.toString();
     }
 
@@ -97,8 +121,9 @@ public class CodeGenerator {
      */
     public String writeCode(AssignmentStatementNode node, String resultRegister) {
 
-        String nodeCode = null;
-
+        String nodeCode = "#++++++ Assignment ++++++\n";
+        nodeCode += "li    $s" +
+        
 
 
         return nodeCode;
@@ -147,10 +172,7 @@ public class CodeGenerator {
 
         String nodeCode = null;
 
-
-
         return nodeCode;
-
     }
 
     /**
@@ -160,13 +182,7 @@ public class CodeGenerator {
      * @return
      */
     public String writeCode(WriteStatementNode node, String resultRegister) {
-
-        String nodeCode = null;
-
-
-
-        return nodeCode;
-
+        
     }
 
     /**
@@ -177,12 +193,7 @@ public class CodeGenerator {
      */
     public String writeCode(ReturnStatementNode node, String resultRegister) {
 
-        String nodeCode = null;
-
-
-
-        return nodeCode;
-
+        return writeCode(node.getReturnValue(), "$v0");
     }
 
     /**
@@ -193,10 +204,18 @@ public class CodeGenerator {
      */
     public String writeCode(WhileStatementNode node, String resultRegister) {
 
-        String nodeCode = null;
+        String nodeCode = "\n#++++++ While Loop ++++++\n";
+        nodeCode += "while" + labelNum + "\n";
+        labelNum++;
 
+        nodeCode += writeCode(node.getTest(), resultRegister);
+        resultRegister = "$s" + ++currentRegister;
+        nodeCode += writeCode(node.getDoStatement(), resultRegister);
 
-
+        nodeCode += "j while" + (labelNum - 1) + "\n";
+        nodeCode += "end-while" + labelNum + "\n";
+        labelNum++;
+        nodeCode += "\n#------ End While Loop ------\n";
         return nodeCode;
     }
 
@@ -221,7 +240,7 @@ public class CodeGenerator {
             nodeCode = writeCode((VariableNode) node, resultRegister);
         }
         else if (node instanceof ValueNode) {
-            writeCode((ValueNode) node, resultRegister);
+            nodeCode = writeCode((ValueNode) node, resultRegister);
         }
 
         return nodeCode;
@@ -229,14 +248,14 @@ public class CodeGenerator {
 
     public String writeCode(OperationNode opNode, String resultRegister) {
 
-        String nodeCode = null;
+        String nodeCode;
         ExpressionNode lValue = opNode.getLeft();
         ExpressionNode rValue = opNode.getRight();
 
-        String leftReg = "t" + currentRegister++;
+        String leftReg = "$t" + currentRegister++;
         nodeCode = writeCode(lValue, leftReg);
 
-        String rightReg = "t" + currentRegister++;
+        String rightReg = "$t" + currentRegister++;
         nodeCode += writeCode(rValue, rightReg);
 
         switch (opNode.getOperation()) {
@@ -272,23 +291,23 @@ public class CodeGenerator {
                 break;
             }
             case EQUAL: {
-                nodeCode += "beq  " + leftReg + ",  " + rightReg + ",  ";
+                nodeCode += "seq  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case LESS_THAN: {
-                nodeCode += "blt  " + leftReg + ",  " + rightReg + ",  ";
+                nodeCode += "slt  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case GREATER_THAN: {
-                nodeCode += "bgt  " + leftReg + ",  " + rightReg + ",  ";
+                nodeCode += "sgt  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case LESS_THAN_EQUAL: {
-                nodeCode += "ble  " + leftReg + ",  " + rightReg + ",  ";
+                nodeCode += "sle  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case GREATER_THAN_EQUAL: {
-                nodeCode += "bge  " + leftReg + ",  " + rightReg + ",  ";
+                nodeCode += "sge  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
         }
@@ -318,7 +337,7 @@ public class CodeGenerator {
     public String writeCode(VariableNode varNode, String resultRegister) {
 
         String name = varNode.getName();
-        String code = "lw\t" + resultRegister + ", " + name + "\n";
+        String code = "lw    " + resultRegister + ", " + name + "\n";
         return name;
     }
 
@@ -331,7 +350,7 @@ public class CodeGenerator {
     public String writeCode(ValueNode valNode, String resultRegister) {
 
         String value = valNode.getAttribute();
-        String code = "addi\t" + resultRegister + ",\t$zero, " + value + "\n";
+        String code = "addi    " + resultRegister + ",  $zero, " + value + "\n";
         return code;
     }
 }

@@ -2,9 +2,12 @@ package codegenerator;
 
 import org.junit.jupiter.api.Test;
 import parser.Parser;
+import scanner.TokenType;
 import semanticanalyzer.SemanticAnalyzer;
 import symboltable.SymbolTable;
+import syntaxtree.OperationNode;
 import syntaxtree.ProgramNode;
+import syntaxtree.ValueNode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,5 +33,16 @@ class CodeGeneratorTest {
         s.checkAssignmentTypes();
         CodeGenerator c = new CodeGenerator();
         System.out.println(c.writeCodeForRoot(progNode));
+    }
+
+    @Test
+    public void writeCodeForOperationTest() {
+
+        ValueNode lVal = new ValueNode("5");
+        ValueNode rVal = new ValueNode("55");
+        OperationNode opNode = new OperationNode(TokenType.MODULO, lVal, rVal);
+
+        CodeGenerator c = new CodeGenerator();
+        System.out.println(c.writeCode(opNode, "$s0"));
     }
 }
