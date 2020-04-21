@@ -210,14 +210,14 @@ public class CodeGenerator {
 
         nodeCode += writeCode(node.getTest(), "$s");
 
-        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, end-while" + labelNum;
+        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, endwhile" + labelNum;
 
         currentSRegister++;
 
         nodeCode += writeCode(node.getDoStatement());
 
         nodeCode += "j while" + (labelNum - 1) + "\n";
-        nodeCode += "end-while" + labelNum + ":\n";
+        nodeCode += "endwhile" + labelNum + ":\n";
         labelNum++;
         nodeCode += "\n#------ End While Loop ------\n";
         return nodeCode;
@@ -253,9 +253,15 @@ public class CodeGenerator {
         return nodeCode;
     }
 
+    /**
+     *
+     * @param opNode
+     * @param resultRegister
+     * @return
+     */
     public String writeCode(OperationNode opNode, String resultRegister) {
 
-        String nodeCode = "\n   #+++ Operation +++\n";
+        String nodeCode = "";
         ExpressionNode lValue = opNode.getLeft();
         ExpressionNode rValue = opNode.getRight();
 

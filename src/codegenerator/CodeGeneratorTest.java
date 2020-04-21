@@ -8,7 +8,6 @@ import symboltable.SymbolTable;
 import syntaxtree.OperationNode;
 import syntaxtree.ProgramNode;
 import syntaxtree.ValueNode;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class CodeGeneratorTest {
@@ -18,12 +17,13 @@ class CodeGeneratorTest {
 
         Parser p = new Parser("main() {\n" +
                 "        int dollars, yen, bitcoins;\n" +
-                "        float myFloat;\n" +
+                "        int myFloat;\n" +
                 "        myFloat = 1;\n" +
-                "        dollars = 12 + myFloat;\n" +
+                "        dollars = 0;\n" +
                 "        yen = 1 + 20;\n" +
-                "        while (yen < 8) {\n" +
+                "        while (yen > 8) {\n" +
                 "        yen = yen - 1;   " +
+                "        dollars = dollars + 1;\n" +
                 "        };\n" +
                 "     };", false);
         ProgramNode progNode = p.program();
