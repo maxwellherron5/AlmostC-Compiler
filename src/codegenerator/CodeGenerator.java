@@ -112,9 +112,21 @@ public class CodeGenerator {
      */
     public String writeCode(IfStatementNode node) {
 
-        String nodeCode = "";
+        String nodeCode = "\n#++++++ If Statement ++++++\n";
+        nodeCode += "if" + labelNum + ":\n";
+        labelNum++;
 
+        nodeCode += writeCode(node.getTest(), "$s");
 
+        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, else" + labelNum;
+        currentSRegister++;
+
+        nodeCode += writeCode(node.getThenStatement());
+        nodeCode += "j    endelse" + labelNum + "\n";
+        nodeCode += "else" + labelNum + ":\n";
+        nodeCode += writeCode(node.getElseStatement());
+        nodeCode += "endelse" + labelNum + ":\n";
+        nodeCode += "\n#------ End If Statement ------\n";
         return nodeCode;
 
     }
@@ -218,7 +230,6 @@ public class CodeGenerator {
 
         nodeCode += "j while" + (labelNum - 1) + "\n";
         nodeCode += "endwhile" + labelNum + ":\n";
-        labelNum++;
         nodeCode += "\n#------ End While Loop ------\n";
         return nodeCode;
     }

@@ -21,10 +21,10 @@ class CodeGeneratorTest {
                 "        myFloat = 1;\n" +
                 "        dollars = 0;\n" +
                 "        yen = 1 + 20;\n" +
-                "        while (yen > 8) {\n" +
+                "        if (yen > 8) {\n" +
                 "        yen = yen - 1;   " +
                 "        dollars = dollars + 1;\n" +
-                "        };\n" +
+                "        } else { yen = 2 + 2;};\n" +
                 "     };", false);
         ProgramNode progNode = p.program();
         SymbolTable st = p.getTable();
