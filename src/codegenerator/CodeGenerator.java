@@ -42,6 +42,7 @@ public class CodeGenerator {
         code.append("#------\n");
         code.append(".data\n");
         code.append("newLine: .asciiz \"\\n\"\n");
+        code.append("input: .asciiz \"Enter Value: \"\n");
         for (VariableNode varNode : progNode.getMain().getVariables().getVars()) {
             code.append(varNode.getName() + ":    .word    0\n");
         }
