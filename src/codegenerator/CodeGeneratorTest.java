@@ -25,6 +25,7 @@ class CodeGeneratorTest {
                 "        yen = yen - 1;   " +
                 "        dollars = dollars + 1;\n" +
                 "        } else { yen = 2 + 2;};\n" +
+                "        write(2 + 2);\n" +
                 "     };", false);
         ProgramNode progNode = p.program();
         SymbolTable st = p.getTable();

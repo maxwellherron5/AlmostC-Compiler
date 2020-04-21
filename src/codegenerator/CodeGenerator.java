@@ -38,7 +38,7 @@ public class CodeGenerator {
         code.append("# Data Segment\n");
         code.append("#------\n");
         code.append(".data\n");
-
+        code.append("newLine: .asciiz \"\\n\"\n");
         for (VariableNode varNode : progNode.getMain().getVariables().getVars()) {
             code.append(varNode.getName() + ":    .word    0\n");
         }
@@ -167,12 +167,10 @@ public class CodeGenerator {
      */
     public String writeCode(ProcedureStatementNode node) {
 
-        String nodeCode = "";
+        String name = node.getName();
+        String code = "jal   " + name + "\n";
 
-
-
-        return nodeCode;
-
+        return code;
     }
 
     /**
@@ -182,8 +180,10 @@ public class CodeGenerator {
      */
     public String writeCode(ReadStatementNode node) {
 
-        String nodeCode = "";
-
+        String nodeCode = "\n#++++++ Read Statement ++++++\n";
+        nodeCode += "li  $v0,  4" + "\nla  $a0,  input \n" + "syscall\n";
+        nodeCode += "li  $v0, 5\n" + "syscall\n" + "sw  $v0,  " + node.getInput() + '\n';
+        nodeCode += "\n#------ End Read ------\n";
         return nodeCode;
     }
 
@@ -194,8 +194,11 @@ public class CodeGenerator {
      */
     public String writeCode(WriteStatementNode node) {
 
-        String nodeCode = "";
-
+        String nodeCode = "\n#++++++ Write Statement ++++++\n";
+        nodeCode += writeCode(node.getOutput(), "$s" + currentSRegister);
+        nodeCode += "addi   $v0,   $zero,   1\n" + "add   $a0,   " + "$s" + currentSRegister + ",   $zero\n" +
+                    "syscall\n" + "li   $v0,   4" + "\nla   $a0, newLine\n" + "syscall\n";
+        nodeCode += "\n#------ End Write ------\n";
         return nodeCode;
     }
 
@@ -335,7 +338,6 @@ public class CodeGenerator {
                 break;
             }
         }
-
         currentTRegister -= 2;
         return nodeCode;
     }

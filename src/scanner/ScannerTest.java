@@ -76,8 +76,8 @@ class ScannerTest {
     @Test
     void nextTokenHappy5()
     {
-        Token expected = new Token("print", TokenType.PRINT);
-        Scanner scan = new Scanner(new StringReader("\n print"));
+        Token expected = new Token("print", TokenType.WRITE);
+        Scanner scan = new Scanner(new StringReader("\n write"));
         try {
             Token actual = new Token(scan.nextToken().lexeme, scan.nextToken().type);
             assertEquals(expected, actual);
