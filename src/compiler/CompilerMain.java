@@ -2,6 +2,8 @@ package compiler;
 
 import java.io.FileWriter;
 import java.io.IOException;
+
+import codegenerator.CodeGenerator;
 import parser.Parser;
 import semanticanalyzer.SemanticAnalyzer;
 import syntaxtree.ProgramNode;
@@ -19,6 +21,8 @@ public class CompilerMain {
         Parser p = new Parser(args[0], true);
         ProgramNode pr = p.program();
         SemanticAnalyzer sa = new SemanticAnalyzer(pr, p.getTable());
+        CodeGenerator c = new CodeGenerator();
+        String program = c.writeCodeForRoot(pr);
         try {
             FileWriter writer = new FileWriter("compiler/symbol_table_output.st");
             writer.write("\n");
@@ -47,6 +51,13 @@ public class CompilerMain {
             } else {
                 writer.write("\nThis program cannot produce assembly :(");
             }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+        try {
+            FileWriter writer = new FileWriter("compiler/program.asm");
+            writer.write(program);
             writer.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());

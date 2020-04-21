@@ -17,8 +17,11 @@ public class CodeGenerator {
 
     private int currentSRegister = 0;
 
-    /** Keeps track of the label number. */
-    private int labelNum = 0;
+    /** Keeps track of the while label number. */
+    private int whileLabelNum = 0;
+
+    /** Keeps track of the if label number. */
+    private int ifLabelNum = 0;
 
 
     /////////////////////////
@@ -60,6 +63,9 @@ public class CodeGenerator {
         code.append("lw    $ra, 0($sp)\n");
         code.append("addi  $sp, $sp, 8\n");
         code.append("jr    $ra\n");
+        code.append("\n#++++++\n");
+        code.append("# End Program\n");
+        code.append("#------\n");
 
         return code.toString();
     }
@@ -113,19 +119,19 @@ public class CodeGenerator {
     public String writeCode(IfStatementNode node) {
 
         String nodeCode = "\n#++++++ If Statement ++++++\n";
-        nodeCode += "if" + labelNum + ":\n";
-        labelNum++;
+        nodeCode += "if" + ifLabelNum + ":\n";
+        ifLabelNum++;
 
         nodeCode += writeCode(node.getTest(), "$s");
 
-        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, else" + labelNum;
+        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, else" + ifLabelNum;
         currentSRegister++;
 
         nodeCode += writeCode(node.getThenStatement());
-        nodeCode += "j    endelse" + labelNum + "\n";
-        nodeCode += "else" + labelNum + ":\n";
+        nodeCode += "j    endelse" + ifLabelNum + "\n";
+        nodeCode += "else" + ifLabelNum + ":\n";
         nodeCode += writeCode(node.getElseStatement());
-        nodeCode += "endelse" + labelNum + ":\n";
+        nodeCode += "endelse" + ifLabelNum + ":\n";
         nodeCode += "\n#------ End If Statement ------\n";
         return nodeCode;
 
@@ -220,19 +226,19 @@ public class CodeGenerator {
     public String writeCode(WhileStatementNode node) {
 
         String nodeCode = "\n#++++++ While Loop ++++++\n";
-        nodeCode += "while" + labelNum + ":\n";
-        labelNum++;
+        nodeCode += "while" + whileLabelNum + ":\n";
+        whileLabelNum++;
 
         nodeCode += writeCode(node.getTest(), "$s");
 
-        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, endwhile" + labelNum;
+        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, endwhile" + whileLabelNum;
 
         currentSRegister++;
 
         nodeCode += writeCode(node.getDoStatement());
 
-        nodeCode += "j while" + (labelNum - 1) + "\n";
-        nodeCode += "endwhile" + labelNum + ":\n";
+        nodeCode += "j while" + (whileLabelNum - 1) + "\n";
+        nodeCode += "endwhile" + whileLabelNum + ":\n";
         nodeCode += "\n#------ End While Loop ------\n";
         return nodeCode;
     }
