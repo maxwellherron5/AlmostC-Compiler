@@ -123,8 +123,7 @@ public class CodeGenerator {
         nodeCode += "if" + ifLabelNum + ":\n";
         ifLabelNum++;
 
-        nodeCode += writeCode(node.getTest(), "$s");
-
+        nodeCode += writeCode(node.getTest(), "$s" + currentSRegister);
         nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, else" + ifLabelNum;
         currentSRegister++;
 
@@ -134,8 +133,8 @@ public class CodeGenerator {
         nodeCode += writeCode(node.getElseStatement());
         nodeCode += "endelse" + ifLabelNum + ":\n";
         nodeCode += "\n#------ End If Statement ------\n";
+        currentSRegister--;
         return nodeCode;
-
     }
 
     /**
@@ -149,6 +148,7 @@ public class CodeGenerator {
         String reg = "$t" + ++currentTRegister;
         nodeCode += writeCode(node.getExpression(), reg);
         nodeCode += "sw    " + reg + ", " + node.getLvalue().getName() + "\n";
+        currentTRegister--;
         return nodeCode;
     }
 
@@ -230,7 +230,7 @@ public class CodeGenerator {
         nodeCode += "while" + whileLabelNum + ":\n";
         whileLabelNum++;
 
-        nodeCode += writeCode(node.getTest(), "$s");
+        nodeCode += writeCode(node.getTest(), "$s" + currentSRegister);
 
         nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, endwhile" + whileLabelNum;
 
@@ -241,6 +241,7 @@ public class CodeGenerator {
         nodeCode += "j while" + (whileLabelNum - 1) + "\n";
         nodeCode += "endwhile" + whileLabelNum + ":\n";
         nodeCode += "\n#------ End While Loop ------\n";
+        currentSRegister--;
         return nodeCode;
     }
 
@@ -329,11 +330,11 @@ public class CodeGenerator {
                 break;
             }
             case LESS_THAN: {
-                nodeCode += "slt  " + resultRegister + currentSRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "slt  " + resultRegister + ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case GREATER_THAN: {
-                nodeCode += "sgt  " + resultRegister + currentSRegister + ",  " + leftReg + ",  " + rightReg + "\n";
+                nodeCode += "sgt  " + resultRegister +  ",  " + leftReg + ",  " + rightReg + "\n";
                 break;
             }
             case LESS_THAN_EQUAL: {
@@ -388,4 +389,23 @@ public class CodeGenerator {
         String code = "addi    " + resultRegister + ",  $zero, " + value + "\n";
         return code;
     }
+
+    ///////////////////////////
+    // METHODS FOR FUNCTIONS
+    ///////////////////////////
+
+    /**
+     *
+     * @param node
+     * @return
+     */
+//    public String writeCode(FunctionNode node) {
+//
+//        int paramNumber = node.getParameters().size();
+//        String nodeCode = node.getName() + ":\n";
+//        nodeCode += "addi  $sp, $sp, -" + (paramNumber * 4);
+//        nodeCode += ""
+//
+//        return nodeCode;
+//    }
 }
