@@ -40,6 +40,11 @@ To run the individual components of the Semantic Analyzer, navigate to `Semantic
 the semanticanalyzer package. There, you can run individual tests through your IDE. You can also run it, along with other
 previous components, from the command line, by using `CompilerMain.java` found in the compiler package.
 
+The code generator is the fun part! With this component done, you can now compile and run an AlmostC program! To do so,
+compile and run `CompilerMain.java`, providing it with an AlmostC file as a command line argument. Once it compiles the file,
+your assembly file titled `program.asm` will be written to the compiler package. You can then fire up your preferred MIPS
+simulator, and run the generated assembly file.
+
 The compiler package is the easiest way to run the Compiler in its entirety. To do so, navigate to `CompilerMain.java`,
 compile the file, and run it, providing the name of the input file as a command line argument, like so - `java compiler/CompilerMain <FILE_OF_YOUR_CHOOSING>`.
  This will run all the built components on an input file in the same package. It will then write the 
