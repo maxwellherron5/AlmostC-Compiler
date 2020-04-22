@@ -3,7 +3,8 @@ package codegenerator;
 import syntaxtree.*;
 
 /**
- *
+ * The final component of the compiler. This takes in an input ProgramNode,
+ * and uses the overloaded method writeCode() to generate an assembly program.
  * @author Maxwell Herron
  */
 public class CodeGenerator {
@@ -15,6 +16,7 @@ public class CodeGenerator {
     /** Keeps track of the current t register. */
     private int currentTRegister = 0;
 
+    /** Keeps track of the current s register. */
     private int currentSRegister = 0;
 
     /** Keeps track of the while label number. */
@@ -23,13 +25,13 @@ public class CodeGenerator {
     /** Keeps track of the if label number. */
     private int ifLabelNum = 0;
 
-
     /////////////////////////
     //      METHODS
     /////////////////////////
 
     /**
-     *
+     * Writes all boilerplate assembly, then generates program code by iterating
+     * through all statements in main.
      * @param progNode
      * @return
      */
@@ -43,6 +45,8 @@ public class CodeGenerator {
         code.append(".data\n");
         code.append("newLine: .asciiz \"\\n\"\n");
         code.append("input: .asciiz \"Enter Value: \"\n");
+
+        // Extracting all variables from main declarations
         for (VariableNode varNode : progNode.getMain().getVariables().getVars()) {
             code.append(varNode.getName() + ":    .word    0\n");
         }
@@ -76,7 +80,7 @@ public class CodeGenerator {
     ///////////////////////////
 
     /**
-     *
+     * Determines what kind of statement it needs to write assembly for.
      * @param node
      * @return
      */
@@ -113,7 +117,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates and returns the assembly for an if statement.
      * @param node
      * @return
      */
@@ -123,22 +127,25 @@ public class CodeGenerator {
         nodeCode += "if" + ifLabelNum + ":\n";
         ifLabelNum++;
 
+        // Keeps track of current label num so it doesn't look track of it in nested ifs
+        int curr = ifLabelNum;
+
         nodeCode += writeCode(node.getTest(), "$s" + currentSRegister);
-        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, else" + ifLabelNum;
+        nodeCode += "beq    " + "$s" + currentSRegister + ", $zero, else" + curr;
         currentSRegister++;
 
         nodeCode += writeCode(node.getThenStatement());
-        nodeCode += "j    endelse" + ifLabelNum + "\n";
-        nodeCode += "else" + ifLabelNum + ":\n";
+        nodeCode += "j    endelse" + curr + "\n";
+        nodeCode += "else" + curr + ":\n";
         nodeCode += writeCode(node.getElseStatement());
-        nodeCode += "endelse" + ifLabelNum + ":\n";
+        nodeCode += "endelse" + curr + ":\n";
         nodeCode += "\n#------ End If Statement ------\n";
         currentSRegister--;
         return nodeCode;
     }
 
     /**
-     *
+     * Generates and returns the assembly for an assignment statement.
      * @param node
      * @return
      */
@@ -153,7 +160,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Iterates through all statements in compound node and generates the assembly for them.
      * @param node
      * @return
      */
@@ -168,7 +175,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates and returns the assembly for a void function call.
      * @param node
      * @return
      */
@@ -181,7 +188,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates and returns the assembly for a read statement.
      * @param node
      * @return
      */
@@ -195,7 +202,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates and returns the assembly for a write statement.
      * @param node
      * @return
      */
@@ -210,7 +217,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates and returns the assembly to create a return statement.
      * @param node
      * @return
      */
@@ -220,7 +227,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates and returns the assembly to create a while loop.
      * @param node
      * @return
      */
@@ -276,7 +283,7 @@ public class CodeGenerator {
     }
 
     /**
-     *
+     * Generates the assembly for the given operation.
      * @param opNode
      * @param resultRegister
      * @return
@@ -399,13 +406,13 @@ public class CodeGenerator {
      * @param node
      * @return
      */
-//    public String writeCode(FunctionNode node) {
-//
-//        int paramNumber = node.getParameters().size();
-//        String nodeCode = node.getName() + ":\n";
-//        nodeCode += "addi  $sp, $sp, -" + (paramNumber * 4);
-//        nodeCode += ""
-//
-//        return nodeCode;
-//    }
+    public String writeCode(FunctionNode node) {
+
+        int paramNumber = node.getParameters().size();
+        String nodeCode = node.getName() + ":\n";
+        nodeCode += "addi  $sp, $sp, -" + (paramNumber * 4);
+        nodeCode += "";
+
+        return nodeCode;
+    }
 }

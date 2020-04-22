@@ -2,20 +2,42 @@
   // This is my test AlmostC program !
   // Author: Maxwell Herron
 
-  int myFunc(int foo, int bar);
+  //int myFunc(int foo, int bar);
 
-   main() {
-       int a;
-       int b;
-       a = 1 + 3;
-       b = a;
-       if(myFunc(a, b) != 2) {
-          return 5;
-       } else {
-          return 1;
-       };
-   }
+   //main() {
+     //  int ab;
+      // int ba;
+      // ab = 1 + 3;
+      // ba = a;
+      // if(myFunc(a, b) != 2) {
+       //   return 5;
+      // } else {
+       //   return 1;
+      // };
+  // }
 
-   int myFunc(int foo, int bar) {
-      return foo - bar;
-   }
+  // int myFunc(int foo, int bar) {
+    //  return foo - bar;
+  // }
+
+  main() {
+    int varOne, varTwo, varThree;
+    varOne = 0;
+    varTwo = 10;
+    varThree = 32;
+    while(varOne < 10) {
+        write(varOne);
+        if (varTwo > 0) {
+            read(varTwo);
+            if (varThree == 32) {
+                write(varThree);
+                varThree = 22;
+            } else {
+                varThree = varThree % 2;
+            };
+        } else {
+            write(varTwo);
+        };
+        varOne = varOne + 1;
+    };
+  };
