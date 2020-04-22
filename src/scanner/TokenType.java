@@ -39,7 +39,6 @@ public enum TokenType
 	IF,
 	ELSE,
 	WHILE,
-	PRINT,
 	READ,
 	WRITE,
 	RETURN,
