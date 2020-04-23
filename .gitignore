@@ -7,7 +7,7 @@
 *.iml
 *.xml
 */.idea/
-*.jar
+jflex.jar
 */production/
 *.ac
 *.st
