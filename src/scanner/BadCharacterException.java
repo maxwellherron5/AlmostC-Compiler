@@ -21,7 +21,6 @@ public class BadCharacterException extends RuntimeException {
     public BadCharacterException(String errorMessage)
     {
         this.errorMessage = errorMessage;
-        System.out.println(errorMessage);
     }
 
     public String getErrorMessage()

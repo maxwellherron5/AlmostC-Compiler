@@ -707,7 +707,7 @@ public class Scanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { String errorMessage = "Illegal char: '" + yytext() + "' found.";
+            { String errorMessage = "";
              throw new BadCharacterException(errorMessage);
             } 
             // fall through
