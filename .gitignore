@@ -8,7 +8,7 @@
 *.xml
 */.idea/
 jflex.jar
-production/
+*production/
 *.ac
 *.st
 *.sa
