@@ -13,3 +13,4 @@ jflex.jar
 *.st
 *.sa
 *.asm
+Compiler/production/
