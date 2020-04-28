@@ -22,9 +22,9 @@ public class CompilerMain {
         ProgramNode pr = p.program();
         SemanticAnalyzer sa = new SemanticAnalyzer(pr, p.getTable());
         CodeGenerator c = new CodeGenerator();
-        String program = c.writeCodeForRoot(pr);
+
         try {
-            FileWriter writer = new FileWriter("compiler/symbol_table_output.st");
+            FileWriter writer = new FileWriter("symbol_table_output.st");
             writer.write("\n");
             writer.write(p.getTable().toString());
             writer.close();
@@ -32,7 +32,7 @@ public class CompilerMain {
             System.out.println(e.getMessage());
         }
         try {
-            FileWriter writer = new FileWriter("compiler/syntax_tree_output.st");
+            FileWriter writer = new FileWriter("syntax_tree_output.st");
             writer.write("*****PRINTING SYNTAX TREE*****");
             writer.write("\n");
             writer.write(pr.indentedToString(0));
@@ -41,7 +41,7 @@ public class CompilerMain {
             System.out.println(e.getMessage());
         }
         try {
-            FileWriter writer = new FileWriter("compiler/semantic_analyzer_tree_.sa");
+            FileWriter writer = new FileWriter("semantic_analyzer_tree_.sa");
             sa.checkIdentifiersDeclaration();
             sa.assignDatatypes();
             sa.checkAssignmentTypes();
@@ -55,12 +55,15 @@ public class CompilerMain {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        try {
-            FileWriter writer = new FileWriter("compiler/program.asm");
-            writer.write(program);
-            writer.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        if (sa.getCanWriteAssembly()) {
+            try {
+                FileWriter writer = new FileWriter("program.asm");
+                String program = c.writeCodeForRoot(pr);
+                writer.write(program);
+                writer.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }

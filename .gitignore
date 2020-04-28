@@ -7,8 +7,8 @@
 *.iml
 *.xml
 */.idea/
-*.jar
-*/production/
+jflex.jar
+*production/
 *.ac
 *.st
 *.sa

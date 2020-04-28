@@ -113,6 +113,6 @@ identifier    = {letter}+[0-9]?+
             }
 
 {other}    { 
-             String errorMessage = "Illegal char: '" + yytext() + "' found.";
+             String errorMessage = "";
              throw new BadCharacterException(errorMessage);
            }

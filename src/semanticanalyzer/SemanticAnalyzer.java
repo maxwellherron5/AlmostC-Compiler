@@ -111,9 +111,11 @@ public class SemanticAnalyzer {
                 VariableNode lNode = ((AssignmentStatementNode) statement).getLvalue();
                 ExpressionNode expNode = ((AssignmentStatementNode) statement).getExpression();
                 if (lNode.getType() != expNode.getType()) {
-                    System.out.println("Type mismatch detected. Left node is of type: " + lNode.getType().toString() + "\n" +
-                            "Expression is of type: " + expNode.getType().toString());
-                    canWriteAssembly = false;
+                    if (lNode.getType() != DataType.FLOAT) {
+                        System.out.println("Type mismatch detected. Left node is of type: " + lNode.getType().toString() + "\n" +
+                                            "Expression is of type: " + expNode.getType().toString());
+                        canWriteAssembly = false;
+                    }
                 }
             }
         }
